@@ -28,6 +28,7 @@ public:
     static bool isInstanceRunning(QString instanceName);
     static bool sortWindow();
     static bool checkPermission(QString instanceName, QString packageName, QString permission);
+    static bool isExistedPackage(QString instanceName, QString packageName);
 
 signals:
 

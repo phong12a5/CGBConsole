@@ -118,21 +118,27 @@ void AppMain::onStartProgram()
                     LDCommand::lunchInstance(deviceName);
 
                     // Waiting for starting up done
-                    while(!LDCommand::checkConnection(deviceName));
+                    while(!LDCommand::checkConnection(deviceName)) {
+                        delay(1000);
+                    }
+
+                    delay(10000);
 
                     // Install AutoFarmer
                     LDCommand::installPackage(deviceName,APP_MODEL->currentDir() + "/" + APK_FILENAME);
+                    while (!LDCommand::isExistedPackage(deviceName,FARM_PACKAGE_NAME)) {
+                        delay(2000);
+                    }
 
                     // Waiting for AutoFarmer is run
                     while ( !LDCommand::currentActivity(deviceName).contains(FARM_PACKAGE_NAME)) {
                         LDCommand::runApp(deviceName, FARM_PACKAGE_NAME);
-                        delay(5000);
+                        delay(2000);
                     }
 
-                    while (!LDCommand::checkPermission(deviceName,FARM_PACKAGE_NAME,"android.permission.ACCESS_SUPERUSER")) {
-                        delay(5000);
-                    }
-
+//                    while (!LDCommand::checkPermission(deviceName,FARM_PACKAGE_NAME,"android.permission.ACCESS_SUPERUSER")) {
+//                        delay(1000);
+//                    }
                     LDCommand::quitInstance(deviceName);
                     while(LDCommand::checkConnection(deviceName));
                 }else{

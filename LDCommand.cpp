@@ -8,6 +8,7 @@
 bool LDCommand::runLDCommand(QString args)
 {
     QString cmd = QString("\"%1/ldconsole.exe\" %2").arg(APP_MODEL->ldIntallFolder()).arg(args);
+    LOG << "Cmd: " << cmd;
     QProcess process;
     process.start(cmd);
     process.waitForFinished(-1);
@@ -22,6 +23,7 @@ bool LDCommand::runLDCommand(QString args)
 bool LDCommand::runLDCommand(QString args, QString &output, QString &error)
 {
     QString cmd = QString("\"%1/ldconsole.exe\" %2").arg(APP_MODEL->ldIntallFolder()).arg(args);
+    LOG << "Cmd: " << cmd;
     QProcess process;
     process.start(cmd);
     process.waitForFinished(-1);
@@ -60,7 +62,7 @@ bool LDCommand::addInstance(QString instanceName)
 {
     LOG << instanceName;
     return LDCommand::runLDCommand(QString("add --name %1").arg(instanceName)) &&
-            LDCommand::runLDCommand(QString("modify --name %1 --cpu 1 --memory 1024 --resolution 720,1280,320").arg(instanceName));
+            /*LDCommand::runLDCommand(QString("modify --name %1 --cpu 1 --memory 1024 --resolution 720,1280,320").arg(instanceName))*/true;
 }
 
 bool LDCommand::ld_adb_command(QString instanceName, QString cmd)
@@ -105,8 +107,10 @@ bool LDCommand::checkConnection(QString instanceName)
     output = LDCommand::ld_adb_command_str(instanceName,"shell ls | grep sdcard");
     output = output.simplified();
     if(output == "sdcard"){
+        LOG << QString("Connect to %1: successful").arg(instanceName);
         return true;
     }else{
+        LOG << QString("Connect to %1: failure").arg(instanceName);
         return false;
     }
 }
@@ -151,6 +155,15 @@ bool LDCommand::checkPermission(QString instanceName, QString packageName, QStri
 {
     QString output = ld_adb_command_str(instanceName,QString("shell dumpsys package %1 | grep %2").arg(packageName).arg(permission));
     if(output.contains(permission))
+        return true;
+    else
+        return false;
+}
+
+bool LDCommand::isExistedPackage(QString instanceName, QString packageName)
+{
+    QString output = ld_adb_command_str(instanceName,QString("shell pm list packages | grep %1").arg(packageName));
+    if(output.contains(packageName))
         return true;
     else
         return false;

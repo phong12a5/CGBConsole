@@ -38,9 +38,7 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
 
-//    while(true) {
-//        LOG << "Connect: " << LDCommand::checkConnection("CGBDevice-0");
-//    }
+//    LOG << "Connect: " << LDCommand::isExistedPackage("CGBDevice-0",FARM_PACKAGE_NAME);
 
     AppMain appMain;
     appMain.initApplication(&engine);

@@ -140,6 +140,9 @@ void AppModel::setAppConfig(APP_CONFIG data)
 {
     m_appConfig = data;
     this->setWalletEmpty(m_appConfig.m_balance >= 0 && m_appConfig.m_balance <= 50);
+#ifdef TEST_MODE
+    m_appConfig.m_ldCount = 10;
+#endif
 }
 
 int AppModel::maxNumberThread() const

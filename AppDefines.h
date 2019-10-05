@@ -7,14 +7,12 @@
 
 #define LOG qDebug() << "[" << __FUNCTION__ << "][" << __LINE__ << "] "
 
-#define FARM_PACKAGE_NAME       "org.qtproject.example.AutoFarm"
-//#define FARM_PACKAGE_NAME       "xyz.autofarmer.app"
-
+#define FARM_PACKAGE_NAME       "xyz.autofarmer.app"
 #define CONFIG_FILE_NAME        "config.json"
 #define ENDSCRIPT_PATH          "/sdcard/DCIM/"
 #define ENDSCRIPT_FILENAME      "endScript.st"
 #define INITSCRIPT_FILENAME     "/sdcard/DCIM/initApp.st"
-#define APK_FILENAME            "xyz.autofarmer.apk"
+#define APK_FILENAME            "xyz.autofarmer.app.apk"
 #define API_SERVER              "https://api.autofarmer.xyz/api/v2/"
 #define EMULATOR_NAME_PREFIX    "CGBDevice"
 #define MAX_THREAD              30
@@ -24,6 +22,7 @@
 #define TOKEN_PROP_KEY          "farm_token"
 #define APP_NAME_PROP_KEY       "appName"
 
+#define APP_DATA_FOLDER         "/sdcard/xyz.autofarmer.app/"
 
 typedef struct app_config_struct {
     int timeout;
