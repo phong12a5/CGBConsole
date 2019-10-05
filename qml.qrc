@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/main.qml</file>
+        <file>qml/page/SettingPage.qml</file>
+        <file>qml/unit/ButtonItem.qml</file>
+        <file>qml/unit/ButtonTextItem.qml</file>
+        <file>image/setting.png</file>
+        <file>image/opened-folder.png</file>
+        <file>qml/page/ExpiredPopup.qml</file>
+    </qresource>
+</RCC>
