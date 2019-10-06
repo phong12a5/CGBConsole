@@ -10,14 +10,14 @@ class LDCommand : public QObject
     Q_OBJECT
 
 public:
-    static bool runLDCommand(QString args);
-    static bool runLDCommand(QString args, QString &output, QString &error);
+    static bool runLDCommand(QString args, int timeout = -1);
+    static bool runLDCommand(QString args, QString &output, QString &error, int timeout = -1);
     static bool lunchInstance(QString instanceName);
     static bool installPackage(QString instanceName, QString apkPath);
     static bool runApp(QString instanceName, QString packageName);
     static bool addInstance(QString instanceName);
-    static bool ld_adb_command(QString instanceName, QString cmd);
-    static QString ld_adb_command_str(QString instanceName, QString cmd);
+    static bool ld_adb_command(QString instanceName, QString cmd, int timeout = -1);
+    static QString ld_adb_command_str(QString instanceName, QString cmd, int timeout = -1);
     static bool quitInstance(QString instanceName);
     static bool quitAll();
     static bool rebootInstance(QString instanceName);

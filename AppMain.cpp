@@ -131,10 +131,10 @@ void AppMain::onStartProgram()
                     }
 
                     // Waiting for AutoFarmer is run
-                    while ( !LDCommand::currentActivity(deviceName).contains(FARM_PACKAGE_NAME)) {
+//                    while ( !LDCommand::currentActivity(deviceName).contains(FARM_PACKAGE_NAME)) {
                         LDCommand::runApp(deviceName, FARM_PACKAGE_NAME);
-                        delay(2000);
-                    }
+                        delay(20000);
+//                    }
 
 //                    while (!LDCommand::checkPermission(deviceName,FARM_PACKAGE_NAME,"android.permission.ACCESS_SUPERUSER")) {
 //                        delay(1000);

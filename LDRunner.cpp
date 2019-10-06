@@ -75,7 +75,9 @@ void LDRunner::onCheckConnection()
         jsonFile.write(QJsonDocument(configObj).toJson());
         jsonFile.close();
 
-        LDCommand::ld_adb_command(m_instanceName,QString("shell push startup.config %1").arg(APP_DATA_FOLDER));
+        LDCommand::ld_adb_command(m_instanceName,QString("shell mkdir %1").arg(APP_DATA_FOLDER));
+
+        LDCommand::ld_adb_command(m_instanceName,QString("push startup.config %1").arg(APP_DATA_FOLDER));
         /* Created startup.config and passed to Nox*/
 
         // Run app

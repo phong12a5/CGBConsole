@@ -5,13 +5,13 @@
 
 #define APP_MODEL AppModel::instance()
 
-bool LDCommand::runLDCommand(QString args)
+bool LDCommand::runLDCommand(QString args, int timeout)
 {
     QString cmd = QString("\"%1/ldconsole.exe\" %2").arg(APP_MODEL->ldIntallFolder()).arg(args);
     LOG << "Cmd: " << cmd;
     QProcess process;
     process.start(cmd);
-    process.waitForFinished(-1);
+    process.waitForFinished(timeout);
     if(process.readAllStandardError() != ""){
         LOG << process.readAllStandardError();
         return false;
@@ -20,13 +20,13 @@ bool LDCommand::runLDCommand(QString args)
     }
 }
 
-bool LDCommand::runLDCommand(QString args, QString &output, QString &error)
+bool LDCommand::runLDCommand(QString args, QString &output, QString &error, int timeout)
 {
     QString cmd = QString("\"%1/ldconsole.exe\" %2").arg(APP_MODEL->ldIntallFolder()).arg(args);
     LOG << "Cmd: " << cmd;
     QProcess process;
     process.start(cmd);
-    process.waitForFinished(-1);
+    process.waitForFinished(timeout);
     output = process.readAllStandardOutput();
     error = process.readAllStandardError();
     if(error != ""){
@@ -65,16 +65,16 @@ bool LDCommand::addInstance(QString instanceName)
             /*LDCommand::runLDCommand(QString("modify --name %1 --cpu 1 --memory 1024 --resolution 720,1280,320").arg(instanceName))*/true;
 }
 
-bool LDCommand::ld_adb_command(QString instanceName, QString cmd)
+bool LDCommand::ld_adb_command(QString instanceName, QString cmd, int timeout)
 {
     QString args = QString("adb --name %1 --command \"%2\"").arg(instanceName).arg(cmd);
-    return LDCommand::runLDCommand(args);
+    return LDCommand::runLDCommand(args,timeout);
 }
 
-QString LDCommand::ld_adb_command_str(QString instanceName, QString cmd)
+QString LDCommand::ld_adb_command_str(QString instanceName, QString cmd, int timeout)
 {
     QString output, error, retVal;
-    LDCommand::runLDCommand(QString("adb --name %1 --command \"%2\"").arg(instanceName).arg(cmd), output, error);
+    LDCommand::runLDCommand(QString("adb --name %1 --command \"%2\"").arg(instanceName).arg(cmd), output, error,timeout);
     if(error != ""){
         retVal = error;
     }else{
@@ -104,7 +104,7 @@ bool LDCommand::rebootInstance(QString instanceName)
 bool LDCommand::checkConnection(QString instanceName)
 {
     QString output;
-    output = LDCommand::ld_adb_command_str(instanceName,"shell ls | grep sdcard");
+    output = LDCommand::ld_adb_command_str(instanceName,"shell ls | grep sdcard",1000);
     output = output.simplified();
     if(output == "sdcard"){
         LOG << QString("Connect to %1: successful").arg(instanceName);
