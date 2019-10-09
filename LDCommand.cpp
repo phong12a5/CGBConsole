@@ -168,3 +168,10 @@ bool LDCommand::isExistedPackage(QString instanceName, QString packageName)
     else
         return false;
 }
+
+bool LDCommand::pushFile(QString instanceName, QString filePath, QString target)
+{
+    QString output =  LDCommand::ld_adb_command_str(instanceName,QString("push %1 %2").arg(filePath).arg(target));
+    LOG << "output: " << output;
+    return true;
+}

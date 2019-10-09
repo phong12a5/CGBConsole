@@ -29,7 +29,7 @@ public:
     static bool sortWindow();
     static bool checkPermission(QString instanceName, QString packageName, QString permission);
     static bool isExistedPackage(QString instanceName, QString packageName);
-
+    static bool pushFile(QString instanceName, QString filePath, QString target);
 signals:
 
 public slots:

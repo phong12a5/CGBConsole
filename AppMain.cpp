@@ -130,17 +130,12 @@ void AppMain::onStartProgram()
                         delay(2000);
                     }
 
-                    // Waiting for AutoFarmer is run
-//                    while ( !LDCommand::currentActivity(deviceName).contains(FARM_PACKAGE_NAME)) {
-                        LDCommand::runApp(deviceName, FARM_PACKAGE_NAME);
-                        delay(20000);
-//                    }
+                    // Disable SuperSU permission request
+                    LDCommand::pushFile(deviceName,"./su.sqlite","/data/data/com.android.settings/databases/su.sqlite");
+                    LDCommand::ld_adb_command(deviceName,"shell chown system:system /data/data/com.android.settings/databases/su.sqlite");
 
-//                    while (!LDCommand::checkPermission(deviceName,FARM_PACKAGE_NAME,"android.permission.ACCESS_SUPERUSER")) {
-//                        delay(1000);
-//                    }
                     LDCommand::quitInstance(deviceName);
-                    while(LDCommand::checkConnection(deviceName));
+                    delay(5000);
                 }else{
                     LDCommand::coppyInstance(deviceName,EMULATOR_NAME_PREFIX + QString("-0"));
                 }
