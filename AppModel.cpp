@@ -1,6 +1,7 @@
 #include "AppModel.h"
 #include "AppMain.h"
 #include <QFile>
+#include <QDir>
 
 AppModel* AppModel::m_instance = nullptr;
 
@@ -14,9 +15,10 @@ AppModel::AppModel(QObject *parent) : QObject(parent)
     m_currentDir = "";
     m_appName = "fblite";
     m_walletEmpty = false;
+    m_deviceCount = 30;
 
-    if(QFile(QString("C:/ChangZhi/LDPlayer") + "/ldconsole.exe").exists()){
-        m_ldIntallFolder = "C:/ChangZhi/LDPlayer";
+    if(QFile(QDir::currentPath() + QString("/LDSetup/ldconsole.exe")).exists()){
+        m_ldIntallFolder = QDir::currentPath() + QString("/LDSetup/");
     }
 }
 
@@ -197,6 +199,20 @@ void AppModel::setWalletEmpty(bool data)
     if(data != m_walletEmpty) {
         m_walletEmpty = data;
         emit walletEmptyChanged();
+    }
+}
+
+int AppModel::deviceCount() const
+{
+    return m_deviceCount;
+}
+
+void AppModel::setDeviceCount(int data)
+{
+    LOG << data;
+    if(m_deviceCount != data) {
+        m_deviceCount = data;
+        emit deviceCountChanged();
     }
 }
 

@@ -34,6 +34,7 @@ private:
 
 public:
     void getConfig();
+    bool downloadFIle(QString url, QString savedPath);
 
 public slots:
 

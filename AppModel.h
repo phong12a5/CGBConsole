@@ -20,6 +20,7 @@ class AppModel : public QObject
     Q_PROPERTY(bool initializing READ initializing WRITE setInitializing NOTIFY initializingChanged)
     Q_PROPERTY(QString appName READ appName WRITE setAppName NOTIFY appNameChanged)
     Q_PROPERTY(bool walletEmpty READ walletEmpty WRITE setWalletEmpty NOTIFY walletEmptyChanged)
+    Q_PROPERTY(int deviceCount READ deviceCount WRITE setDeviceCount NOTIFY deviceCountChanged)
 
 private:
     explicit AppModel(QObject *parent = nullptr);
@@ -62,6 +63,10 @@ public:
     bool walletEmpty() const;
     void setWalletEmpty(bool data);
 
+    int deviceCount() const;
+    void setDeviceCount(int data);
+
+
 public:
     Q_INVOKABLE void startProgram();
     Q_INVOKABLE void stopProgarm();
@@ -75,6 +80,7 @@ signals:
     void initializingChanged();
     void appNameChanged();
     void walletEmptyChanged();
+    void deviceCountChanged();
 
     void reInitDeviceList();
 
@@ -95,6 +101,7 @@ private:
     QString m_currentDir;
     QString m_appName;
     bool m_walletEmpty;
+    int m_deviceCount;
 
 public slots:
 };
