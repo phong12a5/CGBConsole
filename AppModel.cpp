@@ -18,7 +18,9 @@ AppModel::AppModel(QObject *parent) : QObject(parent)
     m_deviceCount = 30;
 
     if(QFile(QDir::currentPath() + QString("/LDSetup/ldconsole.exe")).exists()){
-        m_ldIntallFolder = QDir::currentPath() + QString("/LDSetup/");
+        m_ldIntallFolder = QDir::currentPath() + QString("/LDSetup");
+    }else {
+        m_ldIntallFolder = "";
     }
 }
 
@@ -38,7 +40,10 @@ QString AppModel::ldIntallFolder() const
 void AppModel::setLDIntallFolder(const QString path, bool standardPath)
 {
     QString tmp_path = path;
-
+    if(m_ldIntallFolder != "") {
+        LOG << "There is a valid Path already!";
+        return;
+    }
     if(standardPath == false)
         tmp_path = path.mid(8);
     else
@@ -70,6 +75,17 @@ void AppModel::setDevicesList(QList<QObject*> devices)
         m_devicesList = devices;
         emit devicesListChanged();
     }
+}
+
+void AppModel::appendDevice(QObject* instance)
+{
+    foreach(QObject* device, m_devicesList) {
+        if(dynamic_cast<LDIntance*>(device)->instanceName() == dynamic_cast<LDIntance*>(instance)->instanceName())
+            return;
+    }
+    m_devicesList.append(instance);
+    LOG << "m_devicesList: " << m_devicesList.length();
+    emit devicesListChanged();
 }
 
 uint AppModel::amountOfThread() const

@@ -15,6 +15,7 @@
 #define APK_FILENAME            "xyz.autofarmer.app.apk"
 #define API_SERVER              "https://api.autofarmer.xyz/api/v2/"
 #define EMULATOR_NAME_PREFIX    "CGBDevice"
+#define ORIGIN_DEVICE_NAME      "OrgDevice"
 #define MAX_THREAD              30
 #define LD_DEVICES_COUNT        30
 

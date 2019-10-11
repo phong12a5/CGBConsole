@@ -24,8 +24,15 @@ void AppController::initAppController()
 void AppController::startMultiTask()
 {
     LOG;
-    for(int i = 0; i < static_cast<int>(APP_MODEL->amountOfThread()); i++){
-        m_ldThreadList.append(new LDThread());
+    int amountOfRunThread = 0;
+    if(APP_MODEL->devicesList().length() > static_cast<int>(APP_MODEL->amountOfThread()))
+        amountOfRunThread = static_cast<int>(APP_MODEL->amountOfThread());
+    else {
+        amountOfRunThread = APP_MODEL->devicesList().length();
+    }
+
+    while (m_ldThreadList.length() < amountOfRunThread) {
+        m_ldThreadList.append(new LDThread(this));
     }
 }
 
@@ -36,6 +43,11 @@ void AppController::stopMultiTask()
         delete m_ldThreadList.at(0);
         m_ldThreadList.removeAt(0);
     }
+}
+
+void AppController::startANewDevice()
+{
+
 }
 
 void AppController::onDevicesListChanged()
@@ -51,8 +63,6 @@ void AppController::aMissionCompleted(LDThread* threadAdd)
             delete m_ldThreadList.at(index);
             m_ldThreadList.removeAt(index);
         }
-        while (m_ldThreadList.length() < static_cast<int>(APP_MODEL->amountOfThread())) {
-            m_ldThreadList.append(new LDThread(this));
-        }
+        this->startMultiTask();
     }
 }

@@ -18,6 +18,7 @@ public:
 
     void startMultiTask();
     void stopMultiTask();
+    void startANewDevice();
 
 private:
     static AppController* m_instance;

@@ -12,7 +12,7 @@ LDRunner::LDRunner(QString instanceName):
     m_instanceName(instanceName),
     m_setIsLDFile(false)
 {
-
+    LDCommand::runLDCommand(QString("modify --name %1 --cpu 1 --memory 1024 --resolution 720,1280,320").arg(m_instanceName));
 }
 
 LDRunner::~LDRunner()
@@ -26,12 +26,12 @@ void LDRunner::run()
     LOG << "Thread ID: " << QThread::currentThreadId();
 
     m_checkConnectionTimer = new QTimer(this);
-    m_checkConnectionTimer->setInterval(1000);
+    m_checkConnectionTimer->setInterval(3000);
     m_checkConnectionTimer->setSingleShot(false);
     connect(m_checkConnectionTimer,SIGNAL(timeout()),this,SLOT(onCheckConnection()));
 
     m_checkEndScriptTimer = new QTimer(this);
-    m_checkEndScriptTimer->setInterval(1000);
+    m_checkEndScriptTimer->setInterval(3000);
     m_checkEndScriptTimer->setSingleShot(false);
     connect(m_checkEndScriptTimer,SIGNAL(timeout()),this,SLOT(onCheckEnscript()));
 
@@ -68,7 +68,7 @@ void LDRunner::onCheckConnection()
         configObj["auto_startup"] = true;
         configObj["timeout"] = 30;
         configObj["country"] = "Vietnam";
-        configObj["appname"] = "FBLite";
+        configObj["appname"] = APP_MODEL->appName();
 
         QFile jsonFile("startup.config");
         jsonFile.open(QFile::WriteOnly);

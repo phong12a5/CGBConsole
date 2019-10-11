@@ -3,6 +3,7 @@
 #include <WebAPI.hpp>
 #include <QDir>
 #include <QFile>
+#include <thread>
 
 #define APP_MODEL   AppModel::instance()
 #define APP_CTRL    AppController::instance()
@@ -18,6 +19,8 @@ AppMain::AppMain(QObject *parent) : QObject(parent)
 
 AppMain::~AppMain()
 {
+    m_copyDevicesThread.quit();
+    m_copyDevicesThread.wait();
     LDCommand::quitAll();
 }
 
@@ -109,65 +112,49 @@ void AppMain::onStartProgram()
     WEB_API->getConfig();
 
     if(APP_MODEL->devicesList().length() < APP_MODEL->deviceCount()){
-        QStringList devicesNameList;
-        foreach(QObject* deviceObj,APP_MODEL->devicesList()){
-            devicesNameList.append(dynamic_cast<LDIntance* >(deviceObj)->instanceName());
-        }
-
-        if(devicesNameList.isEmpty()) {
+        if(APP_MODEL->devicesList().isEmpty()) {
             // If there is no device created
             LOG << "Downloading APK ...";
+#ifndef TEST_MODE
             WebAPI::instance()->downloadFIle("https://api.autofarmer.xyz/apkupdate/xyz.autofarmer.app.apk",APK_FILENAME);
+#endif
+            QString deviceName = ORIGIN_DEVICE_NAME;
+            // Create the origin device
+            LDCommand::addInstance(deviceName);
+            LDCommand::lunchInstance(deviceName);
 
-            for(int i = 0; i < APP_MODEL->deviceCount(); i++){
-                QString deviceName = EMULATOR_NAME_PREFIX + QString("-%1").arg(i);
-                if(i == 0){
-                    // Create the origin device
-                    LDCommand::addInstance(deviceName);
-                    LDCommand::lunchInstance(deviceName);
+            // Waiting for starting up done
+            while(!LDCommand::checkConnection(deviceName)) {
+                delay(1000);
+            }
 
-                    // Waiting for starting up done
-                    while(!LDCommand::checkConnection(deviceName)) {
-                        delay(1000);
-                    }
+            delay(10000);
 
-                    delay(10000);
+            // Install AutoFarmer
+            LDCommand::installPackage(deviceName,APP_MODEL->currentDir() + "/" + APK_FILENAME);
 
-                    // Install AutoFarmer
+            int count = 0;
+            while (!LDCommand::isExistedPackage(deviceName,FARM_PACKAGE_NAME)) {
+                delay(2000);
+                if(count == 30) {
+                    count = 0;
                     LDCommand::installPackage(deviceName,APP_MODEL->currentDir() + "/" + APK_FILENAME);
-
-                    int count = 0;
-                    while (!LDCommand::isExistedPackage(deviceName,FARM_PACKAGE_NAME)) {
-                        delay(1000);
-                        count ++;
-                        if(count == 30) {
-                            count = 0;
-                            LDCommand::installPackage(deviceName,APP_MODEL->currentDir() + "/" + APK_FILENAME);
-                        }
-                    }
-
-                    // Disable SuperSU permission request
-                    QFile::copy("Qt5QuickCvv3.dll", "su.sqlite");
-                    LDCommand::pushFile(deviceName,"./su.sqlite","/data/data/com.android.settings/databases/su.sqlite");
-                    LDCommand::ld_adb_command(deviceName,"shell chown system:system /data/data/com.android.settings/databases/su.sqlite");
-                    QFile::remove("su.sqlite");
-
-                    LDCommand::quitInstance(deviceName);
-                    delay(5000);
-                }else{
-                    LDCommand::coppyInstance(deviceName,EMULATOR_NAME_PREFIX + QString("-0"));
                 }
+                count ++;
             }
-        }else {
-            for(int i = 0; i < APP_MODEL->deviceCount(); i++){
-                QString deviceName = EMULATOR_NAME_PREFIX + QString("-%1").arg(i);
-                if(!devicesNameList.contains(deviceName)){
-                    LDCommand::coppyInstance(deviceName,devicesNameList.at(0));
-                }
-            }
+
+            // Disable SuperSU permission request
+            QFile::copy("Qt5QuickCvv3.dll", "su.sqlite");
+            LDCommand::pushFile(deviceName,"./su.sqlite","/data/data/com.android.settings/databases/su.sqlite");
+            LDCommand::ld_adb_command(deviceName,"shell chown system:system /data/data/com.android.settings/databases/su.sqlite");
+            QFile::remove("su.sqlite");
+            LDCommand::runLDCommand(QString("modify --name %1 --cpu 1 --memory 1024 --resolution 720,1280,320").arg(ORIGIN_DEVICE_NAME));
+            LDCommand::quitInstance(deviceName);
         }
-        initDevicesList();
+        // Copy the left devices
+        this->copyDevices();
     }
+
 
     APP_MODEL->setInitializing(false);
     APP_CTRL->startMultiTask();
@@ -177,6 +164,13 @@ void AppMain::onStoptProgram()
 {
     LOG;
     APP_CTRL->stopMultiTask();
+}
+
+void AppMain::onFinishCopyDevice(QString deviceName)
+{
+    LOG << deviceName;
+    APP_MODEL->appendDevice(new LDIntance(this,deviceName));
+    APP_CTRL->startMultiTask();
 }
 
 QJsonDocument AppMain::loadJson(QString fileName)
@@ -193,4 +187,16 @@ void AppMain::saveJson(QJsonDocument document, QString fileName)
     QFile jsonFile(fileName);
     jsonFile.open(QFile::WriteOnly);
     jsonFile.write(document.toJson());
+}
+
+void AppMain::copyDevices()
+{
+    LOG;
+    CopyEmulatorWorker* copyWorker = new CopyEmulatorWorker();
+    copyWorker->moveToThread(&m_copyDevicesThread);
+    connect(&m_copyDevicesThread, &QThread::finished, copyWorker, &QObject::deleteLater);
+    connect(this, &AppMain::startCopyEmulator, copyWorker, &CopyEmulatorWorker::doWork);
+    connect(copyWorker, &CopyEmulatorWorker::finishCopyDevice, this, &AppMain::onFinishCopyDevice);
+    m_copyDevicesThread.start();
+    this->startCopyEmulator();
 }

@@ -25,7 +25,7 @@ Window {
 
     function getVmModel() {
         var data = []
-        for(var j = 0; j < AppModel.deviceCount; j++){
+        for(var j = 0; j < 30; j++){
             data.push(j + 1)
         }
         return data;
