@@ -40,7 +40,13 @@ void LDRunner::run()
     m_checkRunAppTimer->setSingleShot(false);
     connect(m_checkRunAppTimer,SIGNAL(timeout()),this,SLOT(onCheckRunApp()));
 
+    m_checkRunningDevice = new QTimer(this);
+    m_checkRunningDevice->setInterval(20000);
+    m_checkRunningDevice->setSingleShot(false);
+    connect(m_checkRunningDevice,SIGNAL(timeout()),this,SLOT(onCheckRunningDevice()));
+
     LDCommand::lunchInstance(m_instanceName);
+    m_checkRunningDevice->start();
 
     m_checkConnectionTimer->start();
 }
@@ -51,6 +57,7 @@ void LDRunner::quitRunner()
     m_checkConnectionTimer->stop();
     m_checkRunAppTimer->stop();
     m_checkEndScriptTimer->stop();
+    m_checkRunningDevice->stop();
 }
 
 void LDRunner::onCheckConnection()
@@ -106,5 +113,19 @@ void LDRunner::onCheckRunApp()
 {
     if (!LDCommand::isAppRunning(m_instanceName)) {
         LDCommand::runApp(m_instanceName, FARM_PACKAGE_NAME);
+    }
+}
+
+void LDRunner::onCheckRunningDevice()
+{
+    int deviceState = LDCommand::isRunningDevice(m_instanceName) ;
+    if(deviceState == LDCommand::DEVICE_STATE_RUNNING) {
+        LOG << m_instanceName << " run already!";
+        m_checkRunningDevice->stop();
+    }else if(deviceState == LDCommand::DEVICE_STATE_STOP){
+        LOG << m_instanceName << " is not running now!";
+        LDCommand::lunchInstance(m_instanceName);
+    }else {
+        LOG << "Could not determine state of " <<  m_instanceName;
     }
 }

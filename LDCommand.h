@@ -10,6 +10,13 @@ class LDCommand : public QObject
     Q_OBJECT
 
 public:
+    enum DEVICE_STATE: int {
+        DEVICE_STATE_UNKNOW = 0,
+        DEVICE_STATE_RUNNING,
+        DEVICE_STATE_STOP
+    };
+
+public:
     static bool runLDCommand(QString args, int timeout = -1);
     static bool runLDCommand(QString args, QString &output, QString &error, int timeout = -1);
     static bool lunchInstance(QString instanceName);
@@ -25,11 +32,11 @@ public:
     static bool coppyInstance(QString instanceName, QString fromInstanceName);
     static QString currentActivity(QString instanceName);
     static bool isAppRunning(QString instanceName);
-    static bool isInstanceRunning(QString instanceName);
     static bool sortWindow();
     static bool checkPermission(QString instanceName, QString packageName, QString permission);
     static bool isExistedPackage(QString instanceName, QString packageName);
     static bool pushFile(QString instanceName, QString filePath, QString target);
+    static int isRunningDevice(QString instanceName);
 signals:
 
 public slots:

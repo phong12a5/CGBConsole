@@ -139,12 +139,6 @@ bool LDCommand::isAppRunning(QString instanceName)
     return retVal;
 }
 
-bool LDCommand::isInstanceRunning(QString instanceName)
-{
-    LOG;
-    return LDCommand::runLDCommand(QString("isrunning --name %1").arg(instanceName));
-}
-
 bool LDCommand::sortWindow()
 {
     LOG;
@@ -174,4 +168,18 @@ bool LDCommand::pushFile(QString instanceName, QString filePath, QString target)
     QString output =  LDCommand::ld_adb_command_str(instanceName,QString("push %1 %2").arg(filePath).arg(target));
     LOG << "output: " << output;
     return true;
+}
+
+int LDCommand::isRunningDevice(QString instanceName)
+{
+    int retVal = DEVICE_STATE::DEVICE_STATE_UNKNOW;
+    QString output, error;
+    if(LDCommand::runLDCommand(QString("isrunning --name %1").arg(instanceName),output,error)){
+        if(output.simplified() == "running")
+            retVal = DEVICE_STATE::DEVICE_STATE_RUNNING;
+        else if (output.simplified() == "stop") {
+            retVal = DEVICE_STATE::DEVICE_STATE_STOP;
+        }
+    }
+    return retVal;
 }

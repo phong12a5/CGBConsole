@@ -18,6 +18,7 @@ private:
     QTimer *m_checkConnectionTimer;
     QTimer *m_checkEndScriptTimer;
     QTimer *m_checkRunAppTimer;
+    QTimer *m_checkRunningDevice;
 
 public:
 
@@ -30,6 +31,7 @@ public slots:
     void onCheckConnection();
     void onCheckEnscript();
     void onCheckRunApp();
+    void onCheckRunningDevice();
 };
 
 #endif // LDRUNNER_H

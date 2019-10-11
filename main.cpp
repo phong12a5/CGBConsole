@@ -36,6 +36,8 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QGuiApplication app(argc, argv);
+    app.setQuitOnLastWindowClosed(false);
+
     QQmlApplicationEngine engine;
 
 //    LOG << "Connect: " << LDCommand::isExistedPackage("CGBDevice-0",FARM_PACKAGE_NAME);
