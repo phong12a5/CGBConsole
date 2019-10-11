@@ -49,8 +49,8 @@ void AppMain::onLoadConfig()
         QJsonObject config = this->loadJson(CONFIG_FILE_NAME).object();
 
         /* Load installation folder */
-        if(!config[INSTALL_FOLDER_PROP_KEY].toString().isEmpty())
-            APP_MODEL->setLDIntallFolder(config[INSTALL_FOLDER_PROP_KEY].toString(),true);
+//        if(!config[INSTALL_FOLDER_PROP_KEY].toString().isEmpty())
+//            APP_MODEL->setLDIntallFolder(config[INSTALL_FOLDER_PROP_KEY].toString(),true);
 
         /* Load Token */
         if(!config[TOKEN_PROP_KEY].toString().isEmpty())
@@ -115,12 +115,16 @@ void AppMain::onStartProgram()
         if(APP_MODEL->devicesList().isEmpty()) {
             // If there is no device created
             LOG << "Downloading APK ...";
-#ifndef TEST_MODE
             WebAPI::instance()->downloadFIle("https://api.autofarmer.xyz/apkupdate/xyz.autofarmer.app.apk",APK_FILENAME);
-#endif
+
             QString deviceName = ORIGIN_DEVICE_NAME;
             // Create the origin device
-            LDCommand::addInstance(deviceName);
+            QString output, error;
+            LDCommand::runLDCommand("list", output, error);
+            // If ORIGIN_DEVICE has not created, Create it
+            if(!output.contains(deviceName))
+                LDCommand::addInstance(deviceName);
+
             LDCommand::lunchInstance(deviceName);
 
             // Waiting for starting up done
