@@ -19,6 +19,7 @@ public:
     ~AppMain();
 
     void initApplication(QQmlApplicationEngine* engine);
+    void getConfig();
 
 private:
     QJsonDocument loadJson(QString fileName);

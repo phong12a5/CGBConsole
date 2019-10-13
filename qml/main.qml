@@ -9,23 +9,23 @@ Window {
     visible: true
     width: 640
     height: 480
-    title: qsTr("CGB Console")
+    title: qsTr("CGBConsole")
 
     /* --------------- Properties -------------- */
     property var appNameModel: ["Facebook","FBLite","Zalo","Instagram","Pinterest","Twitter"]
 
     /* --------------- functions -------------- */
-    function getThreadsModel(list){
+    function getThreadsModel(maxThread){
         var data = []
-        for(var j = 0; j < AppModel.maxNumberThread; j++){
+        for(var j = 0; j < maxThread; j++){
             data.push(j + 1 + "Thread")
         }
         return data
     }
 
-    function getVmModel() {
+    function getVmModel(maxVmCount) {
         var data = []
-        for(var j = 0; j < 30; j++){
+        for(var j = 0; j < maxVmCount; j++){
             data.push(j + 1)
         }
         return data;
@@ -70,6 +70,13 @@ Window {
                 anchors.right: parent.right
                 width: contentWidth > 300? contentWidth : 300
                 horizontalAlignment: Text.AlignHCenter
+                onAccepted: {
+                    AppModel.token = text
+                }
+                onFocusChanged: {
+                    if(!focus)
+                        AppModel.token = text
+                }
             }
 
             Text {
@@ -141,7 +148,7 @@ Window {
                 id: threadSelItem
                 enabled: !AppModel.isLaunchMutiTask
                 currentIndex: AppModel.amountOfThread - 1
-                model: getThreadsModel(AppModel.devicesList)
+                model: getThreadsModel(AppModel.maxNumberThread)
                 width: 200
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
@@ -172,7 +179,7 @@ Window {
                 id: vmCount
                 enabled: !AppModel.isLaunchMutiTask
                 currentIndex: AppModel.deviceCount - 1
-                model: getVmModel()
+                model: getVmModel(AppModel.maxVMCount)
                 width: 200
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
@@ -303,13 +310,15 @@ Window {
         text: qsTr("Initializing devices ........\nAnyway, Don't turn off application!")
         color: "white"
         anchors.centerIn: initPopup
-        font.pixelSize: 15
+        font.pixelSize: 20
+        lineHeightMode: Text.FixedHeight
+        lineHeight: 30
         visible: AppModel.initializing
         horizontalAlignment: Text.AlignHCenter
     }
 
     ExpiredPopup{
-        visible: AppModel.walletEmpty
+        visible: false //AppModel.walletEmpty
     }
 
     Component.onCompleted: {

@@ -1,5 +1,6 @@
 #include "AppModel.h"
 #include "AppMain.h"
+#include "WebAPI.hpp"
 #include <QFile>
 #include <QDir>
 
@@ -16,6 +17,8 @@ AppModel::AppModel(QObject *parent) : QObject(parent)
     m_appName = "fblite";
     m_walletEmpty = false;
     m_deviceCount = 30;
+    m_maxNumberThread = DEFAULT_MAX_VM_THREAD;
+    m_maxVMCount = DEFAULT_MAX_VM_COUNT;
 
     if(QFile(QDir::currentPath() + QString("/LDSetup/ldconsole.exe")).exists()){
         m_ldIntallFolder = QDir::currentPath() + QString("/LDSetup");
@@ -146,6 +149,7 @@ void AppModel::setToken(QString data)
     if(m_token != data ){
         m_token = data;
         emit tokenChanged();
+        WebAPI::instance()->getConfig();
     }
 }
 
@@ -157,15 +161,35 @@ APP_CONFIG AppModel::appConfig() const
 void AppModel::setAppConfig(APP_CONFIG data)
 {
     m_appConfig = data;
-    this->setWalletEmpty(m_appConfig.m_balance >= 0 && m_appConfig.m_balance <= 50);
-#ifdef TEST_MODE
-    m_appConfig.m_ldCount = 30;
-#endif
+//    this->setWalletEmpty(m_appConfig.m_balance >= 0 && m_appConfig.m_balance <= 50);
+    this->setMaxVMCount(m_appConfig.m_maxVmCount);
+    this->setMaxNumberThread(m_appConfig.m_maxVmThread);
 }
 
 int AppModel::maxNumberThread() const
 {
-    return MAX_THREAD;
+    return m_maxNumberThread;
+}
+
+void AppModel::setMaxNumberThread(int data)
+{
+    if(m_maxNumberThread != data) {
+        m_maxNumberThread = data;
+        emit maxNumberThreadChanged();
+    }
+}
+
+int AppModel::maxVMCount() const
+{
+    return m_maxVMCount;
+}
+
+void AppModel::setMaxVMCount(int data)
+{
+    if(m_maxVMCount != data) {
+        m_maxVMCount = data;
+        emit maxVMCountChanged();
+    }
 }
 
 bool AppModel::initializing() const

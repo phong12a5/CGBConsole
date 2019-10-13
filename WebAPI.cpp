@@ -60,19 +60,22 @@ void WebAPI::getConfig()
     LOG << "jsonResponsedObj: " << jsonResponsedObj;
     if(!jsonResponsedObj.isEmpty()){
         APP_CONFIG config;
-        QJsonObject AppInfo =  jsonResponsedObj[MODEL->appName()].toObject();
         config.timeout =    jsonResponsedObj["Timeout"].toString().toInt();
         config.reset_3g =   jsonResponsedObj["Reset3g"].toString().toInt();
         config.debug_mode = jsonResponsedObj["Debug_mode"].toString();
         config.user_type = jsonResponsedObj["User_type"].toString().toInt();
-        config.m_ldCount = AppInfo["NoxCount"].toString().toInt();
+        config.m_maxVmCount = jsonResponsedObj["TotalVM"].toString().toInt();
+        config.m_maxVmThread = jsonResponsedObj["MaxThreadNoxLD"].toString().toInt();
         config.m_balance = jsonResponsedObj["Balance"].toInt();
+        config.m_openApkAfterNSeconds = jsonResponsedObj["OpenApkAfterNSeconds"].toString().toInt();
         LOG << "config.timeout: " << config.timeout;
         LOG << "config.reset_3g: " << config.reset_3g;
         LOG << "config.debug_mode: " << config.debug_mode;
         LOG << "config.user_type: " << config.user_type;
-        LOG << "config.ldCount: " << config.m_ldCount;
+        LOG << "config.m_maxVmCount: " << config.m_maxVmCount;
+        LOG << "config.m_maxVmThread: " << config.m_maxVmThread;
         LOG << "config.balance: " << config.m_balance;
+        LOG << "config.m_openApkAfterNSeconds: " << config.m_openApkAfterNSeconds;
         MODEL->setAppConfig(config);
     }
 }

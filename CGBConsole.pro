@@ -1,4 +1,6 @@
-QT += quick widgets
+QT += quick \
+      widgets \
+#      testlib
 
 CONFIG += c++11
 #DEFINES += TEST_MODE
@@ -55,6 +57,12 @@ HEADERS += \
     LDRunner.h \
     WebAPI.hpp \
     QAESEncryption.hpp
+
+LIBS += -L"$$PWD" \
+        -lssl32 \
+        -lssl-1_1 \
+        -lcrypto-1_1 \
+        -leay32
 
 RC_ICONS = Logo.ico
 

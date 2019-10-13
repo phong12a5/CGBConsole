@@ -50,5 +50,7 @@ int main(int argc, char *argv[])
         qDebug() << "rootObject is NULL";
     }
 
+    appMain.getConfig();
+
     return app.exec();
 }

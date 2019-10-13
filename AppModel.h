@@ -16,7 +16,8 @@ class AppModel : public QObject
     Q_PROPERTY(uint amountOfThread READ amountOfThread WRITE setAmountOfThread NOTIFY amountOfThreadChanged)
     Q_PROPERTY(bool isLaunchMutiTask READ isLaunchMutiTask WRITE setIsLaunchMutiTask NOTIFY isLaunchMutiTaskChanged)
     Q_PROPERTY(QString token READ token WRITE setToken NOTIFY tokenChanged)
-    Q_PROPERTY(int maxNumberThread READ maxNumberThread CONSTANT)
+    Q_PROPERTY(int maxNumberThread READ maxNumberThread WRITE setMaxNumberThread NOTIFY maxNumberThreadChanged)
+    Q_PROPERTY(int maxVMCount READ maxVMCount WRITE setMaxVMCount NOTIFY maxVMCountChanged)
     Q_PROPERTY(bool initializing READ initializing WRITE setInitializing NOTIFY initializingChanged)
     Q_PROPERTY(QString appName READ appName WRITE setAppName NOTIFY appNameChanged)
     Q_PROPERTY(bool walletEmpty READ walletEmpty WRITE setWalletEmpty NOTIFY walletEmptyChanged)
@@ -51,6 +52,10 @@ public:
     void setAppConfig(APP_CONFIG data);
 
     int maxNumberThread() const;
+    void setMaxNumberThread(int data);
+
+    int maxVMCount() const;
+    void setMaxVMCount(int data);
 
     bool initializing() const;
     void setInitializing(bool data);
@@ -82,6 +87,8 @@ signals:
     void appNameChanged();
     void walletEmptyChanged();
     void deviceCountChanged();
+    void maxNumberThreadChanged();
+    void maxVMCountChanged();
 
     void reInitDeviceList();
 
@@ -103,6 +110,8 @@ private:
     QString m_appName;
     bool m_walletEmpty;
     int m_deviceCount;
+    int m_maxNumberThread;
+    int m_maxVMCount;
 
 public slots:
 };

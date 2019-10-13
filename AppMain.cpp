@@ -34,6 +34,11 @@ void AppMain::initApplication(QQmlApplicationEngine* engine)
     APP_CTRL->initAppController();
 }
 
+void AppMain::getConfig()
+{
+    WEB_API->getConfig();
+}
+
 void AppMain::onLoadConfig()
 {
     LOG;

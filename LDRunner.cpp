@@ -36,7 +36,7 @@ void LDRunner::run()
     connect(m_checkEndScriptTimer,SIGNAL(timeout()),this,SLOT(onCheckEnscript()));
 
     m_checkRunAppTimer = new QTimer(this);
-    m_checkRunAppTimer->setInterval(15000);
+    m_checkRunAppTimer->setInterval(APP_MODEL->appConfig().m_openApkAfterNSeconds);
     m_checkRunAppTimer->setSingleShot(false);
     connect(m_checkRunAppTimer,SIGNAL(timeout()),this,SLOT(onCheckRunApp()));
 
@@ -83,12 +83,10 @@ void LDRunner::onCheckConnection()
         jsonFile.close();
 
         LDCommand::ld_adb_command(m_instanceName,QString("shell mkdir %1").arg(APP_DATA_FOLDER));
-
         LDCommand::ld_adb_command(m_instanceName,QString("push startup.config %1").arg(APP_DATA_FOLDER));
         /* Created startup.config and passed to Nox*/
 
         // Run app
-        LDCommand::runApp(m_instanceName, FARM_PACKAGE_NAME);
         m_checkRunAppTimer->start();
 
         QString endScptNamePath = QString(APP_DATA_FOLDER) + QString(ENDSCRIPT_FILENAME);

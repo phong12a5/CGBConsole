@@ -16,8 +16,10 @@
 #define API_SERVER              "https://api.autofarmer.xyz/api/v2/"
 #define EMULATOR_NAME_PREFIX    "CGBDevice"
 #define ORIGIN_DEVICE_NAME      "OrgDevice"
-#define MAX_THREAD              30
-#define LD_DEVICES_COUNT        30
+
+#define DEFAULT_MAX_VM_THREAD   3
+#define DEFAULT_MAX_VM_COUNT    20
+#define DEFAULT_OPENAPK_TIME    20 // Unit seconds
 
 #define INSTALL_FOLDER_PROP_KEY "installation_folder"
 #define TOKEN_PROP_KEY          "farm_token"
@@ -32,9 +34,11 @@ typedef struct app_config_struct {
     QString debug_mode;
     int user_type;
     int m_mobileCloneCount;
-    int m_ldCount;
+    int m_maxVmCount;
+    int m_maxVmThread;
     int m_ldCloneCount;
     int m_balance;
+    int m_openApkAfterNSeconds;
 
     app_config_struct(){
         timeout = 30;
@@ -42,9 +46,11 @@ typedef struct app_config_struct {
         debug_mode = "test";
         user_type = 0;
         m_mobileCloneCount = 0;
-        m_ldCount = LD_DEVICES_COUNT;
+        m_maxVmCount = DEFAULT_MAX_VM_COUNT;
+        m_maxVmThread = DEFAULT_MAX_VM_THREAD;
         m_ldCloneCount = 0;
         m_balance = -1;
+        m_openApkAfterNSeconds = DEFAULT_OPENAPK_TIME;
     }
 } APP_CONFIG;
 
