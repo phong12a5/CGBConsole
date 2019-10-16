@@ -60,14 +60,14 @@ void WebAPI::getConfig()
     LOG << "jsonResponsedObj: " << jsonResponsedObj;
     if(!jsonResponsedObj.isEmpty()){
         APP_CONFIG config;
-        config.timeout =    jsonResponsedObj["Timeout"].toString().toInt();
-        config.reset_3g =   jsonResponsedObj["Reset3g"].toString().toInt();
-        config.debug_mode = jsonResponsedObj["Debug_mode"].toString();
-        config.user_type = jsonResponsedObj["User_type"].toString().toInt();
-        config.m_maxVmCount = jsonResponsedObj["TotalVM"].toString().toInt();
-        config.m_maxVmThread = jsonResponsedObj["MaxThreadNoxLD"].toString().toInt();
-        config.m_balance = jsonResponsedObj["Balance"].toInt();
-        config.m_openApkAfterNSeconds = jsonResponsedObj["OpenApkAfterNSeconds"].toString().toInt();
+        config.timeout =                jsonResponsedObj["timeout"].toString().toInt();
+        config.reset_3g =               jsonResponsedObj["reset3g"].toString().toInt();
+        config.debug_mode =             jsonResponsedObj["debug_mode"].toString();
+        config.user_type =              jsonResponsedObj["user_type"].toString().toInt();
+        config.m_maxVmCount =           jsonResponsedObj["totalvm"].toString().toInt();
+        config.m_maxVmThread =          jsonResponsedObj["maxthreadnoxld"].toString().toInt();
+        config.m_balance =              jsonResponsedObj["balance"].toInt();
+        config.m_openApkAfterNSeconds = jsonResponsedObj["openapkafternseconds"].toString().toInt();
         LOG << "config.timeout: " << config.timeout;
         LOG << "config.reset_3g: " << config.reset_3g;
         LOG << "config.debug_mode: " << config.debug_mode;
