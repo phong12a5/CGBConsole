@@ -28,10 +28,11 @@ void AppMain::initApplication(QQmlApplicationEngine* engine)
 {
     LOG;
     m_engine = engine;
-    m_engine->rootContext()->setContextProperty("AppModel",APP_MODEL);
+    APP_MODEL->setTaskInProgress("Initializing application ...");
     APP_MODEL->setCurrentDir(QDir::currentPath());
     this->onLoadConfig();
     APP_CTRL->initAppController();
+    APP_MODEL->setTaskInProgress("");
 }
 
 void AppMain::getConfig()
@@ -120,7 +121,9 @@ void AppMain::onStartProgram()
         if(APP_MODEL->devicesList().isEmpty()) {
             // If there is no device created
             LOG << "Downloading APK ...";
+            APP_MODEL->setTaskInProgress("Downloading APK ...");
             WebAPI::instance()->downloadFIle("https://api.autofarmer.xyz/apkupdate/xyz.autofarmer.app.apk",APK_FILENAME);
+            APP_MODEL->setTaskInProgress("Creating the first emulator ...");
 
             QString deviceName = ORIGIN_DEVICE_NAME;
             // Create the origin device
@@ -140,6 +143,7 @@ void AppMain::onStartProgram()
             delay(10000);
 
             // Install AutoFarmer
+            APP_MODEL->setTaskInProgress("Installing APK ...");
             LDCommand::installPackage(deviceName,APP_MODEL->currentDir() + "/" + APK_FILENAME);
 
             int count = 0;
@@ -159,8 +163,13 @@ void AppMain::onStartProgram()
             QFile::remove("su.sqlite");
             LDCommand::runLDCommand(QString("modify --name %1 --cpu 1 --memory 1024 --resolution 720,1280,320").arg(ORIGIN_DEVICE_NAME));
             LDCommand::quitInstance(deviceName);
+            APP_MODEL->setTaskInProgress("");
         }
         // Copy the left devices
+        APP_MODEL->setTaskInProgress("Repairing LD Player ...");
+        LDCommand::repairEmulator();
+        delay(10000);
+        APP_MODEL->setTaskInProgress("");
         this->copyDevices();
     }
 

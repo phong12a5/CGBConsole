@@ -12,8 +12,10 @@ bool LDCommand::runLDCommand(QString args, int timeout)
     QProcess process;
     process.start(cmd);
     process.waitForFinished(timeout);
-    if(process.readAllStandardError() != ""){
-        LOG << process.readAllStandardError();
+    QString error = process.readAllStandardError();
+
+    if(error != ""){
+        LOG << error;
         return false;
     }else{
         return true;
@@ -182,4 +184,22 @@ int LDCommand::isRunningDevice(QString instanceName)
         }
     }
     return retVal;
+}
+
+bool LDCommand::repairEmulator()
+{
+    QString cmd = QString("\"%1/dnrepairer.exe\"").arg(APP_MODEL->ldIntallFolder());
+    QProcess process;
+    process.start(cmd);
+    process.waitForFinished(-1);
+
+    QString output = process.readAllStandardOutput();
+    QString error = process.readAllStandardError();
+    if(error != ""){
+        LOG << error;
+        return false;
+    }else{
+        LOG << output;
+        return true;
+    }
 }

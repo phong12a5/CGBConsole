@@ -37,6 +37,7 @@ public:
     static bool isExistedPackage(QString instanceName, QString packageName);
     static bool pushFile(QString instanceName, QString filePath, QString target);
     static int isRunningDevice(QString instanceName);
+    static bool repairEmulator();
 signals:
 
 public slots:

@@ -24,8 +24,10 @@ void CopyEmulatorWorker::doWork()
     for (int i = 0; i < AppModel::instance()->deviceCount(); i++) {
         QString deviceName = EMULATOR_NAME_PREFIX + QString("-%1").arg(i);
         if(!existedDevices.contains(deviceName)){
+            AppModel::instance()->setTaskInProgress(QString("Creating device: %1").arg(deviceName));
             LDCommand::coppyInstance(deviceName,ORIGIN_DEVICE_NAME);
             emit finishCopyDevice(deviceName);
+            AppModel::instance()->setTaskInProgress("");
         }
     }
 }

@@ -22,6 +22,7 @@ class AppModel : public QObject
     Q_PROPERTY(QString appName READ appName WRITE setAppName NOTIFY appNameChanged)
     Q_PROPERTY(bool walletEmpty READ walletEmpty WRITE setWalletEmpty NOTIFY walletEmptyChanged)
     Q_PROPERTY(int deviceCount READ deviceCount WRITE setDeviceCount NOTIFY deviceCountChanged)
+    Q_PROPERTY(QString taskInProgress READ taskInProgress WRITE setTaskInProgress NOTIFY taskInProgressChanged)
 
 private:
     explicit AppModel(QObject *parent = nullptr);
@@ -72,6 +73,8 @@ public:
     int deviceCount() const;
     void setDeviceCount(int data);
 
+    QString taskInProgress() const;
+    void setTaskInProgress(QString data);
 
 public:
     Q_INVOKABLE void startProgram();
@@ -89,6 +92,7 @@ signals:
     void deviceCountChanged();
     void maxNumberThreadChanged();
     void maxVMCountChanged();
+    void taskInProgressChanged();
 
     void reInitDeviceList();
 
@@ -112,6 +116,7 @@ private:
     int m_deviceCount;
     int m_maxNumberThread;
     int m_maxVMCount;
+    QString m_taskInProgress;
 
 public slots:
 };

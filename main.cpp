@@ -36,21 +36,21 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QGuiApplication app(argc, argv);
-    app.setQuitOnLastWindowClosed(false);
+    app.setQuitOnLastWindowClosed(true);
 
     QQmlApplicationEngine engine;
 
 //    LOG << "Connect: " << LDCommand::isExistedPackage("CGBDevice-0",FARM_PACKAGE_NAME);
 
-    AppMain appMain;
-    appMain.initApplication(&engine);
+    engine.rootContext()->setContextProperty("AppModel",AppModel::instance());
 
     engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
     if (engine.rootObjects().isEmpty()){
         qDebug() << "rootObject is NULL";
     }
 
-    appMain.getConfig();
+    AppMain appMain;
+    appMain.initApplication(&engine);
 
     return app.exec();
 }

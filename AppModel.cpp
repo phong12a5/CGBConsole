@@ -19,6 +19,7 @@ AppModel::AppModel(QObject *parent) : QObject(parent)
     m_deviceCount = 30;
     m_maxNumberThread = DEFAULT_MAX_VM_THREAD;
     m_maxVMCount = DEFAULT_MAX_VM_COUNT;
+    m_taskInProgress = "";
 
     if(QFile(QDir::currentPath() + QString("/LDSetup/ldconsole.exe")).exists()){
         m_ldIntallFolder = QDir::currentPath() + QString("/LDSetup");
@@ -253,6 +254,19 @@ void AppModel::setDeviceCount(int data)
     if(m_deviceCount != data) {
         m_deviceCount = data;
         emit deviceCountChanged();
+    }
+}
+
+QString AppModel::taskInProgress() const
+{
+    return m_taskInProgress;
+}
+
+void AppModel::setTaskInProgress(QString data)
+{
+    if(m_taskInProgress != data) {
+        m_taskInProgress = data;
+        emit taskInProgressChanged();
     }
 }
 

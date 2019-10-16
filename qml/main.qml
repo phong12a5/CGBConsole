@@ -321,6 +321,22 @@ Window {
         visible: false //AppModel.walletEmpty
     }
 
+    Rectangle{
+        anchors.bottom: parent.bottom
+        color: "black"
+        width: parent.width
+        height: 30
+        visible: AppModel.taskInProgress !== ""
+        opacity: 0.8
+        Text {
+            id: name
+            text: AppModel.taskInProgress
+            anchors.centerIn: parent
+            font.pixelSize: 15
+            color: "white"
+        }
+    }
+
     Component.onCompleted: {
         if(AppModel.ldIntallFolder == ""){
             settingPage.startAnimation()
