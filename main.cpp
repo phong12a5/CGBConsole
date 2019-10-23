@@ -1,5 +1,4 @@
 #include <QGuiApplication>
-#include <QQmlApplicationEngine>
 #include "AppMain.h"
 #include <QtWidgets>
 #include <iostream>
@@ -34,23 +33,13 @@ int main(int argc, char *argv[])
 //    qInstallMessageHandler(myMessageOutput);
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-
     QGuiApplication app(argc, argv);
-    app.setQuitOnLastWindowClosed(true);
-
-    QQmlApplicationEngine engine;
 
 //    LOG << "Connect: " << LDCommand::isExistedPackage("CGBDevice-0",FARM_PACKAGE_NAME);
-
-    engine.rootContext()->setContextProperty("AppModel",AppModel::instance());
-
-    engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
-    if (engine.rootObjects().isEmpty()){
-        qDebug() << "rootObject is NULL";
-    }
+//    LDCommand::installPackage(ORIGIN_DEVICE_NAME,APK_FILENAME,QString("./%1").arg(APK_FILENAME));
 
     AppMain appMain;
-    appMain.initApplication(&engine);
+    appMain.initApplication();
 
     return app.exec();
 }

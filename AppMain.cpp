@@ -4,6 +4,7 @@
 #include <QDir>
 #include <QFile>
 #include <thread>
+#include <QCoreApplication>
 
 #define APP_MODEL   AppModel::instance()
 #define APP_CTRL    AppController::instance()
@@ -11,7 +12,6 @@
 
 AppMain::AppMain(QObject *parent) : QObject(parent)
 {
-    m_engine = nullptr;
     connect(APP_MODEL,SIGNAL(reInitDeviceList()),this,SLOT(initDevicesList()));
     connect(APP_MODEL,SIGNAL(sigStartProgram()),this,SLOT(onStartProgram()));
     connect(APP_MODEL,SIGNAL(sigStoptProgram()),this,SLOT(onStoptProgram()));
@@ -24,10 +24,15 @@ AppMain::~AppMain()
     LDCommand::quitAll();
 }
 
-void AppMain::initApplication(QQmlApplicationEngine* engine)
+void AppMain::initApplication()
 {
     LOG;
-    m_engine = engine;
+    m_view = new QQuickView();
+    m_view->rootContext()->setContextProperty("AppModel",AppModel::instance());
+    m_view->rootContext()->setContextProperty("AppMain",this);
+    m_view->setSource(QUrl(QStringLiteral("qrc:/qml/main.qml")));
+    m_view->show();
+
     APP_MODEL->setTaskInProgress("Initializing application ...");
     APP_MODEL->setCurrentDir(QDir::currentPath());
     this->onLoadConfig();
@@ -55,8 +60,10 @@ void AppMain::onLoadConfig()
         QJsonObject config = this->loadJson(CONFIG_FILE_NAME).object();
 
         /* Load installation folder */
-//        if(!config[INSTALL_FOLDER_PROP_KEY].toString().isEmpty())
-//            APP_MODEL->setLDIntallFolder(config[INSTALL_FOLDER_PROP_KEY].toString(),true);
+#if 0
+        if(!config[INSTALL_FOLDER_PROP_KEY].toString().isEmpty())
+            APP_MODEL->setLDIntallFolder(config[INSTALL_FOLDER_PROP_KEY].toString(),true);
+#endif
 
         /* Load Token */
         if(!config[TOKEN_PROP_KEY].toString().isEmpty())
@@ -140,20 +147,10 @@ void AppMain::onStartProgram()
                 delay(1000);
             }
 
-            delay(10000);
-
             // Install AutoFarmer
             APP_MODEL->setTaskInProgress("Installing APK ...");
-            LDCommand::installPackage(deviceName,APP_MODEL->currentDir() + "/" + APK_FILENAME);
-
-            int count = 0;
             while (!LDCommand::isExistedPackage(deviceName,FARM_PACKAGE_NAME)) {
-                delay(2000);
-                if(count == 30) {
-                    count = 0;
-                    LDCommand::installPackage(deviceName,APP_MODEL->currentDir() + "/" + APK_FILENAME);
-                }
-                count ++;
+                LDCommand::installPackage(deviceName,APK_FILENAME,APP_MODEL->currentDir() + "/" + APK_FILENAME);
             }
 
             // Disable SuperSU permission request
@@ -189,6 +186,12 @@ void AppMain::onFinishCopyDevice(QString deviceName)
     LOG << deviceName;
     APP_MODEL->appendDevice(new LDIntance(this,deviceName));
     APP_CTRL->startMultiTask();
+}
+
+void AppMain::closingApp()
+{
+    LOG;
+    QCoreApplication::quit();
 }
 
 QJsonDocument AppMain::loadJson(QString fileName)

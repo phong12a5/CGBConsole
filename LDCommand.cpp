@@ -8,7 +8,7 @@
 bool LDCommand::runLDCommand(QString args, int timeout)
 {
     QString cmd = QString("\"%1/ldconsole.exe\" %2").arg(APP_MODEL->ldIntallFolder()).arg(args);
-//    LOG << "Cmd: " << cmd;
+    LOG << "Cmd: " << cmd;
     QProcess process;
     process.start(cmd);
     process.waitForFinished(timeout);
@@ -25,7 +25,7 @@ bool LDCommand::runLDCommand(QString args, int timeout)
 bool LDCommand::runLDCommand(QString args, QString &output, QString &error, int timeout)
 {
     QString cmd = QString("\"%1/ldconsole.exe\" %2").arg(APP_MODEL->ldIntallFolder()).arg(args);
-//    LOG << "Cmd: " << cmd;
+    LOG << "Cmd: " << cmd;
     QProcess process;
     process.start(cmd);
     process.waitForFinished(timeout);
@@ -44,14 +44,20 @@ bool LDCommand::lunchInstance(QString instanceName)
     return LDCommand::runLDCommand(QString("launch --name %1").arg(instanceName));
 }
 
-bool LDCommand::installPackage(QString instanceName, QString apkPath)
+bool LDCommand::installPackage(QString instanceName, QString fileName, QString apkPath)
 {
-    LOG << "instanceName: " << instanceName << " -- apkPath: " << apkPath;
+    LOG << "instanceName: " << instanceName;
+    LOG << "fileName: " << fileName;
+    LOG << "apkPath: " << apkPath;
+
     if(!QFile(apkPath).exists()){
         LOG << "apkPath has not existed!";
         return false;
     }
-    return LDCommand::runLDCommand(QString("installapp --name %1 --filename %2").arg(instanceName).arg(apkPath));
+    QString apkPathInRemote = "/sdcard/DCIM/" + fileName;
+    LDCommand::runLDCommand(QString("push --name %1 --remote %2 --local %3").arg(instanceName).arg(apkPathInRemote).arg(apkPath));
+    LDCommand::ld_adb_command(instanceName,QString("shell pm install %1").arg(apkPathInRemote));
+    return true;
 }
 
 bool LDCommand::runApp(QString instanceName, QString packageName)
@@ -63,8 +69,7 @@ bool LDCommand::runApp(QString instanceName, QString packageName)
 bool LDCommand::addInstance(QString instanceName)
 {
     LOG << instanceName;
-    return LDCommand::runLDCommand(QString("add --name %1").arg(instanceName)) &&
-            /*LDCommand::runLDCommand(QString("modify --name %1 --cpu 1 --memory 1024 --resolution 720,1280,320").arg(instanceName))*/true;
+    return LDCommand::runLDCommand(QString("add --name %1").arg(instanceName));
 }
 
 bool LDCommand::ld_adb_command(QString instanceName, QString cmd, int timeout)

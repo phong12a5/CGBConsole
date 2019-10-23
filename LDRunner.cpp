@@ -36,7 +36,7 @@ void LDRunner::run()
     connect(m_checkEndScriptTimer,SIGNAL(timeout()),this,SLOT(onCheckEnscript()));
 
     m_checkRunAppTimer = new QTimer(this);
-    m_checkRunAppTimer->setInterval(APP_MODEL->appConfig().m_openApkAfterNSeconds);
+    m_checkRunAppTimer->setInterval(APP_MODEL->appConfig().m_openApkAfterNSeconds * 1000);
     m_checkRunAppTimer->setSingleShot(false);
     connect(m_checkRunAppTimer,SIGNAL(timeout()),this,SLOT(onCheckRunApp()));
 
@@ -111,6 +111,8 @@ void LDRunner::onCheckRunApp()
 {
     if (!LDCommand::isAppRunning(m_instanceName)) {
         LDCommand::runApp(m_instanceName, FARM_PACKAGE_NAME);
+    }else {
+        m_checkRunAppTimer->stop();
     }
 }
 

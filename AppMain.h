@@ -2,7 +2,7 @@
 #define APPMAIN_H
 
 #include <QObject>
-#include <QQmlApplicationEngine>
+#include <QQuickView>
 #include <QQmlContext>
 #include "AppDefines.h"
 #include "AppModel.h"
@@ -18,8 +18,10 @@ public:
     explicit AppMain(QObject *parent = nullptr);
     ~AppMain();
 
-    void initApplication(QQmlApplicationEngine* engine);
+    void initApplication();
     void getConfig();
+
+    Q_INVOKABLE void closingApp();
 
 private:
     QJsonDocument loadJson(QString fileName);
@@ -27,9 +29,9 @@ private:
     void copyDevices();
 
 private:
-    QQmlApplicationEngine* m_engine;
     bool m_getAppConfig;
     QThread m_copyDevicesThread;
+    QQuickView * m_view;
 
 public slots:
     void onSaveConfig();
@@ -38,7 +40,6 @@ public slots:
     void onStartProgram();
     void onStoptProgram();
     void onFinishCopyDevice(QString deviceName);
-
 signals:
     void startCopyEmulator();
 };

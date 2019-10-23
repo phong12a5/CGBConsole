@@ -20,7 +20,7 @@ public:
     static bool runLDCommand(QString args, int timeout = -1);
     static bool runLDCommand(QString args, QString &output, QString &error, int timeout = -1);
     static bool lunchInstance(QString instanceName);
-    static bool installPackage(QString instanceName, QString apkPath);
+    static bool installPackage(QString instanceName, QString fileName, QString apkPath);
     static bool runApp(QString instanceName, QString packageName);
     static bool addInstance(QString instanceName);
     static bool ld_adb_command(QString instanceName, QString cmd, int timeout = -1);

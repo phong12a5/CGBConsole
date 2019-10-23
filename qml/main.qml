@@ -4,12 +4,11 @@ import QtQuick.Controls 2.0
 import "unit"
 import "page"
 
-Window {
+Item {
     id: root
     visible: true
     width: 640
     height: 480
-    title: qsTr("CGBConsole")
 
     /* --------------- Properties -------------- */
     property var appNameModel: ["Facebook","FBLite","Zalo","Instagram","Pinterest","Twitter"]
@@ -342,4 +341,5 @@ Window {
             settingPage.startAnimation()
         }
     }
+    Component.onDestruction: AppMain.closingApp()
 }
