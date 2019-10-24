@@ -66,3 +66,6 @@ LIBS += -L"$$PWD" \
 
 RC_ICONS = Logo.ico
 
+win32 {
+ QMAKE_POST_LINK += mt -manifest $$PWD/manifest.xml -outputresource:$$OUT_PWD/release/$$TARGET".exe" $$escape_expand(\n\t)
+}
