@@ -35,6 +35,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
 
+    LDCommand::repairEmulator();
 //    LOG << "Connect: " << LDCommand::isExistedPackage("CGBDevice-0",FARM_PACKAGE_NAME);
 //    LDCommand::installPackage(ORIGIN_DEVICE_NAME,APK_FILENAME,QString("./%1").arg(APK_FILENAME));
 

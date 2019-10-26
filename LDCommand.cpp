@@ -2,6 +2,7 @@
 #include "AppMain.h"
 #include <iostream>
 #include <QFile>
+#include <QDir>
 
 #define APP_MODEL AppModel::instance()
 
@@ -193,18 +194,8 @@ int LDCommand::isRunningDevice(QString instanceName)
 
 bool LDCommand::repairEmulator()
 {
-    QString cmd = QString("\"%1/dnrepairer.exe\"").arg(APP_MODEL->ldIntallFolder());
-    QProcess process;
-    process.start(cmd);
-    process.waitForFinished(-1);
-
-    QString output = process.readAllStandardOutput();
-    QString error = process.readAllStandardError();
-    if(error != ""){
-        LOG << error;
-        return false;
-    }else{
-        LOG << output;
-        return true;
-    }
+    QString exeFileName = QDir::toNativeSeparators("\"" + QDir::currentPath() + "/LDSetup/dnrepairer.exe\"");
+    int result = (int)::ShellExecuteA(nullptr, "runas", exeFileName.toUtf8().constData(), nullptr, nullptr, SW_SHOWNORMAL);
+    LOG << "result: " << result;
+    return (result >= 32? true : false);
 }

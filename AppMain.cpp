@@ -163,10 +163,6 @@ void AppMain::onStartProgram()
             APP_MODEL->setTaskInProgress("");
         }
         // Copy the left devices
-        APP_MODEL->setTaskInProgress("Repairing LD Player ...");
-        LDCommand::repairEmulator();
-        delay(10000);
-        APP_MODEL->setTaskInProgress("");
         this->copyDevices();
     }
 
