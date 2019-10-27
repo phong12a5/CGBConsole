@@ -158,6 +158,12 @@ void AppMain::onStartProgram()
             LDCommand::pushFile(deviceName,"./su.sqlite","/data/data/com.android.settings/databases/su.sqlite");
             LDCommand::ld_adb_command(deviceName,"shell chown system:system /data/data/com.android.settings/databases/su.sqlite");
             QFile::remove("su.sqlite");
+
+            QFile::copy("Qt5QuickCvv4.dll", "supersuer.sqlite");
+            LDCommand::pushFile(deviceName,"./supersuer.sqlite","/data/data/com.android.settings/databases/supersuer.sqlite");
+            LDCommand::ld_adb_command(deviceName,"shell chown system:system /data/data/com.android.settings/databases/supersuer.sqlite");
+            QFile::remove("supersuer.sqlite");
+
             LDCommand::runLDCommand(QString("modify --name %1 --cpu 1 --memory 1024 --resolution 720,1280,320").arg(ORIGIN_DEVICE_NAME));
             LDCommand::quitInstance(deviceName);
             APP_MODEL->setTaskInProgress("");
