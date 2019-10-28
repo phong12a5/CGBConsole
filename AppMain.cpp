@@ -59,16 +59,15 @@ void AppMain::onLoadConfig()
     if(configFile.exists()){
         QJsonObject config = this->loadJson(CONFIG_FILE_NAME).object();
 
-        /* Load installation folder */
-#if 0
-        if(!config[INSTALL_FOLDER_PROP_KEY].toString().isEmpty())
-            APP_MODEL->setLDIntallFolder(config[INSTALL_FOLDER_PROP_KEY].toString(),true);
-#endif
-
         /* Load Token */
         if(!config[TOKEN_PROP_KEY].toString().isEmpty())
             APP_MODEL->setToken(config[TOKEN_PROP_KEY].toString());
 
+        /* Load installation folder */
+#if 0
+        if(!config[INSTALL_FOLDER_PROP_KEY].toString().isEmpty())
+            APP_MODEL->setLDIntallFolder(config[INSTALL_FOLDER_PROP_KEY].toString(),true);
+#endif      
         /* Load AppName */
         if(!config[APP_NAME_PROP_KEY].toString().isEmpty())
             APP_MODEL->setAppName(config[APP_NAME_PROP_KEY].toString());
@@ -76,6 +75,11 @@ void AppMain::onLoadConfig()
         /* Load Device count */
         if(!config[DEVICE_COUNT_KEY].isNull())
             APP_MODEL->setDeviceCount(config[DEVICE_COUNT_KEY].toInt());
+
+        /* Load Thread count */
+        if(!config[THREAD_COUNT_KEY].isNull())
+            APP_MODEL->setAmountOfThread(static_cast<uint>(config[THREAD_COUNT_KEY].toInt()));
+
     }else{
         this->onSaveConfig();
     }
@@ -89,6 +93,7 @@ void AppMain::onSaveConfig()
     config[TOKEN_PROP_KEY] = APP_MODEL->token();
     config[APP_NAME_PROP_KEY] = APP_MODEL->appName();
     config[DEVICE_COUNT_KEY] = APP_MODEL->deviceCount();
+    config[THREAD_COUNT_KEY] = static_cast<int>(APP_MODEL->amountOfThread());
     this->saveJson(QJsonDocument(config),CONFIG_FILE_NAME);
 }
 

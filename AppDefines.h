@@ -25,6 +25,7 @@
 #define TOKEN_PROP_KEY          "farm_token"
 #define APP_NAME_PROP_KEY       "appName"
 #define DEVICE_COUNT_KEY        "device_count"
+#define THREAD_COUNT_KEY        "thread_count"
 
 #define APP_DATA_FOLDER         "/sdcard/xyz.autofarmer.app/"
 
