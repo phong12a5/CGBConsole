@@ -18,12 +18,14 @@ class WebAPI : public QObject
 
 private:
     explicit WebAPI(QObject *parent = nullptr);
+    bool unlockChilkat();
 
 public:
     static WebAPI *instance();
 
 private:
     static WebAPI* s_instance;
+    const char * m_dropBoxToken;
 
 private:
 
@@ -35,6 +37,7 @@ private:
 public:
     void getConfig();
     bool downloadFIle(QString url, QString savedPath);
+    bool downloadApk(int version);
 
 public slots:
 

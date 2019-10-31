@@ -7,5 +7,7 @@
         <file>image/setting.png</file>
         <file>image/opened-folder.png</file>
         <file>qml/page/ExpiredPopup.qml</file>
+        <file>qml/unit/AdsComponent.qml</file>
+        <file>image/background.jpg</file>
     </qresource>
 </RCC>

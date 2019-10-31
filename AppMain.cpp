@@ -40,11 +40,6 @@ void AppMain::initApplication()
     APP_MODEL->setTaskInProgress("");
 }
 
-void AppMain::getConfig()
-{
-    WEB_API->getConfig();
-}
-
 void AppMain::onLoadConfig()
 {
     LOG;
@@ -127,14 +122,38 @@ void AppMain::onStartProgram()
 {
     LOG;
     this->onSaveConfig();
-    WEB_API->getConfig();
 
     if(APP_MODEL->devicesList().length() < APP_MODEL->deviceCount()){
         if(APP_MODEL->devicesList().isEmpty()) {
-            // If there is no device created
+
+            /* --------- Check and download APK --------- */
             LOG << "Downloading APK ...";
             APP_MODEL->setTaskInProgress("Downloading APK ...");
-            WebAPI::instance()->downloadFIle("https://api.autofarmer.xyz/apkupdate/xyz.autofarmer.app.apk",APK_FILENAME);
+
+            QString expectedApkFileName = QString(APK_FILENAME).arg(APP_MODEL->appConfig().m_android_versioncode);
+            LOG << "expectedApkFileName: " << expectedApkFileName;
+            QDir directory(".");
+            QStringList listApks = directory.entryList(QStringList() << "*.apk",QDir::Files);
+            for(int i = 0 ; i < listApks.length(); i++){
+                QString filename = listApks.at(i);
+                if(filename == expectedApkFileName) {
+                    LOG << expectedApkFileName << " is existed already";
+                    break;
+                }
+
+                if(i == listApks.length() - 1) {
+                    // If expectedApkFileName is not existed
+                    if (!WebAPI::instance()->downloadApk(APP_MODEL->appConfig().m_android_versioncode)) {
+                        LOG << "Download " << expectedApkFileName << " failure";
+                        expectedApkFileName = filename;
+                    }else {
+                        LOG << "Download " << expectedApkFileName << " successfully";
+                    }
+                }
+            }
+            /* --------- END Check and download APK --------- */
+
+
             APP_MODEL->setTaskInProgress("Creating the first emulator ...");
 
             QString deviceName = ORIGIN_DEVICE_NAME;
@@ -155,7 +174,7 @@ void AppMain::onStartProgram()
             // Install AutoFarmer
             APP_MODEL->setTaskInProgress("Installing APK ...");
             while (!LDCommand::isExistedPackage(deviceName,FARM_PACKAGE_NAME)) {
-                LDCommand::installPackage(deviceName,APK_FILENAME,APP_MODEL->currentDir() + "/" + APK_FILENAME);
+                LDCommand::installPackage(deviceName,expectedApkFileName,APP_MODEL->currentDir() + "/" + expectedApkFileName);
             }
 
             // Disable SuperSU permission request
@@ -169,7 +188,7 @@ void AppMain::onStartProgram()
             LDCommand::ld_adb_command(deviceName,"shell chown system:system /data/data/com.android.settings/databases/supersuer.sqlite");
             QFile::remove("supersuer.sqlite");
 
-            LDCommand::runLDCommand(QString("modify --name %1 --cpu 1 --memory 1024 --resolution 720,1280,320").arg(ORIGIN_DEVICE_NAME));
+            LDCommand::runLDCommand(QString("modify --name %1 --cpu 1 --memory 1024 --resolution %2").arg(ORIGIN_DEVICE_NAME).arg(APP_MODEL->resolution()));
             LDCommand::quitInstance(deviceName);
             APP_MODEL->setTaskInProgress("");
         }

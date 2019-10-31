@@ -12,7 +12,8 @@ LDRunner::LDRunner(QString instanceName):
     m_instanceName(instanceName),
     m_setIsLDFile(false)
 {
-    LDCommand::runLDCommand(QString("modify --name %1 --cpu 1 --memory 1024 --resolution 720,1280,320").arg(m_instanceName));
+    LOG << "APP_MODEL->resolution(): " << APP_MODEL->resolution();
+    LDCommand::runLDCommand(QString("modify --name %1 --cpu 1 --memory 1024 --resolution %2").arg(m_instanceName).arg(APP_MODEL->resolution()));
 }
 
 LDRunner::~LDRunner()

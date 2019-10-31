@@ -8,16 +8,17 @@ Item {
     id: root
     visible: true
     width: 640
-    height: 480
+    height: 550
 
     /* --------------- Properties -------------- */
     property var appNameModel: ["Facebook","FBLite","Zalo","Instagram","Pinterest","Twitter"]
+    property var resolutionModel: ["540,960,240","720,1280,320","900,1600,320","1080,1920,490"]
 
     /* --------------- functions -------------- */
     function getThreadsModel(maxThread){
         var data = []
         for(var j = 0; j < maxThread; j++){
-            data.push(j + 1 + "Thread")
+            data.push(j + 1 + " Thread")
         }
         return data
     }
@@ -30,12 +31,35 @@ Item {
         return data;
     }
 
-    Rectangle{
-        id: line
-        width: 2
-        height: parent.height
-        anchors.left: parent.right
-        color: "black"
+    function getCurrentAppNameIndex(currentAppName) {
+        for(var i = 0; i < appNameModel.length; i++) {
+            if(currentAppName === appNameModel[i])
+                return i
+        }
+        return 0
+    }
+
+    function getCurrentResolutionIndex(currentResolution) {
+        for(var i = 0; i < resolutionModel.length; i++) {
+            if(currentResolution === resolutionModel[i])
+                return i
+        }
+        return 0
+    }
+
+    AdsComponent{
+        id: ads
+        width: 250
+        height: 40
+        anchors.right: parent.right
+    }
+
+
+    Image {
+        id: backGround
+        source: "qrc:/image/background.jpg"
+        opacity: 0.07
+        anchors.fill: parent
     }
 
     Item{
@@ -113,14 +137,9 @@ Item {
                 width: 200
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
+                currentIndex: getCurrentAppNameIndex(AppModel.appName)
                 onActivated: {
                     AppModel.appName = appNameModel[currentIndex]
-                }
-                Component.onCompleted: {
-                    for(var i = 0; i < appNameModel.length; i++) {
-                        if(AppModel.appName === appNameModel[i])
-                            currentIndex = i
-                    }
                 }
             }
         }
@@ -190,11 +209,42 @@ Item {
         }
 
         Item {
-            id: emulatorOption
+            id: screenoptionItem
             width: tokenItem.width
             height: 50
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: vmItem.bottom
+            anchors.topMargin: 20
+
+            Text {
+                id: screenoptionTile
+                text: qsTr("Resolution: ")
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                font.pixelSize: 15
+                font.bold: true
+            }
+
+            ComboBox {
+                id: screenoption
+                enabled: !AppModel.isLaunchMutiTask
+                currentIndex: getCurrentResolutionIndex(AppModel.resolution)
+                model: resolutionModel
+                width: 200
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                onActivated: {
+                    AppModel.resolution = resolutionModel[currentIndex]
+                }
+            }
+        }
+
+        Item {
+            id: emulatorOption
+            width: tokenItem.width
+            height: 50
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.top: screenoptionItem.bottom
             anchors.topMargin: 20
             enabled: false
 
@@ -259,68 +309,7 @@ Item {
     }
 
     Rectangle{
-        anchors.fill: parent
-        opacity: 0.5
-        visible: AppModel.ldIntallFolder == ""
-        MouseArea{
-            anchors.fill: parent
-            propagateComposedEvents: false
-        }
-    }
-
-    SettingPage{
-        id: settingPage
-        x: parent.width
-        y: 0
-        width: parent.width
-        height: parent.height
-        onXChanged: {
-            if(x == 0){
-                isOpenned = true
-            }else if(x == parent.width ){
-                isOpenned = false
-            }
-        }
-    }
-    ButtonItem{
-        id: settingBtn
         anchors.right: parent.right
-        anchors.top: parent.top
-        iconSource: "qrc:/image/setting.png"
-        width: 50
-        height: 50
-        imgIcon.width: 30
-        imgIcon.height: 30
-
-        onButtonClicked: {
-            settingPage.startAnimation()
-        }
-    }
-
-    Rectangle{
-        id: initPopup
-        anchors.fill: parent
-        color: "black"
-        opacity: 0.8
-        visible: AppModel.initializing
-    }
-
-    Text {
-        text: qsTr("Initializing devices ........\nAnyway, Don't turn off application!")
-        color: "white"
-        anchors.centerIn: initPopup
-        font.pixelSize: 20
-        lineHeightMode: Text.FixedHeight
-        lineHeight: 30
-        visible: AppModel.initializing
-        horizontalAlignment: Text.AlignHCenter
-    }
-
-    ExpiredPopup{
-        visible: false //AppModel.walletEmpty
-    }
-
-    Rectangle{
         anchors.bottom: parent.bottom
         color: "black"
         width: parent.width
@@ -336,10 +325,5 @@ Item {
         }
     }
 
-    Component.onCompleted: {
-        if(AppModel.ldIntallFolder == ""){
-            settingPage.startAnimation()
-        }
-    }
     Component.onDestruction: AppMain.closingApp()
 }

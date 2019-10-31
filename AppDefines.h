@@ -12,7 +12,7 @@
 #define ENDSCRIPT_PATH          "/sdcard/DCIM/"
 #define ENDSCRIPT_FILENAME      "endScript.st"
 #define INITSCRIPT_FILENAME     "/sdcard/DCIM/initApp.st"
-#define APK_FILENAME            "xyz.autofarmer.app.apk"
+#define APK_FILENAME            "xyz.autofarmer.app.%1.apk"
 #define API_SERVER              "https://api.autofarmer.xyz/api/v2/"
 #define EMULATOR_NAME_PREFIX    "CGBDevice"
 #define ORIGIN_DEVICE_NAME      "OrgDevice"
@@ -40,6 +40,7 @@ typedef struct app_config_struct {
     int m_ldCloneCount;
     int m_balance;
     int m_openApkAfterNSeconds;
+    int m_android_versioncode;
 
     app_config_struct(){
         timeout = 30;
@@ -52,6 +53,7 @@ typedef struct app_config_struct {
         m_ldCloneCount = 0;
         m_balance = -1;
         m_openApkAfterNSeconds = DEFAULT_OPENAPK_TIME;
+        m_android_versioncode = 8;
     }
 } APP_CONFIG;
 

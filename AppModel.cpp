@@ -20,6 +20,7 @@ AppModel::AppModel(QObject *parent) : QObject(parent)
     m_maxNumberThread = DEFAULT_MAX_VM_THREAD;
     m_maxVMCount = DEFAULT_MAX_VM_COUNT;
     m_taskInProgress = "";
+    m_resolution = "720,1280,320";
 
     if(QFile(QDir::currentPath() + QString("/LDSetup/ldconsole.exe")).exists()){
         m_ldIntallFolder = QDir::currentPath() + QString("/LDSetup");
@@ -267,6 +268,20 @@ void AppModel::setTaskInProgress(QString data)
     if(m_taskInProgress != data) {
         m_taskInProgress = data;
         emit taskInProgressChanged();
+    }
+}
+
+QString AppModel::resolution() const
+{
+    return m_resolution;
+}
+
+void AppModel::setResolution(QString data)
+{
+    LOG << data;
+    if (m_resolution != data) {
+        m_resolution = data;
+        emit resolutionChanged();;
     }
 }
 

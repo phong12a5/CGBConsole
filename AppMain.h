@@ -19,7 +19,6 @@ public:
     ~AppMain();
 
     void initApplication();
-    void getConfig();
 
     Q_INVOKABLE void closingApp();
 
