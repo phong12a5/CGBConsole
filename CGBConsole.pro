@@ -64,6 +64,10 @@ LIBS += -L"$$PWD" \
         -lcrypto-1_1 \
         -leay32
 
+#LIBS += -L$$PWD/chilkat-9.5.0-mingw-5.3.0-32/ -lchilkat-9.5.0 -lws2_32 -lcrypt32 -ldnsapi
+
+#INCLUDEPATH += $$PWD/chilkat-9.5.0-mingw-5.3.0-32/include
+
 RC_ICONS = Logo.ico
 
 win32 {

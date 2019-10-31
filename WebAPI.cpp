@@ -2,7 +2,12 @@
 #include "AppModel.h"
 #include <QEventLoop>
 #include <QFile>
-
+if 0
+#include <CkJsonObject.h>
+#include <CkHttp.h>
+#include <CkHttpResponse.h>
+#include <CkHttpRequest.h>
+#endif
 #define MODEL AppModel::instance()
 
 WebAPI* WebAPI::s_instance = nullptr;
@@ -79,6 +84,70 @@ void WebAPI::getConfig()
         MODEL->setAppConfig(config);
     }
 }
+
+#if 0
+void WebAPI::getConfig()
+{
+    QString url = API_SERVER + QString("config?token=%1").arg(MODEL->token());
+    QUrl serviceUrl = QUrl(url);
+    QNetworkRequest request(serviceUrl);
+    QJsonObject json;
+
+    json.insert("action", QTextCodec::codecForMib(106)->toUnicode(getEncodedString("config")));
+    json.insert("appname", QTextCodec::codecForMib(106)->toUnicode(getEncodedString(MODEL->appName().toLower())));
+    json.insert("info", QTextCodec::codecForMib(106)->toUnicode(getEncodedDeviceInfo()));
+
+    QByteArray jsonData = QJsonDocument(json).toJson();
+
+    CkHttpRequest req;
+    CkHttp http;
+
+    CkHttpResponse *resp = nullptr;
+    resp = http.PostJson2(url.toLocal8Bit().data(), "application/json", jsonData.data());
+    if (http.get_LastMethodSuccess() != true) {
+        LOG << "Http error: " << QString(http.lastErrorText());
+    } else {
+        if (resp->bodyStr()) {
+            LOG << "Reponsed: " << QString(resp->bodyStr());
+            CkJsonObject jsonResponse;
+            bool loadJson = jsonResponse.Load(resp->bodyStr());
+            if (loadJson) {
+                QString data = QString(jsonResponse.stringOf("data"));
+                QAESEncryption encryption(QAESEncryption::AES_256, QAESEncryption::CBC);
+                QByteArray decodeText = encryption.decode(QByteArray::fromBase64(data.toUtf8()), getKey().toLocal8Bit(), getIV().toLocal8Bit());
+                QJsonDocument jdoc = QJsonDocument::fromJson(encryption.removePadding(decodeText));
+                QJsonObject jsonResponsedObj = jdoc.object();
+                LOG << "jsonResponsedObj: " << jsonResponsedObj;
+                if(!jsonResponsedObj.isEmpty()){
+                    APP_CONFIG config;
+                    config.timeout = jsonResponsedObj["timeout"].toString().toInt();
+                    config.reset_3g = jsonResponsedObj["reset3g"].toString().toInt();
+                    config.debug_mode = jsonResponsedObj["debug_mode"].toString();
+                    config.user_type = jsonResponsedObj["user_type"].toString().toInt();
+                    config.m_maxVmCount = jsonResponsedObj["totalvm"].toString().toInt();
+                    config.m_maxVmThread = jsonResponsedObj["maxthreadnoxld"].toString().toInt();
+                    config.m_balance = jsonResponsedObj["balance"].toInt();
+                    config.m_openApkAfterNSeconds = jsonResponsedObj["openapkafternseconds"].toString().toInt();
+                    LOG << "config.timeout: " << config.timeout;
+                    LOG << "config.reset_3g: " << config.reset_3g;
+                    LOG << "config.debug_mode: " << config.debug_mode;
+                    LOG << "config.user_type: " << config.user_type;
+                    LOG << "config.m_maxVmCount: " << config.m_maxVmCount;
+                    LOG << "config.m_maxVmThread: " << config.m_maxVmThread;
+                    LOG << "config.balance: " << config.m_balance;
+                    LOG << "config.m_openApkAfterNSeconds: " << config.m_openApkAfterNSeconds;
+                    MODEL->setAppConfig(config);
+                }
+
+            } else {
+                LOG << "Could not load resp->bodyStr() -> JsonObject";
+            }
+        } else {
+            LOG << "resp->bodyStr() is NULL";
+        }
+    }
+}
+#endif
 
 QString WebAPI::getKey() const
 {
