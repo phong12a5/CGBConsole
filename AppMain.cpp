@@ -134,23 +134,21 @@ void AppMain::onStartProgram()
             LOG << "expectedApkFileName: " << expectedApkFileName;
             QDir directory(".");
             QStringList listApks = directory.entryList(QStringList() << "*.apk",QDir::Files);
-            for(int i = 0 ; i < listApks.length(); i++){
-                QString filename = listApks.at(i);
-                if(filename == expectedApkFileName) {
-                    LOG << expectedApkFileName << " is existed already";
-                    break;
-                }
 
-                if(i == listApks.length() - 1) {
-                    // If expectedApkFileName is not existed
-                    if (!WebAPI::instance()->downloadApk(APP_MODEL->appConfig().m_android_versioncode)) {
-                        LOG << "Download " << expectedApkFileName << " failure";
-                        expectedApkFileName = filename;
-                    }else {
-                        LOG << "Download " << expectedApkFileName << " successfully";
-                    }
+            if(listApks.contains(expectedApkFileName)) {
+                LOG << expectedApkFileName << " is existed already";
+            }else {
+                if (!WebAPI::instance()->downloadApk(APP_MODEL->appConfig().m_android_versioncode)) {
+                    LOG << "Download " << expectedApkFileName << " failure";
+                    if(!listApks.isEmpty())
+                        expectedApkFileName = listApks.last();
+                    else
+                        LOG << "Couldn't get any apk file to install!";
+                }else {
+                    LOG << "Download " << expectedApkFileName << " successfully";
                 }
             }
+
             /* --------- END Check and download APK --------- */
 
 
