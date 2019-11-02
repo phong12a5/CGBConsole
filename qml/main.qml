@@ -7,8 +7,8 @@ import "page"
 Item {
     id: root
     visible: true
-    width: 640
-    height: 550
+    width: adsItem.width + contentArea.width
+    height: 600
 
     /* --------------- Properties -------------- */
     property var appNameModel: ["Facebook","FBLite","Zalo","Instagram","Pinterest","Twitter"]
@@ -47,26 +47,35 @@ Item {
         return 0
     }
 
-    AdsComponent{
-        id: ads
-        width: 250
-        height: 40
+
+    Item{
+        id: adsItem
+        width: 300
+        height: parent.height
         anchors.right: parent.right
+        Image {
+            id: backGround
+            source: "qrc:/image/background.jpg"
+            opacity: 0.8
+            y: 70
+            width: parent.width
+            height: parent.width
+            anchors.horizontalCenter: parent.horizontalCenter
+        }
+        AdsComponent{
+            id: ads
+            width: 250
+            height: 40
+            anchors.top: backGround.bottom
+            anchors.horizontalCenter: parent.horizontalCenter
+        }
     }
 
-
-    Image {
-        id: backGround
-        source: "qrc:/image/background.jpg"
-        opacity: 0.07
-        anchors.fill: parent
-    }
 
     Item{
         id: contentArea
-        width: parent.width
+        width: 400
         height: parent.height
-        anchors.right: parent.right
 
         Item {
             id: tokenItem
@@ -282,31 +291,31 @@ Item {
                 enabled: parent.enabled
             }
         }
-
-        Button{
-            id: startBtn
-
-            property bool selected: false
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: emulatorOption.bottom
-            anchors.topMargin: 20
-            width: 100
-            height: 50
-            enabled: AppModel.token != "" || token.text != ""
-            text: selected? "Stop" : "Start"
-            onClicked: {
-                selected = !selected
-                if(selected){
-                    AppModel.initializing = true
-                    AppModel.token = token.text
-                    AppModel.startProgram()
-                }
-                else
-                    AppModel.stopProgarm()
-            }
-        }
-
     }
+
+    Button{
+        id: startBtn
+
+        property bool selected: false
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 80
+        width: 100
+        height: 50
+        enabled: AppModel.token != "" || token.text != ""
+        text: selected? "Stop" : "Start"
+        onClicked: {
+            selected = !selected
+            if(selected){
+                AppModel.initializing = true
+                AppModel.token = token.text
+                AppModel.startProgram()
+            }
+            else
+                AppModel.stopProgarm()
+        }
+    }
+
 
     Rectangle{
         anchors.right: parent.right
