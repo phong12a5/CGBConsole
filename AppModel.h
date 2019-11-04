@@ -36,7 +36,7 @@ public:
 
     QList<QObject*> devicesList() const;
     void setDevicesList(const QList<QObject*> devices);
-    void appendDevice(QObject* instance);
+    void appendDevice(QString instanceName);
 
     uint amountOfThread() const;
     void setAmountOfThread(const uint data);

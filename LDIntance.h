@@ -10,13 +10,15 @@ class LDIntance : public QObject
     Q_PROPERTY(QString instanceName READ instanceName CONSTANT)
 
 public:
-    explicit LDIntance(QObject *parent, QString instanceName);
+    explicit LDIntance(QObject *parent, QString instanceName, int index);
     ~LDIntance();
 
     QString instanceName() const;
+    int index() const;
 
 private:
     QString m_instanceName;
+    int m_index;
 
 private slots:
 };

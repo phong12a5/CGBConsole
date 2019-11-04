@@ -11,7 +11,7 @@ class LDThread : public QObject
 {
     Q_OBJECT
 public:
-    explicit LDThread(QObject *parent = nullptr);
+    explicit LDThread(QObject *parent = nullptr, QString ldInstanceName = "");
     ~LDThread();
 
 private:
@@ -21,6 +21,7 @@ private:
     LDIntance* m_ldInstance;
     LDRunner* m_Worker;
     QThread* m_workerThread;
+    QString m_ldInstanceName;
 
 signals:
     void operate();

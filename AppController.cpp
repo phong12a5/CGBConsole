@@ -1,4 +1,5 @@
 #include "AppController.h"
+#include "LDIntance.h"
 
 #define APP_MODEL AppModel::instance()
 
@@ -7,6 +8,10 @@ AppController* AppController::m_instance = nullptr;
 AppController::AppController(QObject *parent) : QObject(parent)
 {
     m_ldThreadList.clear();
+    m_updateLDThreadList.setInterval(5000);
+    m_updateLDThreadList.setSingleShot(false);
+    connect(&m_updateLDThreadList, SIGNAL(timeout()), this, SLOT(onUpdateLDThreadList()));
+    m_updateLDThreadList.start();
 }
 
 AppController *AppController::instance()
@@ -45,11 +50,6 @@ void AppController::stopMultiTask()
     }
 }
 
-void AppController::startANewDevice()
-{
-
-}
-
 void AppController::onDevicesListChanged()
 {
     LOG;
@@ -63,6 +63,24 @@ void AppController::aMissionCompleted(LDThread* threadAdd)
             delete m_ldThreadList.at(index);
             m_ldThreadList.removeAt(index);
         }
-        this->startMultiTask();
+    }
+}
+
+void AppController::onUpdateLDThreadList()
+{
+    if(m_ldThreadList.length() < APP_MODEL->amountOfThread()){
+        if(APP_MODEL->devicesList().isEmpty()){
+            LOG << "devicesList is empty!";
+        } else {
+            if(m_ldThreadList.isEmpty()) {
+                LOG << "m_ldThreadList is empty!";
+                LDIntance* ld = dynamic_cast<LDIntance*>(APP_MODEL->devicesList().at(0));
+                m_ldThreadList.append(new LDThread(this,ld->instanceName()));
+            }else {
+
+            }
+        }
+    }else {
+        LOG << "LDThreadList is full already!";
     }
 }

@@ -82,13 +82,13 @@ void AppModel::setDevicesList(QList<QObject*> devices)
     }
 }
 
-void AppModel::appendDevice(QObject* instance)
+void AppModel::appendDevice(QString instanceName)
 {
     foreach(QObject* device, m_devicesList) {
-        if(dynamic_cast<LDIntance*>(device)->instanceName() == dynamic_cast<LDIntance*>(instance)->instanceName())
+        if(dynamic_cast<LDIntance*>(device)->instanceName() == instanceName)
             return;
     }
-    m_devicesList.append(instance);
+    m_devicesList.append(new LDIntance(this,instanceName,m_devicesList.length()));
     LOG << "m_devicesList: " << m_devicesList.length();
     emit devicesListChanged();
 }

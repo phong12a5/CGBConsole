@@ -2,6 +2,7 @@
 #define APPCONTROLLER_H
 
 #include <QObject>
+#include <QTimer>
 #include "AppDefines.h"
 #include "AppModel.h"
 #include "LDThread.h"
@@ -18,18 +19,19 @@ public:
 
     void startMultiTask();
     void stopMultiTask();
-    void startANewDevice();
 
 private:
     static AppController* m_instance;
 
     QList<LDThread* > m_ldThreadList;
+    QTimer m_updateLDThreadList;
 
 signals:
 
 public slots:
     void onDevicesListChanged();
     void aMissionCompleted(LDThread* threadAdd = nullptr);
+    void onUpdateLDThreadList();
 };
 
 #endif // APPCONTROLLER_H

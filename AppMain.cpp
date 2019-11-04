@@ -105,15 +105,11 @@ void AppMain::initDevicesList()
             LOG << "ERROR: " << error;
         }else{
             QStringList listNameDevices = QString(output).split("\r\n",QString::SkipEmptyParts);
-            QList<QObject*> deviceList;
-            deviceList.clear();
             for (int i = 0; i < listNameDevices.length(); i++) {
                 if(listNameDevices.at(i).contains(EMULATOR_NAME_PREFIX)) {
-                    deviceList.append(new LDIntance(this,listNameDevices.at(i)));
-                    LOG << "Added " << listNameDevices.at(i);
+                    APP_MODEL->appendDevice(listNameDevices.at(i));
                 }
             }
-            APP_MODEL->setDevicesList(deviceList);
         }
     }
 }
@@ -196,7 +192,6 @@ void AppMain::onStartProgram()
 
 
     APP_MODEL->setInitializing(false);
-    APP_CTRL->startMultiTask();
 }
 
 void AppMain::onStoptProgram()
@@ -209,7 +204,6 @@ void AppMain::onFinishCopyDevice(QString deviceName)
 {
     LOG << deviceName;
     APP_MODEL->appendDevice(new LDIntance(this,deviceName));
-    APP_CTRL->startMultiTask();
 }
 
 void AppMain::closingApp()

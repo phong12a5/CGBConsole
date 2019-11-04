@@ -5,7 +5,9 @@
 #define APP_CTRL    AppController::instance()
 #define APP_MODEL   AppModel::instance()
 
-LDThread::LDThread(QObject *parent) : QObject(parent)
+LDThread::LDThread(QObject *parent, QString ldInstanceName) :
+    QObject(parent),
+    m_ldInstanceName(ldInstanceName)
 {
     m_ldInstance = nullptr;
     m_Worker = nullptr;

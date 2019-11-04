@@ -1,8 +1,9 @@
 #include "LDIntance.h"
 
-LDIntance::LDIntance(QObject *parent, QString instanceName) :
+LDIntance::LDIntance(QObject *parent, QString instanceName, int index) :
     QObject(parent),
-    m_instanceName(instanceName)
+    m_instanceName(instanceName),
+    m_index(index)
 {
     LOG << "Created new LD instance: " << instanceName;
 }
@@ -15,5 +16,10 @@ LDIntance::~LDIntance()
 QString LDIntance::instanceName() const
 {
     return m_instanceName;
+}
+
+int LDIntance::index() const
+{
+    return m_index;
 }
 
