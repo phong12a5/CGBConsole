@@ -190,20 +190,19 @@ void AppMain::onStartProgram()
         this->copyDevices();
     }
 
-
+    APP_CTRL->startMultiTask();
     APP_MODEL->setInitializing(false);
 }
 
 void AppMain::onStoptProgram()
 {
-    LOG;
     APP_CTRL->stopMultiTask();
 }
 
 void AppMain::onFinishCopyDevice(QString deviceName)
 {
     LOG << deviceName;
-    APP_MODEL->appendDevice(new LDIntance(this,deviceName));
+    APP_MODEL->appendDevice(deviceName);
 }
 
 void AppMain::closingApp()

@@ -22,14 +22,13 @@ public:
 
 private:
     static AppController* m_instance;
-
+    QList<QObject*> m_deviceQueue;
     QList<LDThread* > m_ldThreadList;
     QTimer m_updateLDThreadList;
 
 signals:
 
 public slots:
-    void onDevicesListChanged();
     void aMissionCompleted(LDThread* threadAdd = nullptr);
     void onUpdateLDThreadList();
 };

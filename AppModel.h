@@ -12,7 +12,8 @@ class AppModel : public QObject
     Q_OBJECT
 
     Q_PROPERTY(QString ldIntallFolder READ ldIntallFolder WRITE setLDIntallFolder NOTIFY ldIntallFolderChanged)
-    Q_PROPERTY(QList<QObject*> devicesList READ devicesList WRITE setDevicesList NOTIFY devicesListChanged)
+    Q_PROPERTY(QList<QObject*> devicesList READ devicesList NOTIFY devicesListChanged)
+    Q_PROPERTY(QList<QObject*> devicesRunningList READ devicesRunningList NOTIFY devicesRunningListChanged)
     Q_PROPERTY(uint amountOfThread READ amountOfThread WRITE setAmountOfThread NOTIFY amountOfThreadChanged)
     Q_PROPERTY(bool isLaunchMutiTask READ isLaunchMutiTask WRITE setIsLaunchMutiTask NOTIFY isLaunchMutiTaskChanged)
     Q_PROPERTY(QString token READ token WRITE setToken NOTIFY tokenChanged)
@@ -35,8 +36,11 @@ public:
     void setLDIntallFolder(const QString path, bool standardPath = false);
 
     QList<QObject*> devicesList() const;
-    void setDevicesList(const QList<QObject*> devices);
     void appendDevice(QString instanceName);
+
+    QList<QObject*> devicesRunningList() const;
+    void appendRunningDevice(QString instanceName);
+    void popRunningDevice(QString instanceName);
 
     uint amountOfThread() const;
     void setAmountOfThread(const uint data);
@@ -87,6 +91,7 @@ public:
 signals:
     void ldIntallFolderChanged();
     void devicesListChanged();
+    void devicesRunningListChanged();
     void amountOfThreadChanged();
     void isLaunchMutiTaskChanged();
     void tokenChanged();
@@ -109,6 +114,7 @@ private:
 
     QString m_ldIntallFolder;
     QList<QObject*> m_devicesList;
+    QList<QObject*> m_devicesRunningList;
     uint m_amountOfThread;
     bool m_isLaunchMutiTask;
     int m_latestRunningInstance;

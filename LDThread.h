@@ -11,17 +11,13 @@ class LDThread : public QObject
 {
     Q_OBJECT
 public:
-    explicit LDThread(QObject *parent = nullptr, QString ldInstanceName = "");
+    explicit LDThread(QObject *parent = nullptr, LDIntance* ldInstance = nullptr);
     ~LDThread();
-
-private:
-    void setLDInstance();
 
 private:
     LDIntance* m_ldInstance;
     LDRunner* m_Worker;
-    QThread* m_workerThread;
-    QString m_ldInstanceName;
+    QThread m_workerThread;
 
 signals:
     void operate();

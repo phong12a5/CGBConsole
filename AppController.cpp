@@ -7,11 +7,11 @@ AppController* AppController::m_instance = nullptr;
 
 AppController::AppController(QObject *parent) : QObject(parent)
 {
+    m_deviceQueue.clear();
     m_ldThreadList.clear();
     m_updateLDThreadList.setInterval(5000);
     m_updateLDThreadList.setSingleShot(false);
     connect(&m_updateLDThreadList, SIGNAL(timeout()), this, SLOT(onUpdateLDThreadList()));
-    m_updateLDThreadList.start();
 }
 
 AppController *AppController::instance()
@@ -23,22 +23,13 @@ AppController *AppController::instance()
 
 void AppController::initAppController()
 {
-    QObject::connect(APP_MODEL,SIGNAL(devicesListChanged()),this,SLOT(onDevicesListChanged()));
+    LOG;
 }
 
 void AppController::startMultiTask()
 {
     LOG;
-    int amountOfRunThread = 0;
-    if(APP_MODEL->devicesList().length() > static_cast<int>(APP_MODEL->amountOfThread()))
-        amountOfRunThread = static_cast<int>(APP_MODEL->amountOfThread());
-    else {
-        amountOfRunThread = APP_MODEL->devicesList().length();
-    }
-
-    while (m_ldThreadList.length() < amountOfRunThread) {
-        m_ldThreadList.append(new LDThread(this));
-    }
+    m_updateLDThreadList.start();
 }
 
 void AppController::stopMultiTask()
@@ -48,36 +39,47 @@ void AppController::stopMultiTask()
         delete m_ldThreadList.at(0);
         m_ldThreadList.removeAt(0);
     }
-}
-
-void AppController::onDevicesListChanged()
-{
-    LOG;
+    m_deviceQueue.clear();
+    LDCommand::quitAll();
+    m_updateLDThreadList.stop();
 }
 
 void AppController::aMissionCompleted(LDThread* threadAdd)
 {
     if(threadAdd){
         if(m_ldThreadList.contains(threadAdd)){
-            int index = m_ldThreadList.indexOf(threadAdd);
-            delete m_ldThreadList.at(index);
-            m_ldThreadList.removeAt(index);
+            m_ldThreadList.removeOne(threadAdd);
+            delete threadAdd;
+            this->onUpdateLDThreadList();
         }
     }
 }
 
 void AppController::onUpdateLDThreadList()
 {
-    if(m_ldThreadList.length() < APP_MODEL->amountOfThread()){
-        if(APP_MODEL->devicesList().isEmpty()){
-            LOG << "devicesList is empty!";
-        } else {
-            if(m_ldThreadList.isEmpty()) {
-                LOG << "m_ldThreadList is empty!";
-                LDIntance* ld = dynamic_cast<LDIntance*>(APP_MODEL->devicesList().at(0));
-                m_ldThreadList.append(new LDThread(this,ld->instanceName()));
-            }else {
+    /* ******** Update m_deviceQueue from devicesList ******** */
+    foreach (QObject* device, APP_MODEL->devicesList()) {
+        if(!m_deviceQueue.contains(device))
+            m_deviceQueue.append(device);
+    }
 
+    foreach (QObject* device, m_deviceQueue) {
+        LOG <<"m_deviceQueue: " << dynamic_cast<LDIntance*>(device)->instanceName();
+    }
+
+    if(static_cast<uint>(m_ldThreadList.length()) < APP_MODEL->amountOfThread()){
+        if(m_deviceQueue.isEmpty()){
+            LOG << "m_deviceQueue is empty!";
+        } else {
+            foreach (QObject* device, m_deviceQueue) {
+                if(!APP_MODEL->devicesRunningList().contains(device)){
+                    m_ldThreadList.append(new LDThread(this,dynamic_cast<LDIntance*>(device)));
+                    m_deviceQueue.removeOne(device);
+                    m_deviceQueue.append(device);
+                    break;
+                } else {
+                    LOG << dynamic_cast<LDIntance*>(device)->instanceName() << " is run already";
+                }
             }
         }
     }else {

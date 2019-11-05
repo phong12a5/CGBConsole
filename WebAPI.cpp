@@ -17,7 +17,6 @@ WebAPI* WebAPI::s_instance = nullptr;
 WebAPI::WebAPI(QObject *parent) : QObject(parent)
 {
     // Do nothing
-    m_dropBoxToken = "lr7usq7SigAAAAAAAAAAIkdnw27zr5QbQufg98xTGlPpPwalsxHvRFnQpJaklxK3";
     if (unlockChilkat()){
         LOG << "unlockChilkat successfully";
     } else {
@@ -84,7 +83,6 @@ void WebAPI::getConfig()
                 QByteArray decodeText = encryption.decode(QByteArray::fromBase64(data.toUtf8()), getKey().toLocal8Bit(), getIV().toLocal8Bit());
                 QJsonDocument jdoc = QJsonDocument::fromJson(encryption.removePadding(decodeText));
                 QJsonObject jsonResponsedObj = jdoc.object();
-                LOG << "jsonResponsedObj: " << jsonResponsedObj;
                 if(!jsonResponsedObj.isEmpty()){
                     APP_CONFIG config;
                     config.timeout = jsonResponsedObj["timeout"].toString().toInt();
@@ -96,6 +94,7 @@ void WebAPI::getConfig()
                     config.m_balance = jsonResponsedObj["balance"].toInt();
                     config.m_openApkAfterNSeconds = jsonResponsedObj["openapkafternseconds"].toString().toInt();
                     config.m_android_versioncode = jsonResponsedObj["android_versioncode"].toString().toInt();
+                    config.m_dropboxaccesstoken = jsonResponsedObj["dropboxaccesstoken"].toString();
                     LOG << "config.timeout: " << config.timeout;
                     LOG << "config.reset_3g: " << config.reset_3g;
                     LOG << "config.debug_mode: " << config.debug_mode;
@@ -105,6 +104,7 @@ void WebAPI::getConfig()
                     LOG << "config.balance: " << config.m_balance;
                     LOG << "config.openApkAfterNSeconds: " << config.m_openApkAfterNSeconds;
                     LOG << "config.android_versioncode: " << config.m_android_versioncode;
+                    LOG << "config.dropboxaccesstoken: " << config.m_dropboxaccesstoken;
                     MODEL->setAppConfig(config);
                 }
 
@@ -129,8 +129,9 @@ bool WebAPI::downloadApk(int version) {
     }
 
     //  Add request headers.
-    std::string tokenStr = "Bearer " + std::string(m_dropBoxToken);
-    rest.AddHeader("Authorization", tokenStr.data());
+    QString tokenStr = "Bearer " + AppModel::instance()->appConfig().m_dropboxaccesstoken;
+    LOG << "Token: " << tokenStr;
+    rest.AddHeader("Authorization", tokenStr.toLocal8Bit().data());
 
     QJsonObject json;
     QString clouldPathStr = "/apk/xyz.autofarmer.app." + QString::number(version) + ".apk";

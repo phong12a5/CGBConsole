@@ -41,6 +41,7 @@ typedef struct app_config_struct {
     int m_balance;
     int m_openApkAfterNSeconds;
     int m_android_versioncode;
+    QString m_dropboxaccesstoken;
 
     app_config_struct(){
         timeout = 30;
@@ -54,6 +55,7 @@ typedef struct app_config_struct {
         m_balance = -1;
         m_openApkAfterNSeconds = DEFAULT_OPENAPK_TIME;
         m_android_versioncode = 8;
+        m_dropboxaccesstoken = "";
     }
 } APP_CONFIG;
 

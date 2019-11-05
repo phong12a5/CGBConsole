@@ -74,14 +74,6 @@ QList<QObject*> AppModel::devicesList() const
     return m_devicesList;
 }
 
-void AppModel::setDevicesList(QList<QObject*> devices)
-{
-    if(m_devicesList != devices){
-        m_devicesList = devices;
-        emit devicesListChanged();
-    }
-}
-
 void AppModel::appendDevice(QString instanceName)
 {
     foreach(QObject* device, m_devicesList) {
@@ -91,6 +83,29 @@ void AppModel::appendDevice(QString instanceName)
     m_devicesList.append(new LDIntance(this,instanceName,m_devicesList.length()));
     LOG << "m_devicesList: " << m_devicesList.length();
     emit devicesListChanged();
+}
+
+QList<QObject *> AppModel::devicesRunningList() const
+{
+    return m_devicesRunningList;
+}
+
+void AppModel::appendRunningDevice(QString instanceName)
+{
+    foreach(QObject* device, m_devicesRunningList) {
+        if(dynamic_cast<LDIntance*>(device)->instanceName() == instanceName)
+            return;
+    }
+    m_devicesRunningList.append(new LDIntance(this,instanceName,m_devicesRunningList.length()));
+    emit devicesRunningListChanged();
+}
+
+void AppModel::popRunningDevice(QString instanceName)
+{
+    foreach(QObject* device, m_devicesRunningList) {
+        if(dynamic_cast<LDIntance*>(device)->instanceName() == instanceName)
+            m_devicesRunningList.removeOne(device);
+    }
 }
 
 uint AppModel::amountOfThread() const

@@ -25,7 +25,6 @@ public:
 
 private:
     static WebAPI* s_instance;
-    const char * m_dropBoxToken;
 
 private:
 
