@@ -9,7 +9,7 @@ AppController::AppController(QObject *parent) : QObject(parent)
 {
     m_deviceQueue.clear();
     m_ldThreadList.clear();
-    m_updateLDThreadList.setInterval(5000);
+    m_updateLDThreadList.setInterval(30000);
     m_updateLDThreadList.setSingleShot(false);
     connect(&m_updateLDThreadList, SIGNAL(timeout()), this, SLOT(onUpdateLDThreadList()));
 }
@@ -29,6 +29,7 @@ void AppController::initAppController()
 void AppController::startMultiTask()
 {
     LOG;
+    this->onUpdateLDThreadList();
     m_updateLDThreadList.start();
 }
 
@@ -50,7 +51,6 @@ void AppController::aMissionCompleted(LDThread* threadAdd)
         if(m_ldThreadList.contains(threadAdd)){
             m_ldThreadList.removeOne(threadAdd);
             delete threadAdd;
-            this->onUpdateLDThreadList();
         }
     }
 }
