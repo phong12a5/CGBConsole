@@ -12,7 +12,7 @@ Item {
 
     /* --------------- Properties -------------- */
     property var appNameModel: ["Facebook","FBLite","Zalo","Instagram","Pinterest","Twitter"]
-    property var resolutionModel: ["540,960,240","720,1280,320","900,1600,320","1080,1920,490"]
+    property var resolutionModel: ["540,960,240","720,1280,320","900,1600,320","1080,1920,490", "Random"]
 
     /* --------------- functions -------------- */
     function getThreadsModel(maxThread){
