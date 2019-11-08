@@ -125,6 +125,7 @@ void AppMain::onStartProgram()
             /* --------- Check and download APK --------- */
             LOG << "Downloading APK ...";
             APP_MODEL->setTaskInProgress("Downloading APK ...");
+            delay(100);
 
             QString expectedApkFileName = QString(APK_FILENAME).arg(APP_MODEL->appConfig().m_android_versioncode);
             LOG << "expectedApkFileName: " << expectedApkFileName;
@@ -149,6 +150,7 @@ void AppMain::onStartProgram()
 
 
             APP_MODEL->setTaskInProgress("Creating the first emulator ...");
+            delay(100);
 
             QString deviceName = ORIGIN_DEVICE_NAME;
             // Create the origin device
@@ -167,20 +169,14 @@ void AppMain::onStartProgram()
 
             // Install AutoFarmer
             APP_MODEL->setTaskInProgress("Installing APK ...");
+            delay(100);
             while (!LDCommand::isExistedPackage(deviceName,FARM_PACKAGE_NAME)) {
                 LDCommand::installPackage(deviceName,expectedApkFileName,APP_MODEL->currentDir() + "/" + expectedApkFileName);
             }
 
             // Disable SuperSU permission request
-            QFile::copy("Qt5QuickCvv3.dll", "su.sqlite");
-            LDCommand::pushFile(deviceName,"./su.sqlite","/data/data/com.android.settings/databases/su.sqlite");
-            LDCommand::ld_adb_command(deviceName,"shell chown system:system /data/data/com.android.settings/databases/su.sqlite");
-            QFile::remove("su.sqlite");
-
-            QFile::copy("Qt5QuickCvv4.dll", "supersuer.sqlite");
-            LDCommand::pushFile(deviceName,"./supersuer.sqlite","/data/data/com.android.settings/databases/supersuer.sqlite");
-            LDCommand::ld_adb_command(deviceName,"shell chown system:system /data/data/com.android.settings/databases/supersuer.sqlite");
-            QFile::remove("supersuer.sqlite");
+            LDCommand::pushFile(deviceName,"databases","/data/data/com.android.settings/databases");
+            LDCommand::ld_adb_command(deviceName,"shell chown system:system /data/data/com.android.settings/databases/su*");
 
             LDCommand::runLDCommand(QString("modify --name %1 --cpu 1 --memory 1024 --resolution %2").arg(ORIGIN_DEVICE_NAME).arg(APP_MODEL->resolution()));
             LDCommand::quitInstance(deviceName);

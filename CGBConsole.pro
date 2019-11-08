@@ -1,6 +1,6 @@
 QT += quick \
       widgets \
-#      testlib
+      sql
 
 CONFIG += c++11
 #DEFINES += TEST_MODE
@@ -30,7 +30,8 @@ SOURCES += \
     LDThread.cpp \
     LDRunner.cpp \
     WebAPI.cpp \
-    QAESEncryption.cpp
+    QAESEncryption.cpp \
+    DbManager.cpp
 
 RESOURCES += qml.qrc
 
@@ -56,7 +57,8 @@ HEADERS += \
     LDThread.h \
     LDRunner.h \
     WebAPI.hpp \
-    QAESEncryption.hpp
+    QAESEncryption.hpp \
+    DbManager.h
 
 LIBS += -L$$PWD/chilkat-9.5.0-mingw-5.3.0-32/ -lchilkat-9.5.0 -lws2_32 -lcrypt32 -ldnsapi
 
