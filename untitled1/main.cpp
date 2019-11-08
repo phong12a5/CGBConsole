@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
       // uncomment to try different counter paths
       CPdhQuery pdhQuery(
 //        std::tstring(_T("\\Memory\\% Committed Bytes In Use"))
-        std::tstring(_T("\Thread(firefox/0)\Context Switches/sec"))
+                    std::tstring(_T("\\PhysicalDisk(*)\\% Disk Time"))
         //tstring(L"\Processor(*)\% Processor Time")
         //tstring(_T("\Processor(*)\Interrupts/sec"))
         //tstring(L"\Processor(_Total)\Interrupts/sec")
