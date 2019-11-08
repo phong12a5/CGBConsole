@@ -5,6 +5,7 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QFile>
+#include <QTime>
 
 #define APP_MODEL AppModel::instance()
 
@@ -12,8 +13,13 @@ LDRunner::LDRunner(QString instanceName):
     m_instanceName(instanceName),
     m_setIsLDFile(false)
 {
-    LOG << "APP_MODEL->resolution(): " << APP_MODEL->resolution();
-    LDCommand::runLDCommand(QString("modify --name %1 --cpu 1 --memory 1024 --resolution %2").arg(m_instanceName).arg(APP_MODEL->resolution()));
+    QString resolution = APP_MODEL->resolution();
+    QStringList listResoltion = QStringList() << "540,960,240" << "720,1280,320" << "900,1600,320" << "1080,1920,490";
+    if(resolution == "Random"){
+        resolution = listResoltion.at(QTime::currentTime().msec()%4);
+    }
+    LOG << "resolution: " << resolution;
+    LDCommand::runLDCommand(QString("modify --name %1 --cpu 1 --memory 1024 --resolution %2").arg(m_instanceName).arg(resolution));
 }
 
 LDRunner::~LDRunner()
