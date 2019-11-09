@@ -6,6 +6,7 @@
 #include "AppDefines.h"
 #include "AppModel.h"
 #include "LDThread.h"
+#include "PerformanceReader.h"
 
 class AppController : public QObject
 {

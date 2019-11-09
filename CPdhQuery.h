@@ -7,7 +7,6 @@
 #include <vector>
 #include <tchar.h>
 #include <iostream>
-#pragma comment(lib, "pdh.lib")
 
 namespace std
 {

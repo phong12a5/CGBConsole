@@ -9,7 +9,7 @@ AppController::AppController(QObject *parent) : QObject(parent)
 {
     m_deviceQueue.clear();
     m_ldThreadList.clear();
-    m_updateLDThreadList.setInterval(30000);
+    m_updateLDThreadList.setInterval(5000);
     m_updateLDThreadList.setSingleShot(false);
     connect(&m_updateLDThreadList, SIGNAL(timeout()), this, SLOT(onUpdateLDThreadList()));
 }
@@ -57,14 +57,16 @@ void AppController::aMissionCompleted(LDThread* threadAdd)
 
 void AppController::onUpdateLDThreadList()
 {
+    double diskUsage = PerformanceReader::currentDiskUsage();
+    if(diskUsage < 0 || diskUsage > AVAILBLE_DISK_USAGE ){
+        LOG << "Disk usage is too large ... NONE NEW DEVICE IS STARTED!";
+        return;
+    }
+
     /* ******** Update m_deviceQueue from devicesList ******** */
     foreach (QObject* device, APP_MODEL->devicesList()) {
         if(!m_deviceQueue.contains(device))
             m_deviceQueue.append(device);
-    }
-
-    foreach (QObject* device, m_deviceQueue) {
-        LOG <<"m_deviceQueue: " << dynamic_cast<LDIntance*>(device)->instanceName();
     }
 
     if(static_cast<uint>(m_ldThreadList.length()) < APP_MODEL->amountOfThread()){

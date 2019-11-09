@@ -74,7 +74,6 @@ void WebAPI::getConfig()
         LOG << "Http error: " << QString(http.lastErrorText());
     } else {
         if (resp->bodyStr()) {
-            LOG << "Reponsed: " << QString(resp->bodyStr());
             CkJsonObject jsonResponse;
             bool loadJson = jsonResponse.Load(resp->bodyStr());
             if (loadJson) {

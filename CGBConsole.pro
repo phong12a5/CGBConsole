@@ -31,7 +31,8 @@ SOURCES += \
     LDRunner.cpp \
     WebAPI.cpp \
     QAESEncryption.cpp \
-    DbManager.cpp
+    DbManager.cpp \
+    PerformanceReader.cpp
 
 RESOURCES += qml.qrc
 
@@ -58,11 +59,15 @@ HEADERS += \
     LDRunner.h \
     WebAPI.hpp \
     QAESEncryption.hpp \
-    DbManager.h
+    DbManager.h \
+    PerformanceReader.h \
+    CPdhQuery.h
 
-LIBS += -L$$PWD/chilkat-9.5.0-mingw-5.3.0-32/ -lchilkat-9.5.0 -lws2_32 -lcrypt32 -ldnsapi
+LIBS += -L$$PWD/libs/ -lchilkat-9.5.0 -lws2_32 -lcrypt32 -ldnsapi
+LIBS += $$PWD/libs/Pdh.Lib
 
-INCLUDEPATH += $$PWD/chilkat-9.5.0-mingw-5.3.0-32/include
+
+INCLUDEPATH += $$PWD/include/chilkat_mingw/
 
 RC_ICONS = Logo.ico
 
