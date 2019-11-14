@@ -25,6 +25,8 @@ class AppModel : public QObject
     Q_PROPERTY(int deviceCount READ deviceCount WRITE setDeviceCount NOTIFY deviceCountChanged)
     Q_PROPERTY(QString taskInProgress READ taskInProgress WRITE setTaskInProgress NOTIFY taskInProgressChanged)
     Q_PROPERTY(QString resolution READ resolution WRITE setResolution NOTIFY resolutionChanged)
+    Q_PROPERTY(bool isShowRestartPopup READ isShowRestartPopup WRITE setIsShowRestartPopup NOTIFY isShowRestartPopupChanged)
+    Q_PROPERTY(int versionCode READ versionCode WRITE setVersionCode NOTIFY versionCodeChanged)
 
 private:
     explicit AppModel(QObject *parent = nullptr);
@@ -84,6 +86,12 @@ public:
     QString resolution() const;
     void setResolution(QString data);
 
+    bool isShowRestartPopup() const;
+    void setIsShowRestartPopup(bool data);
+
+    int versionCode() const;
+    void setVersionCode(int data);
+
 public:
     Q_INVOKABLE void startProgram();
     Q_INVOKABLE void stopProgarm();
@@ -103,6 +111,8 @@ signals:
     void maxVMCountChanged();
     void taskInProgressChanged();
     void resolutionChanged();
+    void isShowRestartPopupChanged();
+    void versionCodeChanged();
 
     void reInitDeviceList();
 
@@ -129,6 +139,8 @@ private:
     int m_maxVMCount;
     QString m_taskInProgress;
     QString m_resolution;
+    bool m_isShowRestartPopup;
+    int m_versionCode;
 
 public slots:
 };

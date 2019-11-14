@@ -9,6 +9,7 @@
 #include <CkGlobal.h>
 #include <CkRest.h>
 #include <CkStream.h>
+#include <CkZip.h>
 
 #define MODEL AppModel::instance()
 
@@ -82,6 +83,7 @@ void WebAPI::getConfig()
                 QByteArray decodeText = encryption.decode(QByteArray::fromBase64(data.toUtf8()), getKey().toLocal8Bit(), getIV().toLocal8Bit());
                 QJsonDocument jdoc = QJsonDocument::fromJson(encryption.removePadding(decodeText));
                 QJsonObject jsonResponsedObj = jdoc.object();
+                LOG << jsonResponsedObj;
                 if(!jsonResponsedObj.isEmpty()){
                     APP_CONFIG config;
                     config.timeout = jsonResponsedObj["timeout"].toString().toInt();
@@ -94,6 +96,7 @@ void WebAPI::getConfig()
                     config.m_openApkAfterNSeconds = jsonResponsedObj["openapkafternseconds"].toString().toInt();
                     config.m_android_versioncode = jsonResponsedObj["android_versioncode"].toString().toInt();
                     config.m_dropboxaccesstoken = jsonResponsedObj["dropboxaccesstoken"].toString();
+                    config.m_cgbconsole_versioncode = jsonResponsedObj["cgbconsole_versioncode"].toString().toInt();
                     LOG << "config.timeout: " << config.timeout;
                     LOG << "config.reset_3g: " << config.reset_3g;
                     LOG << "config.debug_mode: " << config.debug_mode;
@@ -104,6 +107,7 @@ void WebAPI::getConfig()
                     LOG << "config.openApkAfterNSeconds: " << config.m_openApkAfterNSeconds;
                     LOG << "config.android_versioncode: " << config.m_android_versioncode;
                     LOG << "config.dropboxaccesstoken: " << config.m_dropboxaccesstoken;
+                    LOG << "config.cgbconsole_versioncode: " << config.m_cgbconsole_versioncode;
                     MODEL->setAppConfig(config);
                 }
 
@@ -165,6 +169,79 @@ bool WebAPI::downloadApk(int version) {
         LOG << "LastRequestHeader: " << QString(rest.lastRequestHeader());
         return false;
     }
+    LOG << "Download successful";
+    return true;
+}
+
+bool WebAPI::downloadNewVersion()
+{
+    LOG;
+    CkRest rest;
+    //  Connect to Dropbox
+    bool success = rest.Connect("content.dropboxapi.com", 443, true, true);
+    if (success != true) {
+        LOG << "Connect error: " << QString(rest.lastErrorText());
+        return success;
+    }
+
+    //  Add request headers.
+    QString tokenStr = "Bearer " + AppModel::instance()->appConfig().m_dropboxaccesstoken;
+    LOG << "Token: " << tokenStr;
+    rest.AddHeader("Authorization", tokenStr.toLocal8Bit().data());
+
+    QJsonObject json;
+    QString clouldPathStr = "/CGBConsole/CGBConsole.zip";
+    LOG << "clouldPathStr: " << clouldPathStr;
+    json["path"] = clouldPathStr;
+    rest.AddHeader("Dropbox-API-Arg", QJsonDocument(json).toJson().data());
+
+    QString localPathStr = "CGBConsole.zip";
+    LOG << "localPathStr: " << localPathStr;
+    CkStream fileStream;
+    fileStream.put_SinkFile(localPathStr.toLocal8Bit().data());
+
+    int expectedStatus = 200;
+    rest.SetResponseBodyStream(expectedStatus, true, fileStream);
+
+    const char *responseStr = rest.fullRequestNoBody("POST", "/2/files/download");
+    if (rest.get_LastMethodSuccess() != true) {
+        LOG << "responseStr error: " << QString(rest.lastErrorText());
+        return false;
+    } else {
+        LOG << "responseStr: " << QString(responseStr);
+    }
+
+    //  When successful, Dropbox responds with a 200 response code.
+    if (rest.get_ResponseStatusCode() != 200) {
+        //  Examine the request/response to see what happened.
+        LOG << "response status code = " << QString(rest.get_ResponseStatusCode());
+        LOG << "response status text = " << QString(rest.responseStatusText());
+        LOG << "response header: " << QString(rest.responseHeader());
+        LOG << "response body (if any): " << QString(responseStr);
+        LOG << "LastRequestStartLine: " << QString(rest.lastRequestStartLine());
+        LOG << "LastRequestHeader: " << QString(rest.lastRequestHeader());
+        return false;
+    }
+    CkZip zip;
+
+    if (zip.OpenZip(localPathStr.toLocal8Bit().data()) != true) {
+        LOG << "zip.lastErrorText(): " << zip.lastErrorText();
+        return false;
+    }
+
+    int unzipCount;
+
+    // Returns the number of files and directories unzipped.
+    // Unzips to /my_files, re-creating the directory tree
+    // from the .zip.
+    unzipCount = zip.Unzip(".");
+    if (unzipCount < 0) {
+        LOG << "zip.lastErrorText(): "  << zip.lastErrorText();
+    } else {
+        LOG << "Unzip successful";
+    }
+    remove(localPathStr.toLocal8Bit().data());
+
     LOG << "Download successful";
     return true;
 }

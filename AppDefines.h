@@ -9,6 +9,7 @@
 
 #define FARM_PACKAGE_NAME       "xyz.autofarmer.app"
 #define CONFIG_FILE_NAME        "config.json"
+#define VERSION_FILENAME        "version.json"
 #define ENDSCRIPT_PATH          "/sdcard/DCIM/"
 #define ENDSCRIPT_FILENAME      "endScript.st"
 #define INITSCRIPT_FILENAME     "/sdcard/DCIM/initApp.st"
@@ -26,6 +27,7 @@
 #define APP_NAME_PROP_KEY       "appName"
 #define DEVICE_COUNT_KEY        "device_count"
 #define THREAD_COUNT_KEY        "thread_count"
+#define VERSION_KEY             "version"
 
 #define APP_DATA_FOLDER         "/sdcard/xyz.autofarmer.app/"
 
@@ -44,6 +46,7 @@ typedef struct app_config_struct {
     int m_openApkAfterNSeconds;
     int m_android_versioncode;
     QString m_dropboxaccesstoken;
+    int m_cgbconsole_versioncode;
 
     app_config_struct(){
         timeout = 30;
@@ -58,6 +61,7 @@ typedef struct app_config_struct {
         m_openApkAfterNSeconds = DEFAULT_OPENAPK_TIME;
         m_android_versioncode = 8;
         m_dropboxaccesstoken = "";
+        m_cgbconsole_versioncode = 0;
     }
 } APP_CONFIG;
 

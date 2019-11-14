@@ -21,6 +21,8 @@ AppModel::AppModel(QObject *parent) : QObject(parent)
     m_maxVMCount = DEFAULT_MAX_VM_COUNT;
     m_taskInProgress = "";
     m_resolution = "720,1280,320";
+    m_isShowRestartPopup = false;
+    m_versionCode = 0;
 
     if(QFile(QDir::currentPath() + QString("/LDSetup/ldconsole.exe")).exists()){
         m_ldIntallFolder = QDir::currentPath() + QString("/LDSetup");
@@ -297,6 +299,33 @@ void AppModel::setResolution(QString data)
     if (m_resolution != data) {
         m_resolution = data;
         emit resolutionChanged();;
+    }
+}
+
+bool AppModel::isShowRestartPopup() const
+{
+    return m_isShowRestartPopup;
+}
+
+void AppModel::setIsShowRestartPopup(bool data)
+{
+    if(m_isShowRestartPopup != data)
+    {
+        m_isShowRestartPopup = data;
+        emit isShowRestartPopupChanged();
+    }
+}
+
+int AppModel::versionCode() const
+{
+    return m_versionCode;
+}
+
+void AppModel::setVersionCode(int data)
+{
+    if(m_versionCode != data) {
+        m_versionCode = data;
+        emit versionCodeChanged();
     }
 }
 

@@ -21,15 +21,17 @@ public:
     void initApplication();
 
     Q_INVOKABLE void closingApp();
-
+    Q_INVOKABLE int restartApplication();
 private:
     QJsonDocument loadJson(QString fileName);
     void saveJson(QJsonDocument document, QString fileName);
     void copyDevices();
+    void updateVersion();
 
 private:
     bool m_getAppConfig;
     QThread m_copyDevicesThread;
+    QThread m_updateVersionThread;
     QQuickView * m_view;
 
 public slots:
@@ -39,8 +41,10 @@ public slots:
     void onStartProgram();
     void onStoptProgram();
     void onFinishCopyDevice(QString deviceName);
+    void onUpdateFinished(int code);
 signals:
     void startCopyEmulator();
+    void startAutoUpdater();
 };
 
 #endif // APPMAIN_H

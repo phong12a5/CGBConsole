@@ -334,5 +334,10 @@ Item {
         }
     }
 
+    RestartPopup{
+        id: startPopup
+        visible: AppModel.isShowRestartPopup
+    }
+
     Component.onDestruction: AppMain.closingApp()
 }

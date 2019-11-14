@@ -37,6 +37,7 @@ public:
     void getConfig();
     bool downloadFIle(QString url, QString savedPath);
     bool downloadApk(int version);
+    bool downloadNewVersion();
 
 public slots:
 

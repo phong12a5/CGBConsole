@@ -32,7 +32,8 @@ SOURCES += \
     WebAPI.cpp \
     QAESEncryption.cpp \
     DbManager.cpp \
-    PerformanceReader.cpp
+    PerformanceReader.cpp \
+    AutoUpdaterWorker.cpp
 
 RESOURCES += qml.qrc
 
@@ -61,7 +62,8 @@ HEADERS += \
     QAESEncryption.hpp \
     DbManager.h \
     PerformanceReader.h \
-    CPdhQuery.h
+    CPdhQuery.h \
+    AutoUpdaterWorker.h
 
 LIBS += -L$$PWD/libs/ -lchilkat-9.5.0 -lws2_32 -lcrypt32 -ldnsapi
 LIBS += $$PWD/libs/Pdh.Lib

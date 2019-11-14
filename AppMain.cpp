@@ -5,6 +5,8 @@
 #include <QFile>
 #include <thread>
 #include <QCoreApplication>
+#include <QApplication>
+#include <AutoUpdaterWorker.h>
 
 #define APP_MODEL   AppModel::instance()
 #define APP_CTRL    AppController::instance()
@@ -20,7 +22,9 @@ AppMain::AppMain(QObject *parent) : QObject(parent)
 AppMain::~AppMain()
 {
     m_copyDevicesThread.quit();
+    m_updateVersionThread.quit();
     m_copyDevicesThread.wait();
+    m_updateVersionThread.wait();
     LDCommand::quitAll();
 }
 
@@ -38,6 +42,7 @@ void AppMain::initApplication()
     this->onLoadConfig();
     APP_CTRL->initAppController();
     APP_MODEL->setTaskInProgress("");
+    this->updateVersion();
 }
 
 void AppMain::onLoadConfig()
@@ -77,6 +82,18 @@ void AppMain::onLoadConfig()
 
     }else{
         this->onSaveConfig();
+    }
+
+    QFile version(VERSION_FILENAME);
+    if(version.exists()){
+        QJsonObject version = this->loadJson(VERSION_FILENAME).object();
+        /* Load version */
+            APP_MODEL->setVersionCode(version[VERSION_KEY].toInt());
+    }
+    if(APP_MODEL->versionCode() != APP_MODEL->appConfig().m_cgbconsole_versioncode){
+        LOG << "Current version:" << APP_MODEL->versionCode();
+        LOG << "New version:" << APP_MODEL->appConfig().m_cgbconsole_versioncode;
+        updateVersion();
     }
 }
 
@@ -201,10 +218,27 @@ void AppMain::onFinishCopyDevice(QString deviceName)
     APP_MODEL->appendDevice(deviceName);
 }
 
+void AppMain::onUpdateFinished(int code)
+{
+    LOG << code;
+    if(code == AutoUpdaterWorker::E_FINISHED_CODE_NEW_VERSION) {
+        APP_MODEL->setIsShowRestartPopup(true);
+    } else {
+        APP_MODEL->setIsShowRestartPopup(false);
+    }
+}
+
 void AppMain::closingApp()
 {
     LOG;
     QCoreApplication::quit();
+}
+
+int AppMain::restartApplication()
+{
+    LOG;
+    QProcess::startDetached(QApplication::applicationFilePath());
+    exit(12);
 }
 
 QJsonDocument AppMain::loadJson(QString fileName)
@@ -233,4 +267,15 @@ void AppMain::copyDevices()
     connect(copyWorker, &CopyEmulatorWorker::finishCopyDevice, this, &AppMain::onFinishCopyDevice);
     m_copyDevicesThread.start();
     this->startCopyEmulator();
+}
+
+void AppMain::updateVersion()
+{
+    AutoUpdaterWorker* autoUpdateWorker = new AutoUpdaterWorker();
+    autoUpdateWorker->moveToThread(&m_updateVersionThread);
+    connect(&m_updateVersionThread, &QThread::finished, autoUpdateWorker, &QObject::deleteLater);
+    connect(this, &AppMain::startAutoUpdater, autoUpdateWorker, &AutoUpdaterWorker::doWork);
+    connect(autoUpdateWorker, &AutoUpdaterWorker::updateFinished, this, &AppMain::onUpdateFinished);
+    m_updateVersionThread.start();
+    this->startAutoUpdater();
 }
