@@ -240,9 +240,10 @@ bool WebAPI::downloadNewVersion()
     } else {
         LOG << "Unzip successful";
     }
-    remove(localPathStr.toLocal8Bit().data());
+    zip.CloseZip();
+    QFile::remove(localPathStr);
 
-    LOG << "Download successful";
+    LOG << "Download and unzip successful";
     return true;
 }
 

@@ -323,7 +323,7 @@ int AppModel::versionCode() const
 
 void AppModel::setVersionCode(int data)
 {
-    if(m_versionCode != data) {
+    if( m_versionCode != data) {
         m_versionCode = data;
         emit versionCodeChanged();
     }

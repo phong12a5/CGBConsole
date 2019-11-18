@@ -42,7 +42,6 @@ void AppMain::initApplication()
     this->onLoadConfig();
     APP_CTRL->initAppController();
     APP_MODEL->setTaskInProgress("");
-    this->updateVersion();
 }
 
 void AppMain::onLoadConfig()
@@ -223,6 +222,9 @@ void AppMain::onUpdateFinished(int code)
     LOG << code;
     if(code == AutoUpdaterWorker::E_FINISHED_CODE_NEW_VERSION) {
         APP_MODEL->setIsShowRestartPopup(true);
+        QJsonObject config;
+        config[VERSION_KEY] = APP_MODEL->appConfig().m_cgbconsole_versioncode;
+        this->saveJson(QJsonDocument(config),VERSION_FILENAME);
     } else {
         APP_MODEL->setIsShowRestartPopup(false);
     }
@@ -271,6 +273,7 @@ void AppMain::copyDevices()
 
 void AppMain::updateVersion()
 {
+    LOG;
     AutoUpdaterWorker* autoUpdateWorker = new AutoUpdaterWorker();
     autoUpdateWorker->moveToThread(&m_updateVersionThread);
     connect(&m_updateVersionThread, &QThread::finished, autoUpdateWorker, &QObject::deleteLater);
