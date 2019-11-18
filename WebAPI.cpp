@@ -222,10 +222,13 @@ bool WebAPI::downloadNewVersion()
         LOG << "LastRequestHeader: " << QString(rest.lastRequestHeader());
         return false;
     }
+
     CkZip zip;
 
+    QFile::rename("CGBConsole.exe","temp.dat");
     if (zip.OpenZip(localPathStr.toLocal8Bit().data()) != true) {
         LOG << "zip.lastErrorText(): " << zip.lastErrorText();
+        QFile::rename("temp.dat","CGBConsole.exe");
         return false;
     }
 
@@ -237,6 +240,7 @@ bool WebAPI::downloadNewVersion()
     unzipCount = zip.Unzip(".");
     if (unzipCount < 0) {
         LOG << "zip.lastErrorText(): "  << zip.lastErrorText();
+        QFile::rename("temp.dat","CGBConsole.exe");
     } else {
         LOG << "Unzip successful";
     }
