@@ -38,7 +38,7 @@ void LDRunner::run()
     connect(m_checkConnectionTimer,SIGNAL(timeout()),this,SLOT(onCheckConnection()));
 
     m_checkEndScriptTimer = new QTimer(this);
-    m_checkEndScriptTimer->setInterval(3000);
+    m_checkEndScriptTimer->setInterval(15000);
     m_checkEndScriptTimer->setSingleShot(false);
     connect(m_checkEndScriptTimer,SIGNAL(timeout()),this,SLOT(onCheckEnscript()));
 
