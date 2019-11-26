@@ -164,30 +164,23 @@ void AppMain::onStartProgram()
 
             /* --------- END Check and download APK --------- */
 
-
-            APP_MODEL->setTaskInProgress("Creating the first emulator ...");
-            delay(100);
-
             QString deviceName = ORIGIN_DEVICE_NAME;
             // Create the origin device
             QString output, error;
             LDCommand::runLDCommand("list", output, error);
             // If ORIGIN_DEVICE has not created, Create it
-            if(!output.contains(deviceName))
+            if(!output.contains(deviceName)){
+                APP_MODEL->setTaskInProgress("Creating the first emulator ...");
                 LDCommand::addInstance(deviceName);
-
-            LDCommand::lunchInstance(deviceName);
-
-            // Waiting for starting up done
-            while(!LDCommand::checkConnection(deviceName)) {
                 delay(1000);
             }
 
+
             // Install AutoFarmer
             APP_MODEL->setTaskInProgress("Installing APK ...");
-            delay(100);
+            LDCommand::runLDCommand(QString("installapp --name %1 --filename %2").arg(deviceName).arg(expectedApkFileName));
             while (!LDCommand::isExistedPackage(deviceName,FARM_PACKAGE_NAME)) {
-                LDCommand::installPackage(deviceName,expectedApkFileName,APP_MODEL->currentDir() + "/" + expectedApkFileName);
+                delay(1000);
             }
 
             // Disable SuperSU permission request
