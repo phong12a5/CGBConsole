@@ -184,8 +184,11 @@ void AppMain::onStartProgram()
                 delay(1000);
             }
 
+            LDCommand::ld_adb_command(deviceName,QString("shell mkdir %1").arg(APP_DATA_FOLDER));
+
             // Disable SuperSU permission request
-            LDCommand::pushFile(deviceName,"databases","/data/data/com.android.settings/databases");
+            LDCommand::pushFile(deviceName,"/data/data/com.android.settings/databases","./databases");
+            LDCommand::ld_adb_command(deviceName,"shell chown system:system /data/data/com.android.settings/databases/");
             LDCommand::ld_adb_command(deviceName,"shell chown system:system /data/data/com.android.settings/databases/su*");
 
             LDCommand::runLDCommand(QString("modify --name %1 --cpu 1 --memory 1024 --resolution %2").arg(ORIGIN_DEVICE_NAME).arg(APP_MODEL->resolution()));

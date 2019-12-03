@@ -33,7 +33,7 @@ void LDRunner::run()
     LOG << "Thread ID: " << QThread::currentThreadId();
 
     m_checkConnectionTimer = new QTimer(this);
-    m_checkConnectionTimer->setInterval(3000);
+    m_checkConnectionTimer->setInterval(10000);
     m_checkConnectionTimer->setSingleShot(false);
     connect(m_checkConnectionTimer,SIGNAL(timeout()),this,SLOT(onCheckConnection()));
 
@@ -54,8 +54,6 @@ void LDRunner::run()
 
     LDCommand::lunchInstance(m_instanceName);
     m_checkRunningDevice->start();
-
-    m_checkConnectionTimer->start();
 }
 
 void LDRunner::quitRunner()
@@ -85,12 +83,14 @@ void LDRunner::onCheckConnection()
         configObj["appname"] = APP_MODEL->appName();
         configObj["device_name"] = m_instanceName;
 
-        QFile jsonFile("startup.config");
+        QString startUpFile = m_instanceName + "_startup.config";
+        QFile jsonFile(startUpFile);
         jsonFile.open(QFile::WriteOnly);
         jsonFile.write(QJsonDocument(configObj).toJson());
         jsonFile.close();
 
-        LDCommand::pushFile(m_instanceName,"/sdcard/startup.config","./startup.config");
+        LDCommand::pushFile(m_instanceName,QString(APP_DATA_FOLDER) + "startup.config","./" + startUpFile);
+        QFile::remove(startUpFile);
         /* Created startup.config and passed to Nox*/
 
         // Run app
@@ -100,6 +100,8 @@ void LDRunner::onCheckConnection()
         m_checkEndScriptTimer->start();
         m_checkConnectionTimer->stop();
         LDCommand::sortWindow();
+    }else {
+        LOG << m_instanceName << " " << false;
     }
 }
 
@@ -117,11 +119,11 @@ void LDRunner::onCheckEnscript()
 
 void LDRunner::onCheckRunApp()
 {
-    if (!LDCommand::isAppRunning(m_instanceName)) {
-        LDCommand::runApp(m_instanceName, FARM_PACKAGE_NAME);
-    }else {
-        m_checkRunAppTimer->stop();
-    }
+//    if (!LDCommand::isAppRunning(m_instanceName)) {
+    LDCommand::runApp(m_instanceName, FARM_PACKAGE_NAME);
+    //    }else {
+    m_checkRunAppTimer->stop();
+//    }
 }
 
 void LDRunner::onCheckRunningDevice()
@@ -130,6 +132,7 @@ void LDRunner::onCheckRunningDevice()
     if(deviceState == LDCommand::DEVICE_STATE_RUNNING) {
         LOG << m_instanceName << " run already!";
         m_checkRunningDevice->stop();
+        m_checkConnectionTimer->start();
     }else if(deviceState == LDCommand::DEVICE_STATE_STOP){
         LOG << m_instanceName << " is not running now!";
         LDCommand::lunchInstance(m_instanceName);

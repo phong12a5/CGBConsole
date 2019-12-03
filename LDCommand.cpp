@@ -95,8 +95,8 @@ bool LDCommand::rebootInstance(QString instanceName)
 
 bool LDCommand::checkConnection(QString instanceName)
 {
-    QString startUpPath = QString("/sdcard/startup.config");
-    QString startUpLocalPath = "./" + instanceName + "_" + "startup.config";
+    QString startUpPath = QString("/sdcard/xyz.autofarmer.app/startup.config");
+    QString startUpLocalPath = "./" + instanceName + ".connected";
     if(LDCommand::pullFile(instanceName,startUpPath,startUpLocalPath)){
         if(QFile(startUpLocalPath).exists()){
             QFile::remove(startUpLocalPath);

@@ -2,7 +2,7 @@ QT += quick \
       widgets \
       sql
 
-CONFIG += c++11
+CONFIG += c++11 console
 #DEFINES += TEST_MODE
 
 
