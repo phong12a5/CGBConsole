@@ -90,15 +90,13 @@ void LDRunner::onCheckConnection()
         jsonFile.write(QJsonDocument(configObj).toJson());
         jsonFile.close();
 
-        LDCommand::ld_adb_command(m_instanceName,QString("shell mkdir %1").arg(APP_DATA_FOLDER));
-        LDCommand::ld_adb_command(m_instanceName,QString("push startup.config %1").arg(APP_DATA_FOLDER));
+        LDCommand::pushFile(m_instanceName,"/sdcard/startup.config","./startup.config");
         /* Created startup.config and passed to Nox*/
 
         // Run app
         m_checkRunAppTimer->start();
 
         QString endScptNamePath = QString(APP_DATA_FOLDER) + QString(ENDSCRIPT_FILENAME);
-        LDCommand::ld_adb_command(m_instanceName,QString("shell rm %1").arg(endScptNamePath));
         m_checkEndScriptTimer->start();
         m_checkConnectionTimer->stop();
         LDCommand::sortWindow();
@@ -108,10 +106,12 @@ void LDRunner::onCheckConnection()
 void LDRunner::onCheckEnscript()
 {
     QString endScptNamePath = QString(APP_DATA_FOLDER) + QString(ENDSCRIPT_FILENAME);
-    QString output = LDCommand::ld_adb_command_str(m_instanceName,QString("shell [ -f %1 ] && echo true || echo false").arg(endScptNamePath)).simplified();
-    if(output == "true"){
-        LOG << "Output: " << output;
-        emit finished();
+    QString endScptLocalPath = "./" + m_instanceName + "_" + ENDSCRIPT_FILENAME;
+    if(LDCommand::pullFile(m_instanceName,endScptNamePath,endScptLocalPath)){
+        if(QFile(endScptLocalPath).exists()){
+            QFile::remove(endScptLocalPath);
+            emit finished();
+        }
     }
 }
 

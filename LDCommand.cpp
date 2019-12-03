@@ -9,7 +9,7 @@
 bool LDCommand::runLDCommand(QString args, int timeout)
 {
     QString cmd = QString("\"%1/ldconsole.exe\" %2").arg(APP_MODEL->ldIntallFolder()).arg(args);
-//    LOG << "Cmd: " << cmd;
+    LOG << "Cmd: " << cmd;
     QProcess process;
     process.start(cmd);
     process.waitForFinished(timeout);
@@ -26,7 +26,7 @@ bool LDCommand::runLDCommand(QString args, int timeout)
 bool LDCommand::runLDCommand(QString args, QString &output, QString &error, int timeout)
 {
     QString cmd = QString("\"%1/ldconsole.exe\" %2").arg(APP_MODEL->ldIntallFolder()).arg(args);
-//    LOG << "Cmd: " << cmd;
+    LOG << "Cmd: " << cmd;
     QProcess process;
     process.start(cmd);
     process.waitForFinished(timeout);
@@ -43,22 +43,6 @@ bool LDCommand::lunchInstance(QString instanceName)
 {
     LOG << instanceName;
     return LDCommand::runLDCommand(QString("launch --name %1").arg(instanceName));
-}
-
-bool LDCommand::installPackage(QString instanceName, QString fileName, QString apkPath)
-{
-    LOG << "instanceName: " << instanceName;
-    LOG << "fileName: " << fileName;
-    LOG << "apkPath: " << apkPath;
-
-    if(!QFile(apkPath).exists()){
-        LOG << "apkPath has not existed!";
-        return false;
-    }
-    QString apkPathInRemote = "/sdcard/DCIM/" + fileName;
-    LDCommand::runLDCommand(QString("push --name %1 --remote %2 --local %3").arg(instanceName).arg(apkPathInRemote).arg(apkPath));
-    LDCommand::ld_adb_command(instanceName,QString("shell pm install %1").arg(apkPathInRemote));
-    return true;
 }
 
 bool LDCommand::runApp(QString instanceName, QString packageName)
@@ -111,33 +95,21 @@ bool LDCommand::rebootInstance(QString instanceName)
 
 bool LDCommand::checkConnection(QString instanceName)
 {
-    QString output;
-    output = LDCommand::ld_adb_command_str(instanceName,"shell ls | grep sdcard",1000);
-    output = output.simplified();
-    if(output == "sdcard"){
-        LOG << QString("Connect to %1: successful").arg(instanceName);
-        return true;
-    }else{
-//        LOG << QString("Connect to %1: failure").arg(instanceName);
-        return false;
+    QString startUpPath = QString("/sdcard/startup.config");
+    QString startUpLocalPath = "./" + instanceName + "_" + "startup.config";
+    if(LDCommand::pullFile(instanceName,startUpPath,startUpLocalPath)){
+        if(QFile(startUpLocalPath).exists()){
+            QFile::remove(startUpLocalPath);
+            return true;
+        }
     }
+    return false;
 }
 
 bool LDCommand::coppyInstance(QString instanceName, QString fromInstanceName)
 {
     LOG << instanceName << " from "  << fromInstanceName;
     return LDCommand::runLDCommand(QString("copy --name %1 --from %2").arg(instanceName).arg(fromInstanceName));
-}
-
-QString LDCommand::currentActivity(QString instanceName)
-{
-    QString retVal;
-    QStringList output = LDCommand::ld_adb_command_str(instanceName,"shell dumpsys window windows | grep -E 'mCurrentFocus'").split(' ');
-    if(output.length() > 4){
-        retVal = output.at(4).simplified().remove('}');
-    }
-    LOG << "retVal: " << retVal;
-    return retVal;
 }
 
 bool LDCommand::isAppRunning(QString instanceName)
@@ -153,29 +125,30 @@ bool LDCommand::sortWindow()
     return LDCommand::runLDCommand("sortWnd");
 }
 
-bool LDCommand::checkPermission(QString instanceName, QString packageName, QString permission)
+bool LDCommand::isExistedPackage(QString packageName)
 {
-    QString output = ld_adb_command_str(instanceName,QString("shell dumpsys package %1 | grep %2").arg(packageName).arg(permission));
-    if(output.contains(permission))
-        return true;
-    else
+    QFile file("LDSetup/data/apps.text");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        LOG << "Open file fail";
         return false;
-}
-
-bool LDCommand::isExistedPackage(QString instanceName, QString packageName)
-{
-    QString output = ld_adb_command_str(instanceName,QString("shell pm list packages | grep %1").arg(packageName));
-    if(output.contains(packageName))
-        return true;
-    else
-        return false;
+    }
+    while (!file.atEnd()) {
+        QString line = QString(file.readLine());
+        LOG << "line: " << line;
+        if(line.contains(packageName))
+            return true;
+    }
+    return false;
 }
 
 bool LDCommand::pushFile(QString instanceName, QString filePath, QString target)
 {
-    QString output =  LDCommand::ld_adb_command_str(instanceName,QString("push %1 %2").arg(filePath).arg(target));
-    LOG << "output: " << output;
-    return true;
+    return LDCommand::runLDCommand(QString("push --name %1 --remote %2 --local %3").arg(instanceName).arg(filePath).arg(target));
+}
+
+bool LDCommand::pullFile(QString instanceName, QString remoteFile, QString localFile)
+{
+    return LDCommand::runLDCommand(QString("pull --name %1 --remote %2 --local %3").arg(instanceName).arg(remoteFile).arg(localFile));
 }
 
 int LDCommand::isRunningDevice(QString instanceName)
