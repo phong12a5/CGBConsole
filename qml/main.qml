@@ -140,7 +140,7 @@ Item {
                 font.bold: true
             }
 
-            ComboBox {
+            CustomizedComboBox {
                 id: appNameComb
                 model: appNameModel
                 width: 200
@@ -171,12 +171,13 @@ Item {
                 font.bold: true
             }
 
-            ComboBox {
+            CustomizedComboBox {
                 id: threadSelItem
                 enabled: !AppModel.isLaunchMutiTask
                 currentIndex: AppModel.amountOfThread - 1
-                model: getThreadsModel(AppModel.maxNumberThread)
+                model: AppModel.maxNumberThread
                 width: 200
+                editable: true
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
                 onActivated: {
@@ -202,14 +203,15 @@ Item {
                 font.bold: true
             }
 
-            ComboBox {
+            CustomizedComboBox {
                 id: vmCount
                 enabled: !AppModel.isLaunchMutiTask
                 currentIndex: AppModel.deviceCount - 1
-                model: getVmModel(AppModel.maxVMCount)
+                model: AppModel.maxVMCount
                 width: 200
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
+                editable: true
                 onActivated: {
                     AppModel.deviceCount = currentIndex + 1
                     currentIndex = AppModel.deviceCount - 1
@@ -234,7 +236,7 @@ Item {
                 font.bold: true
             }
 
-            ComboBox {
+            CustomizedComboBox {
                 id: screenoption
                 enabled: !AppModel.isLaunchMutiTask
                 currentIndex: getCurrentResolutionIndex(AppModel.resolution)
