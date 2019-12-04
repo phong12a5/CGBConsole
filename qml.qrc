@@ -7,8 +7,11 @@
         <file>qml/page/ExpiredPopup.qml</file>
         <file>qml/unit/AdsComponent.qml</file>
         <file>qml/unit/RestartPopup.qml</file>
+        <file>qml/unit/InputBox.qml</file>
         <file>image/setting.png</file>
         <file>image/opened-folder.png</file>
         <file>image/background.jpg</file>
+        <file>image/downIcon.png</file>
+        <file>image/upIcon.png</file>
     </qresource>
 </RCC>
