@@ -174,15 +174,13 @@ Item {
             CustomizedComboBox {
                 id: threadSelItem
                 enabled: !AppModel.isLaunchMutiTask
-                currentIndex: AppModel.amountOfThread - 1
+                currentIndex: AppModel.amountOfThread
                 model: AppModel.maxNumberThread
                 width: 200
                 editable: true
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
-                onActivated: {
-                    AppModel.amountOfThread = currentIndex + 1
-                }
+                onUpdateValue: AppModel.amountOfThread = currentIndex
             }
         }
 
@@ -206,16 +204,13 @@ Item {
             CustomizedComboBox {
                 id: vmCount
                 enabled: !AppModel.isLaunchMutiTask
-                currentIndex: AppModel.deviceCount - 1
+                currentIndex: AppModel.deviceCount
                 model: AppModel.maxVMCount
                 width: 200
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
                 editable: true
-                onActivated: {
-                    AppModel.deviceCount = currentIndex + 1
-                    currentIndex = AppModel.deviceCount - 1
-                }
+                onUpdateValue: AppModel.deviceCount = currentIndex
             }
         }
 

@@ -31,17 +31,14 @@ AppMain::~AppMain()
 void AppMain::initApplication()
 {
     LOG;
+    APP_MODEL->setCurrentDir(QDir::currentPath());
+    this->onLoadConfig();
+    APP_CTRL->initAppController();
     m_view = new QQuickView();
     m_view->rootContext()->setContextProperty("AppModel",AppModel::instance());
     m_view->rootContext()->setContextProperty("AppMain",this);
     m_view->setSource(QUrl(QStringLiteral("qrc:/qml/main.qml")));
     m_view->show();
-
-    APP_MODEL->setTaskInProgress("Initializing application ...");
-    APP_MODEL->setCurrentDir(QDir::currentPath());
-    this->onLoadConfig();
-    APP_CTRL->initAppController();
-    APP_MODEL->setTaskInProgress("");
 }
 
 void AppMain::onLoadConfig()

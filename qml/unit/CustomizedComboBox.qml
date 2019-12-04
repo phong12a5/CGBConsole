@@ -6,6 +6,8 @@ ComboBox {
     width: 200
     height: 30
 
+    signal updateValue()
+
     indicator: Item {
         id: indicatorItem
         height: root.height
@@ -29,6 +31,7 @@ ComboBox {
                 anchors.fill: parent
                 onReleased: {
                     root.currentIndex ++
+                    updateValue()
                 }
             }
         }
@@ -46,6 +49,7 @@ ComboBox {
                 anchors.fill: parent
                 onReleased: {
                     root.currentIndex --
+                    updateValue()
                 }
             }
         }
