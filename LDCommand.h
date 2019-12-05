@@ -17,28 +17,31 @@ public:
     };
 
 public:
-    static bool runLDCommand(QString args, int timeout = -1);
-    static bool runLDCommand(QString args, QString &output, QString &error, int timeout = -1);
-    static bool lunchInstance(QString instanceName);
-    static bool runApp(QString instanceName, QString packageName);
-    static bool addInstance(QString instanceName);
-    static bool ld_adb_command(QString instanceName, QString cmd, int timeout = -1);
-    static QString ld_adb_command_str(QString instanceName, QString cmd, int timeout = -1);
-    static bool quitInstance(QString instanceName);
-    static bool quitAll();
-    static bool rebootInstance(QString instanceName);
-    static bool checkConnection(QString instanceName);
-    static bool coppyInstance(QString instanceName, QString fromInstanceName);
-    static bool isAppRunning(QString instanceName);
-    static bool sortWindow();
-    static bool isExistedPackage(QString packageName);
-    static bool pushFile(QString instanceName, QString filePath, QString target);
-    static bool pullFile(QString instanceName, QString filePath, QString target);
-    static int isRunningDevice(QString instanceName);
-    static bool repairEmulator();
-signals:
+    static LDCommand* instance();
+    bool runLDCommand(QString args, int timeout = -1);
+    bool runLDCommand(QString args, QString &output, QString &error, int timeout = -1);
+    bool lunchInstance(QString instanceName);
+    bool runApp(QString instanceName, QString packageName);
+    bool addInstance(QString instanceName);
+    bool ld_adb_command(QString instanceName, QString cmd, int timeout = -1);
+    QString ld_adb_command_str(QString instanceName, QString cmd, int timeout = -1);
+    bool quitInstance(QString instanceName);
+    bool quitAll();
+    bool rebootInstance(QString instanceName);
+    bool checkConnection(QString instanceName);
+    bool coppyInstance(QString instanceName, QString fromInstanceName);
+    bool isAppRunning(QString instanceName);
+    bool sortWindow();
+    bool isExistedPackage(QString packageName);
+    bool pushFile(QString instanceName, QString filePath, QString target);
+    bool pullFile(QString instanceName, QString filePath, QString target);
+    int isRunningDevice(QString instanceName);
+    bool repairEmulator();
 
-public slots:
+private:
+    static LDCommand* m_instance;
+
+
 };
 
 #endif // LDCOMMAND_H

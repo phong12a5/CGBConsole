@@ -41,7 +41,7 @@ void AppController::stopMultiTask()
         m_ldThreadList.removeAt(0);
     }
     m_deviceQueue.clear();
-    LDCommand::quitAll();
+    LDCommand::instance()->quitAll();
     m_updateLDThreadList.stop();
 }
 

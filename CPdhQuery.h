@@ -40,23 +40,24 @@ public:
 
   //! Constructor
   explicit CPdhQuery(std::tstring const &counterPath)
-    : m_pdhQuery(NULL)
+    : m_pdhQuery(nullptr)
     , m_pdhStatus(ERROR_SUCCESS)
-    , m_pdhCounter(NULL)
+    , m_pdhCounter(nullptr)
     , m_counterPath(counterPath)
   {
-    if (m_pdhStatus = PdhOpenQuery(NULL, 0, &m_pdhQuery))
+      m_pdhStatus = PdhOpenQuery(nullptr, 0, &m_pdhQuery);
+    if (m_pdhStatus)
     {
       throw CException(GetErrorString(m_pdhStatus));
     }
 
     // Specify a counter object with a wildcard for the instance.
-    if (m_pdhStatus = PdhAddCounter(
-      m_pdhQuery,
-      m_counterPath.c_str(),
-      0,
-      &m_pdhCounter)
-      )
+    m_pdhStatus = PdhAddCounter(
+          m_pdhQuery,
+          m_counterPath.c_str(),
+          0,
+          &m_pdhCounter);
+    if (m_pdhStatus)
     {
       GetErrorString(m_pdhStatus);
       throw CException(GetErrorString(m_pdhStatus));
@@ -66,7 +67,7 @@ public:
   //! Destructor. The counter and query handle will be closed.
   ~CPdhQuery()
   {
-    m_pdhCounter = NULL;
+    m_pdhCounter = nullptr;
     if (m_pdhQuery)
       PdhCloseQuery(m_pdhQuery);
   }
@@ -82,7 +83,8 @@ public:
       // PdhGetFormattedCounterArray to fail because some query type
       // requires two collections (or more?). If such scenario is
       // detected, the while loop will retry.
-      if (m_pdhStatus = PdhCollectQueryData(m_pdhQuery))
+        m_pdhStatus = PdhCollectQueryData(m_pdhQuery);
+      if (m_pdhStatus)
       {
         throw CException(GetErrorString(m_pdhStatus));
       }
@@ -93,7 +95,7 @@ public:
       // Number of items in the pItems buffer
       DWORD itemCount = 0;
 
-      PDH_FMT_COUNTERVALUE_ITEM *pdhItems = NULL;
+      PDH_FMT_COUNTERVALUE_ITEM *pdhItems = nullptr;
 
       // Call PdhGetFormattedCounterArray once to retrieve the buffer
       // size and item count. As long as the buffer size is zero, this
@@ -108,13 +110,13 @@ public:
 
       // If the returned value is nto PDH_MORE_DATA, the function
       // has failed.
-      if (PDH_MORE_DATA != m_pdhStatus)
+      if (PDH_MORE_DATA != static_cast<DWORD>(m_pdhStatus))
       {
         throw CException(GetErrorString(m_pdhStatus));
       }
 
       std::vector<unsigned char> buffer(bufferSize);
-      pdhItems = (PDH_FMT_COUNTERVALUE_ITEM *)(&buffer[0]);
+      pdhItems = reinterpret_cast<PDH_FMT_COUNTERVALUE_ITEM *>(&buffer[0]);
 
       m_pdhStatus = PdhGetFormattedCounterArray(
         m_pdhCounter,
@@ -138,7 +140,7 @@ public:
           );
       }
 
-      pdhItems = NULL;
+      pdhItems = nullptr;
       bufferSize = itemCount = 0;
       break;
     }
@@ -150,13 +152,13 @@ private:
   //! an useful message.
   std::tstring GetErrorString(PDH_STATUS errorCode)
   {
-    HANDLE hPdhLibrary = NULL;
-    LPTSTR pMessage = NULL;
-    DWORD_PTR pArgs[] = { (DWORD_PTR)m_searchInstance.c_str() };
+    HANDLE hPdhLibrary = nullptr;
+    LPTSTR pMessage = nullptr;
+    DWORD_PTR pArgs[] = { reinterpret_cast<DWORD_PTR>(m_searchInstance.c_str()) };
     std::tstring errorString;
 
     hPdhLibrary = LoadLibrary(_T("pdh.dll"));
-    if (NULL == hPdhLibrary)
+    if (nullptr == hPdhLibrary)
     {
       std::tstringstream ss;
       ss
@@ -170,11 +172,11 @@ private:
       /*FORMAT_MESSAGE_IGNORE_INSERTS |*/
       FORMAT_MESSAGE_ARGUMENT_ARRAY,
       hPdhLibrary,
-      errorCode,
+      static_cast<DWORD>(errorCode),
       0,
-      (LPTSTR)&pMessage,
+      reinterpret_cast<LPTSTR>(&pMessage),
       0,
-      (va_list*)pArgs))
+      reinterpret_cast<va_list*>(pArgs)))
     {
       std::tstringstream ss;
       ss

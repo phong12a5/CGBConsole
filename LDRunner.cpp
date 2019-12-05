@@ -19,13 +19,13 @@ LDRunner::LDRunner(QString instanceName):
         resolution = listResoltion.at(QTime::currentTime().msec()%4);
     }
     LOG << "resolution: " << resolution;
-    LDCommand::runLDCommand(QString("modify --name %1 --cpu 1 --memory 1024 --resolution %2").arg(m_instanceName).arg(resolution));
+    LDCommand::instance()->runLDCommand(QString("modify --name %1 --cpu 1 --memory 1024 --resolution %2").arg(m_instanceName).arg(resolution));
 }
 
 LDRunner::~LDRunner()
 {
     LOG << m_instanceName;
-    LDCommand::quitInstance(m_instanceName);
+    LDCommand::instance()->quitInstance(m_instanceName);
 }
 
 void LDRunner::run()
@@ -52,7 +52,7 @@ void LDRunner::run()
     m_checkRunningDevice->setSingleShot(false);
     connect(m_checkRunningDevice,SIGNAL(timeout()),this,SLOT(onCheckRunningDevice()));
 
-    LDCommand::lunchInstance(m_instanceName);
+    LDCommand::instance()->lunchInstance(m_instanceName);
     m_checkRunningDevice->start();
 }
 
@@ -67,7 +67,7 @@ void LDRunner::quitRunner()
 
 void LDRunner::onCheckConnection()
 {
-    if (LDCommand::checkConnection(m_instanceName) && !m_checkEndScriptTimer->isActive()){
+    if (LDCommand::instance()->checkConnection(m_instanceName) && !m_checkEndScriptTimer->isActive()){
         LOG << m_instanceName << " is connected";
 
         // Set token
@@ -89,7 +89,7 @@ void LDRunner::onCheckConnection()
         jsonFile.write(QJsonDocument(configObj).toJson());
         jsonFile.close();
 
-        LDCommand::pushFile(m_instanceName,QString(APP_DATA_FOLDER) + "startup.config","./" + startUpFile);
+        LDCommand::instance()->pushFile(m_instanceName,QString(APP_DATA_FOLDER) + "startup.config","./" + startUpFile);
         QFile::remove(startUpFile);
         /* Created startup.config and passed to Nox*/
 
@@ -99,7 +99,7 @@ void LDRunner::onCheckConnection()
         QString endScptNamePath = QString(APP_DATA_FOLDER) + QString(ENDSCRIPT_FILENAME);
         m_checkEndScriptTimer->start();
         m_checkConnectionTimer->stop();
-        LDCommand::sortWindow();
+        LDCommand::instance()->sortWindow();
     }else {
         LOG << m_instanceName << " " << false;
     }
@@ -109,7 +109,7 @@ void LDRunner::onCheckEnscript()
 {
     QString endScptNamePath = QString(APP_DATA_FOLDER) + QString(ENDSCRIPT_FILENAME);
     QString endScptLocalPath = "./" + m_instanceName + "_" + ENDSCRIPT_FILENAME;
-    if(LDCommand::pullFile(m_instanceName,endScptNamePath,endScptLocalPath)){
+    if(LDCommand::instance()->pullFile(m_instanceName,endScptNamePath,endScptLocalPath)){
         if(QFile(endScptLocalPath).exists()){
             QFile::remove(endScptLocalPath);
             emit finished();
@@ -119,8 +119,8 @@ void LDRunner::onCheckEnscript()
 
 void LDRunner::onCheckRunApp()
 {
-//    if (!LDCommand::isAppRunning(m_instanceName)) {
-    LDCommand::runApp(m_instanceName, FARM_PACKAGE_NAME);
+//    if (!LDCommand::instance()->isAppRunning(m_instanceName)) {
+    LDCommand::instance()->runApp(m_instanceName, FARM_PACKAGE_NAME);
     //    }else {
     m_checkRunAppTimer->stop();
 //    }
@@ -128,14 +128,14 @@ void LDRunner::onCheckRunApp()
 
 void LDRunner::onCheckRunningDevice()
 {
-    int deviceState = LDCommand::isRunningDevice(m_instanceName) ;
-    if(deviceState == LDCommand::DEVICE_STATE_RUNNING) {
+    int deviceState = LDCommand::instance()->isRunningDevice(m_instanceName) ;
+    if(deviceState == LDCommand::instance()->DEVICE_STATE_RUNNING) {
         LOG << m_instanceName << " run already!";
         m_checkRunningDevice->stop();
         m_checkConnectionTimer->start();
-    }else if(deviceState == LDCommand::DEVICE_STATE_STOP){
+    }else if(deviceState == LDCommand::instance()->DEVICE_STATE_STOP){
         LOG << m_instanceName << " is not running now!";
-        LDCommand::lunchInstance(m_instanceName);
+        LDCommand::instance()->lunchInstance(m_instanceName);
     }else {
         LOG << "Could not determine state of " <<  m_instanceName;
     }

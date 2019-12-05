@@ -25,7 +25,7 @@ AppMain::~AppMain()
     m_updateVersionThread.quit();
     m_copyDevicesThread.wait();
     m_updateVersionThread.wait();
-    LDCommand::quitAll();
+    LDCommand::instance()->quitAll();
 }
 
 void AppMain::initApplication()
@@ -113,7 +113,7 @@ void AppMain::initDevicesList()
         return;
     }else{
         QString output, error;
-        LDCommand::runLDCommand("list", output, error);
+        LDCommand::instance()->runLDCommand("list", output, error);
         if(error != ""){
             LOG << "ERROR: " << error;
         }else{
@@ -164,11 +164,11 @@ void AppMain::onStartProgram()
             QString deviceName = ORIGIN_DEVICE_NAME;
             // Create the origin device
             QString output, error;
-            LDCommand::runLDCommand("list", output, error);
+            LDCommand::instance()->runLDCommand("list", output, error);
             // If ORIGIN_DEVICE has not created, Create it
             if(!output.contains(deviceName)){
                 APP_MODEL->setTaskInProgress("Creating the first emulator ...");
-                LDCommand::addInstance(deviceName);
+                LDCommand::instance()->addInstance(deviceName);
                 delay(1000);
             }
 
@@ -176,20 +176,20 @@ void AppMain::onStartProgram()
             // Install AutoFarmer
             APP_MODEL->setTaskInProgress("Installing APK ...");
             QFile::remove("LDSetup/data/apps.text");
-            LDCommand::runLDCommand(QString("installapp --name %1 --filename %2").arg(deviceName).arg(expectedApkFileName));
-            while (!LDCommand::isExistedPackage(FARM_PACKAGE_NAME)) {
+            LDCommand::instance()->runLDCommand(QString("installapp --name %1 --filename %2").arg(deviceName).arg(expectedApkFileName));
+            while (!LDCommand::instance()->isExistedPackage(FARM_PACKAGE_NAME)) {
                 delay(1000);
             }
 
-            LDCommand::ld_adb_command(deviceName,QString("shell mkdir %1").arg(APP_DATA_FOLDER));
+            LDCommand::instance()->ld_adb_command(deviceName,QString("shell mkdir %1").arg(APP_DATA_FOLDER));
 
             // Disable SuperSU permission request
-            LDCommand::pushFile(deviceName,"/data/data/com.android.settings/databases","./databases");
-            LDCommand::ld_adb_command(deviceName,"shell chown system:system /data/data/com.android.settings/databases/");
-            LDCommand::ld_adb_command(deviceName,"shell chown system:system /data/data/com.android.settings/databases/su*");
+            LDCommand::instance()->pushFile(deviceName,"/data/data/com.android.settings/databases","./databases");
+            LDCommand::instance()->ld_adb_command(deviceName,"shell chown system:system /data/data/com.android.settings/databases/");
+            LDCommand::instance()->ld_adb_command(deviceName,"shell chown system:system /data/data/com.android.settings/databases/su*");
 
-            LDCommand::runLDCommand(QString("modify --name %1 --cpu 1 --memory 1024 --resolution %2").arg(ORIGIN_DEVICE_NAME).arg(APP_MODEL->resolution()));
-            LDCommand::quitInstance(deviceName);
+            LDCommand::instance()->runLDCommand(QString("modify --name %1 --cpu 1 --memory 1024 --resolution %2").arg(ORIGIN_DEVICE_NAME).arg(APP_MODEL->resolution()));
+            LDCommand::instance()->quitInstance(deviceName);
             APP_MODEL->setTaskInProgress("");
         }
         // Copy the left devices
