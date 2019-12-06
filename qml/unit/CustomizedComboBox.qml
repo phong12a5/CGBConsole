@@ -5,7 +5,6 @@ ComboBox {
     id: root
     width: 200
     height: 30
-
     signal updateValue()
 
     indicator: Item {
