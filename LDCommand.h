@@ -32,7 +32,7 @@ public:
     bool coppyInstance(QString instanceName, QString fromInstanceName);
     bool isAppRunning(QString instanceName);
     bool sortWindow();
-    bool isExistedPackage(QString packageName);
+    bool isExistedPackage(QString instanceName,QString packageName);
     bool pushFile(QString instanceName, QString filePath, QString target);
     bool pullFile(QString instanceName, QString filePath, QString target);
     int isRunningDevice(QString instanceName);

@@ -97,6 +97,8 @@ void LDRunner::onCheckConnection()
         m_checkRunAppTimer->start();
 
         QString endScptNamePath = QString(APP_DATA_FOLDER) + QString(ENDSCRIPT_FILENAME);
+        LDCommand::instance()->ld_adb_command(m_instanceName,QString("shell rm %1").arg(endScptNamePath));
+
         m_checkEndScriptTimer->start();
         m_checkConnectionTimer->stop();
         LDCommand::instance()->sortWindow();

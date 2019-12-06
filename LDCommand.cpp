@@ -148,7 +148,7 @@ bool LDCommand::rebootInstance(QString instanceName)
 bool LDCommand::checkConnection(QString instanceName)
 {
     QString output;
-    output = ld_adb_command_str(instanceName,"shell ls | grep sdcard",-1);
+    output = ld_adb_command_str(instanceName,"shell ls | grep sdcard");
     output = output.simplified();
     if(output == "sdcard"){
         LOG << QString("Connect to %1: successful").arg(instanceName);
@@ -182,20 +182,13 @@ bool LDCommand::sortWindow()
     return success;
 }
 
-bool LDCommand::isExistedPackage(QString packageName)
+bool LDCommand::isExistedPackage(QString instanceName,QString packageName)
 {
-    QFile file("LDSetup/data/apps.text");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        LOG << "Open file fail";
+    QString output = ld_adb_command_str(instanceName,QString("shell pm list packages | grep %1").arg(packageName));
+    if(output.contains(packageName))
+        return true;
+    else
         return false;
-    }
-    while (!file.atEnd()) {
-        QString line = QString(file.readLine());
-        LOG << "line: " << line;
-        if(line.contains(packageName))
-            return true;
-    }
-    return false;
 }
 
 bool LDCommand::pushFile(QString instanceName, QString filePath, QString target)

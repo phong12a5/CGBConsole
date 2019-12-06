@@ -175,9 +175,8 @@ void AppMain::onStartProgram()
 
             // Install AutoFarmer
             APP_MODEL->setTaskInProgress("Installing APK ...");
-            QFile::remove("LDSetup/data/apps.text");
             LDCommand::instance()->runLDCommand(QString("installapp --name %1 --filename %2").arg(deviceName).arg(expectedApkFileName));
-            while (!LDCommand::instance()->isExistedPackage(FARM_PACKAGE_NAME)) {
+            while (!LDCommand::instance()->isExistedPackage(deviceName, FARM_PACKAGE_NAME)) {
                 delay(1000);
             }
 
