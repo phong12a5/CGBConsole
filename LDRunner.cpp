@@ -83,13 +83,13 @@ void LDRunner::onCheckConnection()
         configObj["appname"] = APP_MODEL->appName();
         configObj["device_name"] = m_instanceName;
 
-        QString startUpFile = m_instanceName + "_startup.config";
+        QString startUpFile = "startup.config";
         QFile jsonFile(startUpFile);
         jsonFile.open(QFile::WriteOnly);
         jsonFile.write(QJsonDocument(configObj).toJson());
         jsonFile.close();
 
-        LDCommand::instance()->pushFile(m_instanceName,QString(APP_DATA_FOLDER) + "startup.config","./" + startUpFile);
+        LDCommand::instance()->pushFile(m_instanceName,QString(APP_DATA_FOLDER) + startUpFile,"./" + startUpFile);
         QFile::remove(startUpFile);
         /* Created startup.config and passed to Nox*/
 
@@ -101,7 +101,6 @@ void LDRunner::onCheckConnection()
 
         m_checkEndScriptTimer->start();
         m_checkConnectionTimer->stop();
-        LDCommand::instance()->sortWindow();
     }else {
         LOG << m_instanceName << " " << false;
     }

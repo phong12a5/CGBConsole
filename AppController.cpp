@@ -9,7 +9,7 @@ AppController::AppController(QObject *parent) : QObject(parent)
 {
     m_deviceQueue.clear();
     m_ldThreadList.clear();
-    m_updateLDThreadList.setInterval(5000);
+    m_updateLDThreadList.setInterval(15000);
     m_updateLDThreadList.setSingleShot(false);
     connect(&m_updateLDThreadList, SIGNAL(timeout()), this, SLOT(onUpdateLDThreadList()));
 }
@@ -85,6 +85,7 @@ void AppController::onUpdateLDThreadList()
                     m_ldThreadList.append(new LDThread(this,dynamic_cast<LDIntance*>(device)));
                     m_deviceQueue.removeOne(device);
                     m_deviceQueue.append(device);
+                    LDCommand::instance()->sortWindow();
                     break;
                 } else {
                     LOG << dynamic_cast<LDIntance*>(device)->instanceName() << " is run already";
