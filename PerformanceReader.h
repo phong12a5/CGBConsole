@@ -11,6 +11,7 @@ public:
     explicit PerformanceReader(QObject *parent = nullptr);
 
     static double currentDiskUsage();
+    static double currentCPUUsage();
 };
 
 #endif // PERFORMANCEREADER_H

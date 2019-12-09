@@ -33,12 +33,12 @@ void LDRunner::run()
     LOG << "Thread ID: " << QThread::currentThreadId();
 
     m_checkConnectionTimer = new QTimer(this);
-    m_checkConnectionTimer->setInterval(10000);
+    m_checkConnectionTimer->setInterval(30000);
     m_checkConnectionTimer->setSingleShot(false);
     connect(m_checkConnectionTimer,SIGNAL(timeout()),this,SLOT(onCheckConnection()));
 
     m_checkEndScriptTimer = new QTimer(this);
-    m_checkEndScriptTimer->setInterval(15000);
+    m_checkEndScriptTimer->setInterval(30000);
     m_checkEndScriptTimer->setSingleShot(false);
     connect(m_checkEndScriptTimer,SIGNAL(timeout()),this,SLOT(onCheckEnscript()));
 
@@ -121,11 +121,9 @@ void LDRunner::onCheckEnscript()
 
 void LDRunner::onCheckRunApp()
 {
-//    if (!LDCommand::instance()->isAppRunning(m_instanceName)) {
-    LDCommand::instance()->runApp(m_instanceName, FARM_PACKAGE_NAME);
-    //    }else {
-    m_checkRunAppTimer->stop();
-//    }
+    if (!LDCommand::instance()->isAppRunning(m_instanceName)) {
+        LDCommand::instance()->runApp(m_instanceName, FARM_PACKAGE_NAME);
+    }
 }
 
 void LDRunner::onCheckRunningDevice()

@@ -32,6 +32,7 @@
 #define APP_DATA_FOLDER         "/sdcard/xyz.autofarmer.app/"
 
 #define AVAILBLE_DISK_USAGE     90
+#define AVAILBLE_CPU_USAGE      60
 
 typedef struct app_config_struct {
     int timeout;

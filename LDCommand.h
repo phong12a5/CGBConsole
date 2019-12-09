@@ -23,8 +23,7 @@ public:
     bool lunchInstance(QString instanceName);
     bool runApp(QString instanceName, QString packageName);
     bool addInstance(QString instanceName);
-    bool ld_adb_command(QString instanceName, QString cmd, int timeout = -1);
-    QString ld_adb_command_str(QString instanceName, QString cmd, int timeout = -1);
+    QString ld_adb_command(QString instanceName, QString cmd, int timeout = -1);
     bool quitInstance(QString instanceName);
     bool quitAll();
     bool rebootInstance(QString instanceName);

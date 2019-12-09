@@ -30,9 +30,12 @@ bool LDCommand::runLDCommand(QString args, int timeout)
     QProcess m_process;
     m_process.start(cmd);
     m_process.waitForFinished(timeout);
+    QString output = m_process.readAllStandardOutput();
     QString error = m_process.readAllStandardError();
-    LOG << "error: " << error;
-    LOG << "output: " << m_process.readAllStandardOutput();
+    if(error != "")
+        LOG << "error: " << error;
+    if(output != "")
+        LOG << "output: " << output;
     if(error != ""){
         LOG << error;
         return false;
@@ -51,8 +54,10 @@ bool LDCommand::runLDCommand(QString args, QString &output, QString &error, int 
     m_process.waitForFinished(timeout);
     output = m_process.readAllStandardOutput();
     error = m_process.readAllStandardError();
-    LOG << "error: " << error;
-    LOG << "output: " << output;
+    if(error != "")
+        LOG << "error: " << error;
+    if(output != "")
+        LOG << "output: " << output;
     if(error != ""){
         return false;
     }else{
@@ -90,17 +95,7 @@ bool LDCommand::addInstance(QString instanceName)
     return success;
 }
 
-bool LDCommand::ld_adb_command(QString instanceName, QString cmd, int timeout)
-{
-    QMutex mutex;
-    mutex.lock();
-    QString args = QString("adb --name %1 --command \"%2\"").arg(instanceName).arg(cmd);
-    bool success = this->runLDCommand(args,timeout);
-    mutex.unlock();
-    return success;
-}
-
-QString LDCommand::ld_adb_command_str(QString instanceName, QString cmd, int timeout)
+QString LDCommand::ld_adb_command(QString instanceName, QString cmd, int timeout)
 {
     QMutex mutex;
     mutex.lock();
@@ -110,6 +105,11 @@ QString LDCommand::ld_adb_command_str(QString instanceName, QString cmd, int tim
         retVal = error;
     }else{
         retVal = output;
+    }
+    if(output.contains("ADB server didn't")){
+        QProcess::execute("Taskkill /IM adb.exe /F");
+        QProcess::execute("LDSetup\adb.exe kill-server");
+        QProcess::execute("LDSetup\adb.exe start-server");
     }
     mutex.unlock();
     return  retVal;
@@ -148,7 +148,7 @@ bool LDCommand::rebootInstance(QString instanceName)
 bool LDCommand::checkConnection(QString instanceName)
 {
     QString output;
-    output = ld_adb_command_str(instanceName,"shell ls | grep sdcard");
+    output = ld_adb_command(instanceName,"shell ls | grep sdcard");
     output = output.simplified();
     if(output == "sdcard"){
         LOG << QString("Connect to %1: successful").arg(instanceName);
@@ -170,7 +170,7 @@ bool LDCommand::coppyInstance(QString instanceName, QString fromInstanceName)
 
 bool LDCommand::isAppRunning(QString instanceName)
 {
-    return ld_adb_command_str(instanceName,QString("shell ps | grep %1").arg(FARM_PACKAGE_NAME)).contains(FARM_PACKAGE_NAME);
+    return ld_adb_command(instanceName,QString("shell ps | grep %1").arg(FARM_PACKAGE_NAME)).contains(FARM_PACKAGE_NAME);
 }
 
 bool LDCommand::sortWindow()
@@ -184,11 +184,25 @@ bool LDCommand::sortWindow()
 
 bool LDCommand::isExistedPackage(QString instanceName,QString packageName)
 {
-    QString output = ld_adb_command_str(instanceName,QString("shell pm list packages | grep %1").arg(packageName));
+#if 0
+    QString output = ld_adb_command(instanceName,QString("shell pm list packages | grep %1").arg(packageName));
     if(output.contains(packageName))
         return true;
     else
         return false;
+#endif
+    Q_UNUSED(instanceName)
+    QFile file("LDSetup/data/apps.text");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        LOG << "Open file fail";
+    }
+    while (!file.atEnd()) {
+        QString line = QString(file.readLine());
+        LOG << "line: " << line;
+        if(line.contains(packageName))
+            return true;
+    }
+    return false;
 }
 
 bool LDCommand::pushFile(QString instanceName, QString filePath, QString target)

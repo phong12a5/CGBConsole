@@ -36,6 +36,7 @@ void AppController::startMultiTask()
 void AppController::stopMultiTask()
 {
     LOG;
+    LDCommand::instance()->quitAll();
     while (!m_ldThreadList.isEmpty()) {
         delete m_ldThreadList.at(0);
         m_ldThreadList.removeAt(0);
@@ -60,6 +61,12 @@ void AppController::onUpdateLDThreadList()
     double diskUsage = PerformanceReader::currentDiskUsage();
     if(diskUsage < 0 || diskUsage > AVAILBLE_DISK_USAGE ){
         LOG << "Disk usage is too large ... NONE NEW DEVICE IS STARTED!";
+        return;
+    }
+
+    double curCPU = PerformanceReader::currentCPUUsage();
+    if(curCPU < 0 || curCPU > AVAILBLE_CPU_USAGE ){
+        LOG << "CPU usage is too large ... NONE NEW DEVICE IS STARTED!";
         return;
     }
 
