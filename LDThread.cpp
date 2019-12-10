@@ -14,13 +14,15 @@ LDThread::LDThread(QObject *parent, LDIntance* ldInstance) :
 
     connect(this, SIGNAL(missionCompleted(LDThread*)),APP_CTRL, SLOT(aMissionCompleted(LDThread*)));
 
+    m_workerThread = new QThread();
     m_Worker = new LDRunner(m_ldInstance->instanceName());
-    m_Worker->moveToThread(&m_workerThread);
-    connect(&m_workerThread, &QThread::finished, m_Worker, &LDRunner::deleteLater);
+    m_Worker->moveToThread(m_workerThread);
+    connect(m_workerThread, &QThread::finished, m_Worker, &LDRunner::deleteLater);
+    connect(this, &LDThread::destroyed, m_workerThread, &QThread::quit);
     connect(this, &LDThread::operate, m_Worker, &LDRunner::run);
     connect(this, &LDThread::quitThread, m_Worker, &LDRunner::quitRunner);
     connect(m_Worker, &LDRunner::finished, this, &LDThread::finishedATask);
-    m_workerThread.start();
+    m_workerThread->start();
     emit this->operate();
 }
 
@@ -28,8 +30,6 @@ LDThread::~LDThread()
 {
     APP_MODEL->popRunningDevice(m_ldInstance->instanceName());
     emit quitThread();
-    m_workerThread.quit();
-    m_workerThread.wait();
 }
 
 void LDThread::finishedATask()

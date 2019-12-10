@@ -17,7 +17,7 @@ public:
 private:
     LDIntance* m_ldInstance;
     LDRunner* m_Worker;
-    QThread m_workerThread;
+    QThread *m_workerThread;
 
 signals:
     void operate();
