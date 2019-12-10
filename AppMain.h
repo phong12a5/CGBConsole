@@ -9,7 +9,7 @@
 #include "AppController.h"
 #include <QJsonObject>
 #include <QJsonDocument>
-#include "CopyEmulatorWorker.h"
+#include "EmulatorWorker.h"
 
 class AppMain : public QObject
 {
@@ -26,6 +26,7 @@ private:
     QJsonDocument loadJson(QString fileName);
     void saveJson(QJsonDocument document, QString fileName);
     void copyDevices();
+    void createTemplateDevice();
     void updateVersion();
 
 private:
@@ -33,6 +34,7 @@ private:
     QThread m_copyDevicesThread;
     QThread m_updateVersionThread;
     QQuickView * m_view;
+    EmulatorWorker* m_emulaterWorker;
 
 public slots:
     void onSaveConfig();
@@ -41,10 +43,12 @@ public slots:
     void onStartProgram();
     void onStoptProgram();
     void onFinishCopyDevice(QString deviceName);
+    void onFinishCreateTemplateDevice();
     void onUpdateFinished(int code);
 signals:
     void startCopyEmulator();
     void startAutoUpdater();
+    void startCreateTemplateDevice();
 };
 
 #endif // APPMAIN_H

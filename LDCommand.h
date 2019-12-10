@@ -36,6 +36,7 @@ public:
     bool pullFile(QString instanceName, QString filePath, QString target);
     int isRunningDevice(QString instanceName);
     bool repairEmulator();
+    bool isExistedDevice(QString instanceName);
 
 private:
     static LDCommand* m_instance;

@@ -23,6 +23,7 @@ AppModel::AppModel(QObject *parent) : QObject(parent)
     m_resolution = "720,1280,320";
     m_isShowRestartPopup = false;
     m_versionCode = 0;
+    m_appStarted = false;
 
     if(QFile(QDir::currentPath() + QString("/LDSetup/ldconsole.exe")).exists()){
         m_ldIntallFolder = QDir::currentPath() + QString("/LDSetup");
@@ -37,6 +38,19 @@ AppModel *AppModel::instance()
         m_instance = new AppModel();
     }
     return m_instance;
+}
+
+bool AppModel::appStarted() const
+{
+    return m_appStarted;
+}
+
+void AppModel::setAppStarted(bool data)
+{
+    if(m_appStarted != data) {
+        m_appStarted = data;
+        emit appStartedChanged();
+    }
 }
 
 QString AppModel::ldIntallFolder() const

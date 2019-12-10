@@ -27,12 +27,16 @@ class AppModel : public QObject
     Q_PROPERTY(QString resolution READ resolution WRITE setResolution NOTIFY resolutionChanged)
     Q_PROPERTY(bool isShowRestartPopup READ isShowRestartPopup WRITE setIsShowRestartPopup NOTIFY isShowRestartPopupChanged)
     Q_PROPERTY(int versionCode READ versionCode WRITE setVersionCode NOTIFY versionCodeChanged)
+    Q_PROPERTY(bool appStarted READ appStarted WRITE setAppStarted NOTIFY appStartedChanged)
 
 private:
     explicit AppModel(QObject *parent = nullptr);
 
 public:
     static AppModel* instance();
+
+    bool appStarted() const;
+    void setAppStarted(bool data);
 
     QString ldIntallFolder() const;
     void setLDIntallFolder(const QString path, bool standardPath = false);
@@ -113,6 +117,7 @@ signals:
     void resolutionChanged();
     void isShowRestartPopupChanged();
     void versionCodeChanged();
+    void appStartedChanged();
 
     void reInitDeviceList();
 
@@ -141,7 +146,7 @@ private:
     QString m_resolution;
     bool m_isShowRestartPopup;
     int m_versionCode;
-
+    bool m_appStarted;
 public slots:
 };
 

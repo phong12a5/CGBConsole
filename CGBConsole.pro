@@ -21,7 +21,7 @@ DEFINES += QT_DEPRECATED_WARNINGS \
 
 SOURCES += \
     main.cpp \
-    CopyEmulatorWorker.cpp \
+    EmulatorWorker.cpp \
     AppMain.cpp \
     AppModel.cpp \
     AppController.cpp \
@@ -53,7 +53,7 @@ HEADERS += \
     AppModel.h \
     AppDefines.h \
     AppController.h \
-    CopyEmulatorWorker.h \
+    EmulatorWorker.h \
     LDCommand.h \
     LDIntance.h \
     LDThread.h \

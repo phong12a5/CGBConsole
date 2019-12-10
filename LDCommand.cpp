@@ -247,3 +247,19 @@ bool LDCommand::repairEmulator()
     LOG << "result: " << result;
     return (result >= 32? true : false);
 }
+
+bool LDCommand::isExistedDevice(QString instanceName)
+{
+    QString deviceList;
+    QString error;
+    if(this->runLDCommand("list", deviceList, error)){
+        if(deviceList.contains(instanceName)){
+            LOG << "Device " << instanceName << " existed already";
+            return  true;
+        } else {
+            return false;
+        }
+    }else {
+        return false;
+    }
+}

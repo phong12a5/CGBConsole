@@ -17,6 +17,15 @@ AppMain::AppMain(QObject *parent) : QObject(parent)
     connect(APP_MODEL,SIGNAL(reInitDeviceList()),this,SLOT(initDevicesList()));
     connect(APP_MODEL,SIGNAL(sigStartProgram()),this,SLOT(onStartProgram()));
     connect(APP_MODEL,SIGNAL(sigStoptProgram()),this,SLOT(onStoptProgram()));
+
+    m_emulaterWorker = new EmulatorWorker();
+    m_emulaterWorker->moveToThread(&m_copyDevicesThread);
+
+    connect(&m_copyDevicesThread, &QThread::finished, m_emulaterWorker, &QObject::deleteLater);
+    connect(this, &AppMain::startCopyEmulator, m_emulaterWorker, &EmulatorWorker::onCoppyDevices);
+    connect(this, &AppMain::startCreateTemplateDevice, m_emulaterWorker, &EmulatorWorker::onCreateTemplateDevice);
+    connect(m_emulaterWorker, &EmulatorWorker::finishCopyDevice, this, &AppMain::onFinishCopyDevice);
+    connect(m_emulaterWorker, &EmulatorWorker::finishCreateTemplateDevice, this, &AppMain::onFinishCreateTemplateDevice);
 }
 
 AppMain::~AppMain()
@@ -125,78 +134,24 @@ void AppMain::initDevicesList()
 void AppMain::onStartProgram()
 {
     LOG;
+    APP_MODEL->setAppStarted(true);
     this->onSaveConfig();
-
     if(APP_MODEL->devicesList().length() < APP_MODEL->deviceCount()){
-        if(APP_MODEL->devicesList().isEmpty()) {
-
-            /* --------- Check and download APK --------- */
-            LOG << "Downloading APK ...";
-            APP_MODEL->setTaskInProgress("Downloading APK ...");
-            delay(100);
-
-            QString expectedApkFileName = QString(APK_FILENAME).arg(APP_MODEL->appConfig().m_android_versioncode);
-            LOG << "expectedApkFileName: " << expectedApkFileName;
-            QDir directory(".");
-            QStringList listApks = directory.entryList(QStringList() << "*.apk",QDir::Files);
-
-            if(listApks.contains(expectedApkFileName)) {
-                LOG << expectedApkFileName << " is existed already";
-            }else {
-                if (!WebAPI::instance()->downloadApk(APP_MODEL->appConfig().m_android_versioncode)) {
-                    LOG << "Download " << expectedApkFileName << " failure";
-                    if(!listApks.isEmpty())
-                        expectedApkFileName = listApks.last();
-                    else
-                        LOG << "Couldn't get any apk file to install!";
-                }else {
-                    LOG << "Download " << expectedApkFileName << " successfully";
-                }
-            }
-
-            /* --------- END Check and download APK --------- */
-
-            QString deviceName = ORIGIN_DEVICE_NAME;
-            // Create the origin device
-            QString output, error;
-            LDCommand::instance()->runLDCommand("list", output, error);
-            // If ORIGIN_DEVICE has not created, Create it
-            if(!output.contains(deviceName)){
-                APP_MODEL->setTaskInProgress("Creating the first emulator ...");
-                LDCommand::instance()->addInstance(deviceName);
-                delay(1000);
-            }
-
-
-            // Install AutoFarmer
-            APP_MODEL->setTaskInProgress("Installing APK ...");
-            QFile::remove("LDSetup/data/apps.text");
-            LDCommand::instance()->runLDCommand(QString("installapp --name %1 --filename %2").arg(deviceName).arg(expectedApkFileName));
-            while (!LDCommand::instance()->isExistedPackage(deviceName, FARM_PACKAGE_NAME)) {
-                delay(1000);
-            }
-
-            LDCommand::instance()->ld_adb_command(deviceName,QString("shell mkdir %1").arg(APP_DATA_FOLDER));
-
-            // Disable SuperSU permission request
-            LDCommand::instance()->pushFile(deviceName,"/data/data/com.android.settings/databases","./databases");
-            LDCommand::instance()->ld_adb_command(deviceName,"shell chown system:system /data/data/com.android.settings/databases/");
-            LDCommand::instance()->ld_adb_command(deviceName,"shell chown system:system /data/data/com.android.settings/databases/su*");
-
-            LDCommand::instance()->runLDCommand(QString("modify --name %1 --cpu 1 --memory 1024 --resolution %2").arg(ORIGIN_DEVICE_NAME).arg(APP_MODEL->resolution()));
-            LDCommand::instance()->quitInstance(deviceName);
-            APP_MODEL->setTaskInProgress("");
+        if(!(LDCommand::instance()->isExistedDevice(ORIGIN_DEVICE_NAME))) {
+            this->createTemplateDevice();
+        }else {
+            // Copy the left devices
+            this->copyDevices();
+            APP_CTRL->startMultiTask();
         }
-        // Copy the left devices
-        this->copyDevices();
+    }else {
+        APP_CTRL->startMultiTask();
     }
-
-    APP_CTRL->startMultiTask();
-    APP_MODEL->setInitializing(false);
 }
 
 void AppMain::onStoptProgram()
 {
+    APP_MODEL->setAppStarted(false);
     APP_CTRL->stopMultiTask();
 }
 
@@ -204,6 +159,15 @@ void AppMain::onFinishCopyDevice(QString deviceName)
 {
     LOG << deviceName;
     APP_MODEL->appendDevice(deviceName);
+}
+
+void AppMain::onFinishCreateTemplateDevice()
+{
+    LOG;
+    if(APP_MODEL->appStarted()){
+        this->copyDevices();
+        APP_CTRL->startMultiTask();
+    }
 }
 
 void AppMain::onUpdateFinished(int code)
@@ -251,13 +215,20 @@ void AppMain::saveJson(QJsonDocument document, QString fileName)
 void AppMain::copyDevices()
 {
     LOG;
-    CopyEmulatorWorker* copyWorker = new CopyEmulatorWorker();
-    copyWorker->moveToThread(&m_copyDevicesThread);
-    connect(&m_copyDevicesThread, &QThread::finished, copyWorker, &QObject::deleteLater);
-    connect(this, &AppMain::startCopyEmulator, copyWorker, &CopyEmulatorWorker::doWork);
-    connect(copyWorker, &CopyEmulatorWorker::finishCopyDevice, this, &AppMain::onFinishCopyDevice);
-    m_copyDevicesThread.start();
+
+    if(!m_copyDevicesThread.isRunning()){
+            m_copyDevicesThread.start();
+    }
     this->startCopyEmulator();
+}
+
+void AppMain::createTemplateDevice()
+{
+    LOG;
+    if(!m_copyDevicesThread.isRunning()){
+            m_copyDevicesThread.start();
+    }
+    this->startCreateTemplateDevice();
 }
 
 void AppMain::updateVersion()
