@@ -18,7 +18,6 @@ LDRunner::LDRunner(QString instanceName):
     if(resolution == "Random"){
         resolution = listResoltion.at(QTime::currentTime().msec()%4);
     }
-    LOG << "resolution: " << resolution;
     LDCommand::instance()->runLDCommand(QString("modify --name %1 --cpu 1 --memory 1024 --resolution %2").arg(m_instanceName).arg(resolution));
 }
 
@@ -53,6 +52,7 @@ void LDRunner::run()
     connect(m_checkRunningDevice,SIGNAL(timeout()),this,SLOT(onCheckRunningDevice()));
 
     LDCommand::instance()->lunchInstance(m_instanceName);
+    QTimer::singleShot(3000, this, [] () { LDCommand::instance()->sortWindow();});
     m_checkRunningDevice->start();
 }
 

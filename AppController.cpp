@@ -85,7 +85,6 @@ void AppController::onUpdateLDThreadList()
                     m_ldThreadList.append(new LDThread(this,dynamic_cast<LDIntance*>(device)));
                     m_deviceQueue.removeOne(device);
                     m_deviceQueue.append(device);
-                    LDCommand::instance()->sortWindow();
                     break;
                 } else {
                     LOG << dynamic_cast<LDIntance*>(device)->instanceName() << " is run already";

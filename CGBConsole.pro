@@ -2,8 +2,10 @@ QT += quick \
       widgets \
       sql
 
-CONFIG += c++11
-#DEFINES += TEST_MODE
+CONFIG += c++11 console
+DEFINES +=  \
+#           TEST_MODE\
+            USE_FILE_STEADOF_ADB
 
 
 # The following define makes your compiler emit warnings if you use

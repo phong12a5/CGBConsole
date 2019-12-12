@@ -147,6 +147,17 @@ bool LDCommand::rebootInstance(QString instanceName)
 
 bool LDCommand::checkConnection(QString instanceName)
 {
+#ifdef USE_FILE_STEADOF_ADB
+    QString targetFileName = instanceName + ".checker";
+    QFile::remove(targetFileName);
+    if(this->runLDCommand(QString("pull --name %1 --remote /sdcard/Pictures/.checkconnect.st --local ./%2").arg(instanceName).arg(targetFileName))){
+        if(QFile(targetFileName).exists()){
+            QFile::remove(targetFileName);
+            return true;
+        }
+    }
+    return false;
+#else
     QString output;
     output = ld_adb_command(instanceName,"shell ls | grep sdcard");
     output = output.simplified();
@@ -156,6 +167,7 @@ bool LDCommand::checkConnection(QString instanceName)
     }else{
         return false;
     }
+#endif
 }
 
 bool LDCommand::coppyInstance(QString instanceName, QString fromInstanceName)
