@@ -2,7 +2,7 @@ QT += quick \
       widgets \
       sql
 
-CONFIG += c++11 console
+CONFIG += c++11
 DEFINES +=  \
 #           TEST_MODE\
             USE_FILE_STEADOF_ADB

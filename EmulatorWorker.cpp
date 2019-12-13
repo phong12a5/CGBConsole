@@ -25,6 +25,11 @@ void EmulatorWorker::onCoppyDevices()
         existedDevices << dynamic_cast<LDIntance*>(AppModel::instance()->devicesList().at(i))->instanceName();
     }
 
+    if(!LDCommand::instance()->isExistedDevice(ORIGIN_DEVICE_NAME)){
+        LOGD << ORIGIN_DEVICE_NAME << " don't exist";
+        delay(2000);
+    }
+
     for (int i = 0; i < AppModel::instance()->deviceCount(); i++) {
         QString deviceName = EMULATOR_NAME_PREFIX + QString("-%1").arg(i);
         if(!existedDevices.contains(deviceName)){
@@ -48,18 +53,14 @@ void EmulatorWorker::onCreateTemplateDevice()
     QDir directory(".");
     QStringList listApks = directory.entryList(QStringList() << "*.apk",QDir::Files);
 
-    if(listApks.contains(expectedApkFileName)) {
-        LOGD << expectedApkFileName << " is existed already";
+    if (!WebAPI::instance()->downloadApk(APP_MODEL->appConfig().m_android_versioncode)) {
+        LOGD << "Download " << expectedApkFileName << " failure";
+        if(!listApks.isEmpty())
+            expectedApkFileName = listApks.last();
+        else
+            LOGD << "Couldn't get any apk file to install!";
     }else {
-        if (!WebAPI::instance()->downloadApk(APP_MODEL->appConfig().m_android_versioncode)) {
-            LOGD << "Download " << expectedApkFileName << " failure";
-            if(!listApks.isEmpty())
-                expectedApkFileName = listApks.last();
-            else
-                LOGD << "Couldn't get any apk file to install!";
-        }else {
-            LOGD << "Download " << expectedApkFileName << " successfully";
-        }
+        LOGD << "Download " << expectedApkFileName << " successfully";
     }
 
     /* --------- END Check and download APK --------- */

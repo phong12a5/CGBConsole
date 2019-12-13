@@ -7,6 +7,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <math.h>
+#include <QStandardPaths>
 
 #define APP_MODEL AppModel::instance()
 
@@ -176,7 +177,7 @@ bool LDCommand::checkConnection(QString instanceName)
 bool LDCommand::checkEnscript(QString instanceName)
 {
 #ifdef USE_FILE_STEADOF_ADB
-    QString targetFileName = "." + instanceName + ".enscript";
+    QString targetFileName = "." + instanceName + ".endscript";
     QFile::remove(targetFileName);
     if(this->runLDCommand(QString("pull --name %1 --remote /sdcard/Applications/%2 --local ./%3").arg(instanceName).arg(targetFileName).arg(targetFileName))){
         if(QFile(targetFileName).exists()){
@@ -230,12 +231,6 @@ bool LDCommand::sortWindow()
         int rowcount = static_cast<int>(ceil(APP_MODEL->devicesRunningList().length()/static_cast<float>(rowCol)));
         int deviceWidth = screenWidth/rowCol;
         int deviceHeight = static_cast<int>(deviceWidth * 1.72);
-        //LOGD << "rowcount: " << rowcount;
-        //LOGD << "rowCol: " << rowCol;
-        //LOGD << "deviceWidth: " << deviceWidth;
-        //LOGD << "deviceHeight: " << deviceHeight;
-        //LOGD << "screenWidth: " << screenWidth;
-        //LOGD << "screenHeight: " << screenHeight;
         if(rowcount * deviceHeight > screenHeight){
             continue;
         }else {
@@ -244,7 +239,7 @@ bool LDCommand::sortWindow()
         }
     }
     if(windowsRowCount <= 0)
-        windowsRowCount = APP_MODEL->devicesRunningList().length();
+        windowsRowCount = 4;
     LOGD << "windowsRowCount: " << windowsRowCount << " listRunning: " << APP_MODEL->devicesRunningList().length();
 
     if(configFile.open(QIODevice::ReadOnly)){
@@ -290,8 +285,11 @@ bool LDCommand::pushFile(QString instanceName, QString filePath, QString target)
 {
     QMutex mutex;
     mutex.lock();
-    bool success = this->runLDCommand(QString("push --name %1 --remote %2 --local %3").arg(instanceName).arg(filePath).arg(target));
-    mutex.unlock();
+    QString output, error;
+    bool success = this->runLDCommand(QString("push --name %1 --remote %2 --local %3").arg(instanceName).arg(filePath).arg(target),output,error);
+    if(output.contains("copy files failed!")){
+        QFile::remove(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/LDPlayer/Pictures/temp");
+    }mutex.unlock();
     return success;
 }
 
@@ -299,7 +297,11 @@ bool LDCommand::pullFile(QString instanceName, QString remoteFile, QString local
 {
     QMutex mutex;
     mutex.lock();
-    bool success = this->runLDCommand(QString("pull --name %1 --remote %2 --local %3").arg(instanceName).arg(remoteFile).arg(localFile));
+    QString output, error;
+    bool success = this->runLDCommand(QString("pull --name %1 --remote %2 --local %3").arg(instanceName).arg(remoteFile).arg(localFile),output,error);
+    if(output.contains("copy files failed!")){
+        QFile::remove(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/LDPlayer/Pictures/temp");
+    }
     mutex.unlock();
     return success;
 }
