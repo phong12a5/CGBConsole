@@ -19,6 +19,7 @@ public:
     ~AppMain();
 
     void initApplication();
+    void preSetup();
 
     Q_INVOKABLE void closingApp();
     Q_INVOKABLE int restartApplication();

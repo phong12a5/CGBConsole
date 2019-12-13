@@ -23,19 +23,19 @@ AppController *AppController::instance()
 
 void AppController::initAppController()
 {
-    LOG;
+    LOGD;
 }
 
 void AppController::startMultiTask()
 {
-    LOG;
+    LOGD;
     this->onUpdateLDThreadList();
     m_updateLDThreadList.start();
 }
 
 void AppController::stopMultiTask()
 {
-    LOG;
+    LOGD;
     LDCommand::instance()->quitAll();
     while (!m_ldThreadList.isEmpty()) {
         delete m_ldThreadList.at(0);
@@ -60,13 +60,13 @@ void AppController::onUpdateLDThreadList()
 {
     double diskUsage = PerformanceReader::currentDiskUsage();
     if(diskUsage < 0 || diskUsage > AVAILBLE_DISK_USAGE ){
-        LOG << "Disk usage is too large ... NONE NEW DEVICE IS STARTED!";
+        LOGD << "Disk usage is too large ... NONE NEW DEVICE IS STARTED!";
         return;
     }
 
     double curCPU = PerformanceReader::currentCPUUsage();
     if(curCPU < 0 || curCPU > AVAILBLE_CPU_USAGE ){
-        LOG << "CPU usage is too large ... NONE NEW DEVICE IS STARTED!";
+        LOGD << "CPU usage is too large ... NONE NEW DEVICE IS STARTED!";
         return;
     }
 
@@ -78,7 +78,7 @@ void AppController::onUpdateLDThreadList()
 
     if(static_cast<uint>(m_ldThreadList.length()) < APP_MODEL->amountOfThread()){
         if(m_deviceQueue.isEmpty()){
-            LOG << "m_deviceQueue is empty!";
+            LOGD << "m_deviceQueue is empty!";
         } else {
             foreach (QObject* device, m_deviceQueue) {
                 if(!APP_MODEL->devicesRunningList().contains(device)){
@@ -87,11 +87,11 @@ void AppController::onUpdateLDThreadList()
                     m_deviceQueue.append(device);
                     break;
                 } else {
-                    LOG << dynamic_cast<LDIntance*>(device)->instanceName() << " is run already";
+                    LOGD << dynamic_cast<LDIntance*>(device)->instanceName() << " is run already";
                 }
             }
         }
     }else {
-        LOG << "LDThreadList is full already!";
+        LOGD << "LDThreadList is full already!";
     }
 }

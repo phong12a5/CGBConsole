@@ -62,7 +62,7 @@ void AppModel::setLDIntallFolder(const QString path, bool standardPath)
 {
     QString tmp_path = path;
     if(m_ldIntallFolder != "") {
-        LOG << "There is a valid Path already!";
+        LOGD << "There is a valid Path already!";
         return;
     }
     if(standardPath == false)
@@ -70,7 +70,7 @@ void AppModel::setLDIntallFolder(const QString path, bool standardPath)
     else
         tmp_path = path;
 
-    LOG << "path: " << tmp_path;
+    LOGD << "path: " << tmp_path;
 
     if(QFile(tmp_path + "/ldconsole.exe").exists()){
         if(m_ldIntallFolder != tmp_path ){
@@ -78,7 +78,7 @@ void AppModel::setLDIntallFolder(const QString path, bool standardPath)
             emit ldIntallFolderChanged();
         }
     }else{
-        LOG << "Invalid folder.";
+        LOGD << "Invalid folder.";
         return;
     }
 
@@ -97,7 +97,7 @@ void AppModel::appendDevice(QString instanceName)
             return;
     }
     m_devicesList.append(new LDIntance(this,instanceName,m_devicesList.length()));
-    LOG << "m_devicesList: " << m_devicesList.length();
+    LOGD << "m_devicesList: " << m_devicesList.length();
     emit devicesListChanged();
 }
 
@@ -131,7 +131,7 @@ uint AppModel::amountOfThread() const
 
 void AppModel::setAmountOfThread(const uint data)
 {
-    LOG << data;
+    LOGD << data;
     if(data != m_amountOfThread){
         m_amountOfThread = data;
         emit amountOfThreadChanged();
@@ -145,7 +145,7 @@ bool AppModel::isLaunchMutiTask() const
 
 void AppModel::setIsLaunchMutiTask(const bool data)
 {
-    LOG << data;
+    LOGD << data;
     if(m_isLaunchMutiTask != data){
         m_isLaunchMutiTask = data;
         emit isLaunchMutiTaskChanged();
@@ -178,7 +178,7 @@ QString AppModel::token() const
 
 void AppModel::setToken(QString data)
 {
-    LOG << data;
+    LOGD << data;
     if(m_token != data ){
         m_token = data;
         emit tokenChanged();
@@ -246,7 +246,7 @@ QString AppModel::currentDir() const
 void AppModel::setCurrentDir(QString data)
 {
     m_currentDir = data;
-    LOG << m_currentDir;
+    LOGD << m_currentDir;
 }
 
 QString AppModel::appName() const
@@ -282,7 +282,7 @@ int AppModel::deviceCount() const
 
 void AppModel::setDeviceCount(int data)
 {
-    LOG << data;
+    LOGD << data;
     if(m_deviceCount != data) {
         m_deviceCount = data;
         emit deviceCountChanged();
@@ -309,7 +309,7 @@ QString AppModel::resolution() const
 
 void AppModel::setResolution(QString data)
 {
-    LOG << data;
+    LOGD << data;
     if (m_resolution != data) {
         m_resolution = data;
         emit resolutionChanged();;

@@ -25,7 +25,7 @@ LDCommand *LDCommand::instance()
 bool LDCommand::runLDCommand(QString args, int timeout)
 {
     QString cmd = QString("\"%1/dnconsole.exe\" %2").arg(APP_MODEL->ldIntallFolder()).arg(args);
-    LOG << "Cmd: " << cmd;
+    LOGD << "Cmd: " << cmd;
 
     QProcess m_process;
     m_process.start(cmd);
@@ -33,11 +33,11 @@ bool LDCommand::runLDCommand(QString args, int timeout)
     QString output = m_process.readAllStandardOutput();
     QString error = m_process.readAllStandardError();
     if(error != "")
-        LOG << "error: " << error;
+        LOGD << "error: " << error;
     if(output != "")
-        LOG << "output: " << output;
+        LOGD << "output: " << output;
     if(error != ""){
-        LOG << error;
+        LOGD << error;
         return false;
     }else{
         return true;
@@ -47,7 +47,7 @@ bool LDCommand::runLDCommand(QString args, int timeout)
 bool LDCommand::runLDCommand(QString args, QString &output, QString &error, int timeout)
 {
     QString cmd = QString("\"%1/dnconsole.exe\" %2").arg(APP_MODEL->ldIntallFolder()).arg(args);
-    LOG << "Cmd: " << cmd;
+    LOGD << "Cmd: " << cmd;
 
     QProcess m_process;
     m_process.start(cmd);
@@ -55,9 +55,9 @@ bool LDCommand::runLDCommand(QString args, QString &output, QString &error, int 
     output = m_process.readAllStandardOutput();
     error = m_process.readAllStandardError();
     if(error != "")
-        LOG << "error: " << error;
+        LOGD << "error: " << error;
     if(output != "")
-        LOG << "output: " << output;
+        LOGD << "output: " << output;
     if(error != ""){
         return false;
     }else{
@@ -67,7 +67,7 @@ bool LDCommand::runLDCommand(QString args, QString &output, QString &error, int 
 
 bool LDCommand::lunchInstance(QString instanceName)
 {
-    LOG << instanceName;
+    LOGD << instanceName;
     QMutex mutex;
     mutex.lock();
     bool success = this->runLDCommand(QString("launch --name %1").arg(instanceName));
@@ -77,7 +77,7 @@ bool LDCommand::lunchInstance(QString instanceName)
 
 bool LDCommand::runApp(QString instanceName, QString packageName)
 {
-    LOG << "instanceName: " << instanceName << " -- packageName: " << packageName;
+    LOGD << "instanceName: " << instanceName << " -- packageName: " << packageName;
     QMutex mutex;
     mutex.lock();
     bool success = this->runLDCommand(QString("runapp --name %1 --packagename %2").arg(instanceName).arg(packageName));
@@ -87,7 +87,7 @@ bool LDCommand::runApp(QString instanceName, QString packageName)
 
 bool LDCommand::addInstance(QString instanceName)
 {
-    LOG << instanceName;
+    LOGD << instanceName;
     QMutex mutex;
     mutex.lock();
     bool success = this->runLDCommand(QString("add --name %1").arg(instanceName));
@@ -117,7 +117,7 @@ QString LDCommand::ld_adb_command(QString instanceName, QString cmd, int timeout
 
 bool LDCommand::quitInstance(QString instanceName)
 {
-    LOG << instanceName;
+    LOGD << instanceName;
     QMutex mutex;
     mutex.lock();
     bool success = this->runLDCommand(QString("quit --name %1").arg(instanceName));
@@ -127,7 +127,7 @@ bool LDCommand::quitInstance(QString instanceName)
 
 bool LDCommand::quitAll()
 {
-    LOG;
+    LOGD;
     QMutex mutex;
     mutex.lock();
     bool success = this->runLDCommand("quitall");
@@ -137,7 +137,7 @@ bool LDCommand::quitAll()
 
 bool LDCommand::rebootInstance(QString instanceName)
 {
-    LOG << instanceName;
+    LOGD << instanceName;
     QMutex mutex;
     mutex.lock();
     bool success = this->runLDCommand(QString("reboot --name %1").arg(instanceName));
@@ -150,7 +150,7 @@ bool LDCommand::checkConnection(QString instanceName)
 #ifdef USE_FILE_STEADOF_ADB
     QString targetFileName = instanceName + ".checker";
     QFile::remove(targetFileName);
-    if(this->runLDCommand(QString("pull --name %1 --remote /sdcard/Pictures/.checkconnect.st --local ./%2").arg(instanceName).arg(targetFileName))){
+    if(this->runLDCommand(QString("pull --name %1 --remote /sdcard/Applications/%2 --local ./%3").arg(instanceName).arg(CHECK_CONNECT_FILENAME).arg(targetFileName))){
         if(QFile(targetFileName).exists()){
             QFile::remove(targetFileName);
             return true;
@@ -162,7 +162,7 @@ bool LDCommand::checkConnection(QString instanceName)
     output = ld_adb_command(instanceName,"shell ls | grep sdcard");
     output = output.simplified();
     if(output == "sdcard"){
-        LOG << QString("Connect to %1: successful").arg(instanceName);
+        LOGD << QString("Connect to %1: successful").arg(instanceName);
         return true;
     }else{
         return false;
@@ -170,9 +170,24 @@ bool LDCommand::checkConnection(QString instanceName)
 #endif
 }
 
+bool LDCommand::checkEnscript(QString instanceName)
+{
+#ifdef USE_FILE_STEADOF_ADB
+    QString targetFileName = "." + instanceName + ".enscript";
+    QFile::remove(targetFileName);
+    if(this->runLDCommand(QString("pull --name %1 --remote /sdcard/Applications/%2 --local ./%3").arg(instanceName).arg(targetFileName).arg(targetFileName))){
+        if(QFile(targetFileName).exists()){
+            QFile::remove(targetFileName);
+            return true;
+        }
+    }
+    return false;
+#endif
+}
+
 bool LDCommand::coppyInstance(QString instanceName, QString fromInstanceName)
 {
-    LOG << instanceName << " from "  << fromInstanceName;
+    LOGD << instanceName << " from "  << fromInstanceName;
     QMutex mutex;
     mutex.lock();
     bool success = this->runLDCommand(QString("copy --name %1 --from %2").arg(instanceName).arg(fromInstanceName));
@@ -182,7 +197,19 @@ bool LDCommand::coppyInstance(QString instanceName, QString fromInstanceName)
 
 bool LDCommand::isAppRunning(QString instanceName)
 {
+#ifdef USE_FILE_STEADOF_ADB
+    QString targetFileName = "." + instanceName + ".running";
+    QFile::remove(targetFileName);
+    if(this->runLDCommand(QString("pull --name %1 --remote /sdcard/Applications/%2 --local ./%3").arg(instanceName).arg(targetFileName).arg(targetFileName))){
+        if(QFile(targetFileName).exists()){
+            QFile::remove(targetFileName);
+            return true;
+        }
+    }
+    return false;
+#else
     return ld_adb_command(instanceName,QString("shell ps | grep %1").arg(FARM_PACKAGE_NAME)).contains(FARM_PACKAGE_NAME);
+#endif
 }
 
 bool LDCommand::sortWindow()
@@ -206,11 +233,11 @@ bool LDCommand::isExistedPackage(QString instanceName,QString packageName)
     Q_UNUSED(instanceName)
     QFile file("LDSetup/data/apps.text");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        LOG << "Open file fail";
+        LOGD << "Open file fail";
     }
     while (!file.atEnd()) {
         QString line = QString(file.readLine());
-        LOG << "line: " << line;
+        LOGD << "line: " << line;
         if(line.contains(packageName))
             return true;
     }
@@ -256,7 +283,7 @@ bool LDCommand::repairEmulator()
 {
     QString exeFileName = QDir::toNativeSeparators("\"" + QDir::currentPath() + "/LDSetup/dnrepairer.exe\"");
     int result = (int)::ShellExecuteA(nullptr, "runas", exeFileName.toUtf8().constData(), nullptr, nullptr, SW_SHOWNORMAL);
-    LOG << "result: " << result;
+    LOGD << "result: " << result;
     return (result >= 32? true : false);
 }
 
@@ -266,7 +293,7 @@ bool LDCommand::isExistedDevice(QString instanceName)
     QString error;
     if(this->runLDCommand("list", deviceList, error)){
         if(deviceList.contains(instanceName)){
-            LOG << "Device " << instanceName << " existed already";
+            LOGD << "Device " << instanceName << " existed already";
             return  true;
         } else {
             return false;

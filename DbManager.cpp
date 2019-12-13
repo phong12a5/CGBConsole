@@ -11,9 +11,9 @@ DbManager::DbManager(const QString &path)
     m_db.setDatabaseName(path);
 
     if (!m_db.open()) {
-        LOG << "Error: connection with database fail";
+        LOGD << "Error: connection with database fail";
     } else {
-        LOG << "Database: connection ok";
+        LOGD << "Database: connection ok";
     }
 }
 
@@ -32,7 +32,7 @@ bool DbManager::isOpen() const
 
 bool DbManager::addObject()
 {
-    LOG;
+    LOGD;
     bool success = false;
     QSqlQuery queryAdd;
     queryAdd.prepare("INSERT INTO uid_policy(logging, desired_name, username, policy, until, command, uid, desired_uid, package_name, name, notification) values(:logging, :desired_name, :username, :policy, :until, :command, :uid, :desired_uid, :package_name, :name, :notification)");
@@ -51,7 +51,7 @@ bool DbManager::addObject()
     if(queryAdd.exec())  {
         success = true;
     } else {
-        LOG << "add object failed: " << queryAdd.lastError();
+        LOGD << "add object failed: " << queryAdd.lastError();
     }
     return success;
 }
@@ -59,12 +59,12 @@ bool DbManager::addObject()
 
 void DbManager::printAllPersons() const
 {
-    LOG;
+    LOGD;
     QSqlQuery query("SELECT * FROM uid_policy");
     int idName = query.record().indexOf("name");
     while (query.next()) {
         QString name = query.value(idName).toString();
-        LOG << "===" << name;
+        LOGD << "===" << name;
     }
 }
 
@@ -80,15 +80,15 @@ bool DbManager::objectExists() const
             exists = true;
         }
     } else {
-        LOG << "person exists failed: " << checkQuery.lastError();
+        LOGD << "person exists failed: " << checkQuery.lastError();
     }
-    LOG << exists;
+    LOGD << exists;
     return exists;
 }
 
 bool DbManager::updateRow()
 {
-    LOG;
+    LOGD;
     bool success = false;
     QSqlQuery query;
     query.prepare("UPDATE uid_policy SET logging=:logging, desired_name=:desired_name, username=:username, policy=:policy, until=:until, command=:command, uid=:uid, desired_uid=:desired_uid, package_name=:package_name, notification=:notification WHERE name=:name");
@@ -107,7 +107,7 @@ bool DbManager::updateRow()
     if (query.exec()) {
         success = true;
     } else {
-        LOG << "Update failed: " << query.lastError();
+        LOGD << "Update failed: " << query.lastError();
     }
     return success;
 }

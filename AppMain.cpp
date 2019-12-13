@@ -7,6 +7,7 @@
 #include <QCoreApplication>
 #include <QApplication>
 #include <AutoUpdaterWorker.h>
+#include <QStandardPaths>
 
 #define APP_MODEL   AppModel::instance()
 #define APP_CTRL    AppController::instance()
@@ -39,18 +40,31 @@ AppMain::~AppMain()
 
 void AppMain::initApplication()
 {
-    LOG;
-    APP_MODEL->setCurrentDir(QDir::currentPath());
+    LOGD;
+    this->preSetup();
     this->onLoadConfig();
     APP_CTRL->initAppController();
 }
 
+void AppMain::preSetup()
+{
+    LOGD;
+    APP_MODEL->setCurrentDir(QDir::currentPath());
+    QString checkConnectFilePath = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/LDPlayer/Applications/" + CHECK_CONNECT_FILENAME;
+    if(QFile(checkConnectFilePath).exists() == false){
+        QFile file(checkConnectFilePath);
+        if (!file.open(QIODevice::WriteOnly | QIODevice::Text)){
+            LOGD << "Create " << CHECK_CONNECT_FILENAME << "failure";
+        }
+    }
+}
+
 void AppMain::onLoadConfig()
 {
-    LOG;
+    LOGD;
     if(APP_MODEL->ldIntallFolder() == "")
     {
-        LOG << "LD installation folder has not set yet";
+        LOGD << "LD installation folder has not set yet";
     }else{
         this->initDevicesList();
     }
@@ -91,15 +105,15 @@ void AppMain::onLoadConfig()
             APP_MODEL->setVersionCode(version[VERSION_KEY].toInt());
     }
     if(APP_MODEL->versionCode() != APP_MODEL->appConfig().m_cgbconsole_versioncode){
-        LOG << "Current version:" << APP_MODEL->versionCode();
-        LOG << "New version:" << APP_MODEL->appConfig().m_cgbconsole_versioncode;
+        LOGD << "Current version:" << APP_MODEL->versionCode();
+        LOGD << "New version:" << APP_MODEL->appConfig().m_cgbconsole_versioncode;
         updateVersion();
     }
 }
 
 void AppMain::onSaveConfig()
 {
-    LOG;
+    LOGD;
     QJsonObject config;
     config[INSTALL_FOLDER_PROP_KEY] = APP_MODEL->ldIntallFolder();
     config[TOKEN_PROP_KEY] = APP_MODEL->token();
@@ -111,15 +125,15 @@ void AppMain::onSaveConfig()
 
 void AppMain::initDevicesList()
 {
-    LOG;
+    LOGD;
     if(APP_MODEL->ldIntallFolder() == ""){
-        LOG << "Installation folder has not set up yet!";
+        LOGD << "Installation folder has not set up yet!";
         return;
     }else{
         QString output, error;
         LDCommand::instance()->runLDCommand("list", output, error);
         if(error != ""){
-            LOG << "ERROR: " << error;
+            LOGD << "ERROR: " << error;
         }else{
             QStringList listNameDevices = QString(output).split("\r\n",QString::SkipEmptyParts);
             for (int i = 0; i < listNameDevices.length(); i++) {
@@ -133,7 +147,7 @@ void AppMain::initDevicesList()
 
 void AppMain::onStartProgram()
 {
-    LOG;
+    LOGD;
     APP_MODEL->setAppStarted(true);
     this->onSaveConfig();
     if(APP_MODEL->devicesList().length() < APP_MODEL->deviceCount()){
@@ -157,13 +171,13 @@ void AppMain::onStoptProgram()
 
 void AppMain::onFinishCopyDevice(QString deviceName)
 {
-    LOG << deviceName;
+    LOGD << deviceName;
     APP_MODEL->appendDevice(deviceName);
 }
 
 void AppMain::onFinishCreateTemplateDevice()
 {
-    LOG;
+    LOGD;
     if(APP_MODEL->appStarted()){
         this->copyDevices();
         APP_CTRL->startMultiTask();
@@ -172,7 +186,7 @@ void AppMain::onFinishCreateTemplateDevice()
 
 void AppMain::onUpdateFinished(int code)
 {
-    LOG << code;
+    LOGD << code;
     if(code == AutoUpdaterWorker::E_FINISHED_CODE_NEW_VERSION) {
         APP_MODEL->setIsShowRestartPopup(true);
         QJsonObject config;
@@ -185,20 +199,20 @@ void AppMain::onUpdateFinished(int code)
 
 void AppMain::closingApp()
 {
-    LOG;
+    LOGD;
     QCoreApplication::quit();
 }
 
 int AppMain::restartApplication()
 {
-    LOG;
+    LOGD;
     QProcess::startDetached(QApplication::applicationFilePath());
     exit(12);
 }
 
 QJsonDocument AppMain::loadJson(QString fileName)
 {
-    LOG << "[AppMain]";
+    LOGD << "[AppMain]";
     QFile jsonFile(fileName);
     jsonFile.open(QFile::ReadOnly);
     return QJsonDocument().fromJson(jsonFile.readAll());
@@ -206,7 +220,7 @@ QJsonDocument AppMain::loadJson(QString fileName)
 
 void AppMain::saveJson(QJsonDocument document, QString fileName)
 {
-    LOG << "[AppMain]";
+    LOGD << "[AppMain]";
     QFile jsonFile(fileName);
     jsonFile.open(QFile::WriteOnly);
     jsonFile.write(document.toJson());
@@ -214,7 +228,7 @@ void AppMain::saveJson(QJsonDocument document, QString fileName)
 
 void AppMain::copyDevices()
 {
-    LOG;
+    LOGD;
 
     if(!m_copyDevicesThread.isRunning()){
             m_copyDevicesThread.start();
@@ -224,7 +238,7 @@ void AppMain::copyDevices()
 
 void AppMain::createTemplateDevice()
 {
-    LOG;
+    LOGD;
     if(!m_copyDevicesThread.isRunning()){
             m_copyDevicesThread.start();
     }
@@ -233,7 +247,7 @@ void AppMain::createTemplateDevice()
 
 void AppMain::updateVersion()
 {
-    LOG;
+    LOGD;
     AutoUpdaterWorker* autoUpdateWorker = new AutoUpdaterWorker();
     autoUpdateWorker->moveToThread(&m_updateVersionThread);
     connect(&m_updateVersionThread, &QThread::finished, autoUpdateWorker, &QObject::deleteLater);

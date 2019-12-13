@@ -5,7 +5,8 @@
 #include <QEventLoop>
 #include <QTimer>
 
-#define LOG qDebug() << "[" << __FUNCTION__ << "][" << __LINE__ << "] "
+#define LOGD qDebug() << "[" << __FUNCTION__ << "][" << __LINE__ << "] "
+#define LOGE qFatal() << "[" << __FUNCTION__ << "][" << __LINE__ << "] "
 
 #define FARM_PACKAGE_NAME       "xyz.autofarmer.app"
 #define CONFIG_FILE_NAME        "config.json"
@@ -28,8 +29,8 @@
 #define DEVICE_COUNT_KEY        "device_count"
 #define THREAD_COUNT_KEY        "thread_count"
 #define VERSION_KEY             "version"
-
 #define APP_DATA_FOLDER         "/sdcard/xyz.autofarmer.app/"
+#define CHECK_CONNECT_FILENAME  ".checkconnect.st"
 
 #define AVAILBLE_DISK_USAGE     90
 #define AVAILBLE_CPU_USAGE      60

@@ -13,12 +13,12 @@ EmulatorWorker::EmulatorWorker(QObject *parent) : QObject(parent)
 
 EmulatorWorker::~EmulatorWorker()
 {
-    LOG;
+    LOGD;
 }
 
 void EmulatorWorker::onCoppyDevices()
 {
-    LOG;
+    LOGD;
     QStringList existedDevices;
     existedDevices.clear();
     for (int i = 0; i < AppModel::instance()->devicesList().length(); i++) {
@@ -39,26 +39,26 @@ void EmulatorWorker::onCoppyDevices()
 void EmulatorWorker::onCreateTemplateDevice()
 {
     /* --------- Check and download APK --------- */
-    LOG << "Downloading APK ...";
+    LOGD << "Downloading APK ...";
     APP_MODEL->setTaskInProgress("Downloading APK ...");
     delay(100);
 
     QString expectedApkFileName = QString(APK_FILENAME).arg(APP_MODEL->appConfig().m_android_versioncode);
-    LOG << "expectedApkFileName: " << expectedApkFileName;
+    LOGD << "expectedApkFileName: " << expectedApkFileName;
     QDir directory(".");
     QStringList listApks = directory.entryList(QStringList() << "*.apk",QDir::Files);
 
     if(listApks.contains(expectedApkFileName)) {
-        LOG << expectedApkFileName << " is existed already";
+        LOGD << expectedApkFileName << " is existed already";
     }else {
         if (!WebAPI::instance()->downloadApk(APP_MODEL->appConfig().m_android_versioncode)) {
-            LOG << "Download " << expectedApkFileName << " failure";
+            LOGD << "Download " << expectedApkFileName << " failure";
             if(!listApks.isEmpty())
                 expectedApkFileName = listApks.last();
             else
-                LOG << "Couldn't get any apk file to install!";
+                LOGD << "Couldn't get any apk file to install!";
         }else {
-            LOG << "Download " << expectedApkFileName << " successfully";
+            LOGD << "Download " << expectedApkFileName << " successfully";
         }
     }
 

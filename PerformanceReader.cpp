@@ -10,7 +10,7 @@ PerformanceReader::PerformanceReader(QObject *parent) : QObject(parent)
 double PerformanceReader::currentDiskUsage()
 {
     QString currentDisk =  QDir::currentPath().mid(0,2);
-    LOG << "currentDisk: " << currentDisk;
+    LOGD << "currentDisk: " << currentDisk;
     double retVal = -1.00;
     try
     {
@@ -22,7 +22,7 @@ double PerformanceReader::currentDiskUsage()
             QString cc = QString::fromStdWString(itr->first);
             //            tcout << itr->first << " " << itr->second << std::endl;
             if(cc.contains(currentDisk)){
-                LOG << "Usage of cucurrentDisk: " << itr->second;
+                LOGD << "Usage of cucurrentDisk: " << itr->second;
                 retVal = itr->second;
                 break;
             }
@@ -48,7 +48,7 @@ double PerformanceReader::currentCPUUsage()
         {
             QString cc = QString::fromStdWString(itr->first);
             if(cc == "_Total"){
-                LOG << "Usage of cucurrentCPU: " << itr->second;
+                LOGD << "Usage of cucurrentCPU: " << itr->second;
                 retVal = itr->second;
                 break;
             }

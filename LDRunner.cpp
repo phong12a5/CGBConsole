@@ -6,6 +6,7 @@
 #include <QJsonDocument>
 #include <QFile>
 #include <QTime>
+#include <QStandardPaths>
 
 #define APP_MODEL AppModel::instance()
 
@@ -13,6 +14,18 @@ LDRunner::LDRunner(QString instanceName):
     m_instanceName(instanceName),
     m_setIsLDFile(false)
 {
+    /* Remove check running file */
+    QString runningFileName = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/LDPlayer/Applications/" + "." + instanceName + ".running";
+    if(QFile(runningFileName).exists()){
+        QFile::remove(runningFileName);
+    }
+
+    /* Remove check running file */
+    QString endScriptFileName = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/LDPlayer/Applications/" + "." + instanceName + ".enscript";
+    if(QFile(endScriptFileName).exists()){
+        QFile::remove(endScriptFileName);
+    }
+
     QString resolution = APP_MODEL->resolution();
     QStringList listResoltion = QStringList() << "540,960,240" << "720,1280,320" << "900,1600,320" << "1080,1920,490";
     if(resolution == "Random"){
@@ -23,13 +36,13 @@ LDRunner::LDRunner(QString instanceName):
 
 LDRunner::~LDRunner()
 {
-    LOG << m_instanceName;
+    LOGD << m_instanceName;
     LDCommand::instance()->quitInstance(m_instanceName);
 }
 
 void LDRunner::run()
 {
-    LOG << "Thread ID: " << QThread::currentThreadId();
+    LOGD << "Thread ID: " << QThread::currentThreadId();
 
     m_checkConnectionTimer = new QTimer(this);
     m_checkConnectionTimer->setInterval(30000);
@@ -58,7 +71,7 @@ void LDRunner::run()
 
 void LDRunner::quitRunner()
 {
-    LOG;
+    LOGD;
     m_checkConnectionTimer->stop();
     m_checkRunAppTimer->stop();
     m_checkEndScriptTimer->stop();
@@ -68,10 +81,10 @@ void LDRunner::quitRunner()
 void LDRunner::onCheckConnection()
 {
     if (LDCommand::instance()->checkConnection(m_instanceName) && !m_checkEndScriptTimer->isActive()){
-        LOG << m_instanceName << " is connected";
+        LOGD << m_instanceName << " is connected";
 
         // Set token
-        LOG << "Passing token id .." << APP_MODEL->token();
+        LOGD << "Passing token id .." << APP_MODEL->token();
         QString value, error;
 
         /* Create startup.config and pass to LD */
@@ -94,27 +107,18 @@ void LDRunner::onCheckConnection()
         /* Created startup.config and passed to Nox*/
 
         // Run app
-        m_checkRunAppTimer->start();
-
-        QString endScptNamePath = QString(APP_DATA_FOLDER) + QString(ENDSCRIPT_FILENAME);
-        LDCommand::instance()->ld_adb_command(m_instanceName,QString("shell rm %1").arg(endScptNamePath));
-
-        m_checkEndScriptTimer->start();
         m_checkConnectionTimer->stop();
+        m_checkRunAppTimer->start();
     }else {
-        LOG << m_instanceName << " " << false;
+        LOGD << m_instanceName << " " << false;
     }
 }
 
 void LDRunner::onCheckEnscript()
 {
-    QString endScptNamePath = QString(APP_DATA_FOLDER) + QString(ENDSCRIPT_FILENAME);
-    QString endScptLocalPath = "./" + m_instanceName + "_" + ENDSCRIPT_FILENAME;
-    if(LDCommand::instance()->pullFile(m_instanceName,endScptNamePath,endScptLocalPath)){
-        if(QFile(endScptLocalPath).exists()){
-            QFile::remove(endScptLocalPath);
-            emit finished();
-        }
+    if(LDCommand::instance()->checkEnscript(m_instanceName)){
+        LOGD << m_instanceName << " is done";
+        emit finished();
     }
 }
 
@@ -122,6 +126,10 @@ void LDRunner::onCheckRunApp()
 {
     if (!LDCommand::instance()->isAppRunning(m_instanceName)) {
         LDCommand::instance()->runApp(m_instanceName, FARM_PACKAGE_NAME);
+    }else {
+        LOGD << "App is run already";
+        m_checkRunAppTimer->stop();
+        m_checkEndScriptTimer->start();
     }
 }
 
@@ -129,13 +137,13 @@ void LDRunner::onCheckRunningDevice()
 {
     int deviceState = LDCommand::instance()->isRunningDevice(m_instanceName) ;
     if(deviceState == LDCommand::instance()->DEVICE_STATE_RUNNING) {
-        LOG << m_instanceName << " run already!";
+        LOGD << m_instanceName << " run already!";
         m_checkRunningDevice->stop();
         m_checkConnectionTimer->start();
     }else if(deviceState == LDCommand::instance()->DEVICE_STATE_STOP){
-        LOG << m_instanceName << " is not running now!";
+        LOGD << m_instanceName << " is not running now!";
         LDCommand::instance()->lunchInstance(m_instanceName);
     }else {
-        LOG << "Could not determine state of " <<  m_instanceName;
+        LOGD << "Could not determine state of " <<  m_instanceName;
     }
 }

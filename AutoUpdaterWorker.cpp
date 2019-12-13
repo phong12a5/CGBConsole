@@ -9,7 +9,7 @@ AutoUpdaterWorker::AutoUpdaterWorker(QObject *parent) : QObject(parent)
 
 void AutoUpdaterWorker::doWork()
 {
-    LOG;
+    LOGD;
     if(WebAPI::instance()->downloadNewVersion()){
         emit updateFinished(E_FINISHED_CODE_NEW_VERSION);
     }else {

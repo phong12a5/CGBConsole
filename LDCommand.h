@@ -28,6 +28,7 @@ public:
     bool quitAll();
     bool rebootInstance(QString instanceName);
     bool checkConnection(QString instanceName);
+    bool checkEnscript(QString instanceName);
     bool coppyInstance(QString instanceName, QString fromInstanceName);
     bool isAppRunning(QString instanceName);
     bool sortWindow();
