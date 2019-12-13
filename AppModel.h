@@ -6,6 +6,7 @@
 #include "LDCommand.h"
 #include "LDIntance.h"
 #include <QMutex>
+#include <QSize>
 
 class AppModel : public QObject
 {
@@ -96,6 +97,9 @@ public:
     int versionCode() const;
     void setVersionCode(int data);
 
+    QSize screenResolution() const;
+    void setScreenResolution(const QSize& data);
+
 public:
     Q_INVOKABLE void startProgram();
     Q_INVOKABLE void stopProgarm();
@@ -147,6 +151,8 @@ private:
     bool m_isShowRestartPopup;
     int m_versionCode;
     bool m_appStarted;
+    QSize m_screenResolution;
+
 public slots:
 };
 

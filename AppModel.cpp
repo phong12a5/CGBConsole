@@ -343,6 +343,18 @@ void AppModel::setVersionCode(int data)
     }
 }
 
+QSize AppModel::screenResolution() const
+{
+    return m_screenResolution;
+}
+
+void AppModel::setScreenResolution(const QSize &data)
+{
+    if(data != m_screenResolution){
+        m_screenResolution = data;
+    }
+}
+
 void AppModel::startProgram()
 {
     emit sigStartProgram();

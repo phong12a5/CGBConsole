@@ -4,6 +4,8 @@
 #include <QFile>
 #include <QDir>
 #include <QMutex>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 #define APP_MODEL AppModel::instance()
 
@@ -216,7 +218,24 @@ bool LDCommand::sortWindow()
 {
     QMutex mutex;
     mutex.lock();
-    bool success = this->runLDCommand("sortWnd");
+    bool success = false;
+    int windowsRowCount = 0;
+    QFile configFile("LDSetup/vms/config/leidians.config");
+    QJsonObject ldConfigObj;
+    int area = APP_MODEL->screenResolution().width() * APP_MODEL->screenResolution().height();
+    if(scale > 1.72);
+    if(configFile.open(QIODevice::ReadOnly)){
+        ldConfigObj = QJsonDocument().fromJson(configFile.readAll()).object();
+    }
+    configFile.close();
+    if(configFile.open(QIODevice::WriteOnly |QIODevice::Truncate)){
+        LOGD << "ldConfigObj: " << ldConfigObj;
+        ldConfigObj["windowsRowCount"] = windowsRowCount;
+        configFile.write(QJsonDocument(ldConfigObj).toJson());
+    }
+    configFile.close();
+    success = this->runLDCommand("sortWnd");
+    //"windowsRowCount"
     mutex.unlock();
     return success;
 }

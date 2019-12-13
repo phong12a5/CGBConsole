@@ -8,6 +8,7 @@
 #include <QApplication>
 #include <AutoUpdaterWorker.h>
 #include <QStandardPaths>
+#include <QScreen>
 
 #define APP_MODEL   AppModel::instance()
 #define APP_CTRL    AppController::instance()
@@ -59,6 +60,12 @@ void AppMain::preSetup()
         if (!file.open(QIODevice::WriteOnly | QIODevice::Text)){
             LOGD << "Create " << CHECK_CONNECT_FILENAME << "failure";
         }
+    }
+
+    QList<QScreen*> listSrc = QGuiApplication::screens();
+    if(!listSrc.isEmpty()){
+        APP_MODEL->setScreenResolution(QGuiApplication::screens().at(0)->size());
+        LOGD << "Screen Size: " << APP_MODEL->screenResolution().width() << "x" << APP_MODEL->screenResolution().height();
     }
 }
 
