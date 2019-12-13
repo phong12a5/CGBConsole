@@ -27,6 +27,8 @@ AppMain::AppMain(QObject *parent) : QObject(parent)
     connect(this, &AppMain::startCreateTemplateDevice, m_emulaterWorker, &EmulatorWorker::onCreateTemplateDevice);
     connect(m_emulaterWorker, &EmulatorWorker::finishCopyDevice, this, &AppMain::onFinishCopyDevice);
     connect(m_emulaterWorker, &EmulatorWorker::finishCreateTemplateDevice, this, &AppMain::onFinishCreateTemplateDevice);
+
+    connect(APP_MODEL, &AppModel::deviceCountChanged, this, &AppMain::startCopyEmulator);
 }
 
 AppMain::~AppMain()
@@ -36,6 +38,7 @@ AppMain::~AppMain()
     m_copyDevicesThread.wait();
     m_updateVersionThread.wait();
     LDCommand::instance()->quitAll();
+    this->onSaveConfig();
 }
 
 void AppMain::initApplication()
@@ -149,6 +152,9 @@ void AppMain::onStartProgram()
 {
     LOGD;
     APP_MODEL->setAppStarted(true);
+    if(!m_copyDevicesThread.isRunning()){
+            m_copyDevicesThread.start();
+    }
     this->onSaveConfig();
     if(APP_MODEL->devicesList().length() < APP_MODEL->deviceCount()){
         if(!(LDCommand::instance()->isExistedDevice(ORIGIN_DEVICE_NAME))) {
@@ -229,19 +235,12 @@ void AppMain::saveJson(QJsonDocument document, QString fileName)
 void AppMain::copyDevices()
 {
     LOGD;
-
-    if(!m_copyDevicesThread.isRunning()){
-            m_copyDevicesThread.start();
-    }
     this->startCopyEmulator();
 }
 
 void AppMain::createTemplateDevice()
 {
     LOGD;
-    if(!m_copyDevicesThread.isRunning()){
-            m_copyDevicesThread.start();
-    }
     this->startCreateTemplateDevice();
 }
 
