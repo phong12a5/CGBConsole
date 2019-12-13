@@ -6,6 +6,7 @@
 #include <QMutex>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <math.h>
 
 #define APP_MODEL AppModel::instance()
 
@@ -222,8 +223,30 @@ bool LDCommand::sortWindow()
     int windowsRowCount = 0;
     QFile configFile("LDSetup/vms/config/leidians.config");
     QJsonObject ldConfigObj;
-    int area = APP_MODEL->screenResolution().width() * APP_MODEL->screenResolution().height();
-    if(scale > 1.72);
+    int screenWidth = APP_MODEL->screenResolution().width();
+    int screenHeight = APP_MODEL->screenResolution().height();
+
+    for(int rowCol = 1; rowCol <= APP_MODEL->devicesRunningList().length(); rowCol++){
+        int rowcount = static_cast<int>(ceil(APP_MODEL->devicesRunningList().length()/static_cast<float>(rowCol)));
+        int deviceWidth = screenWidth/rowCol;
+        int deviceHeight = static_cast<int>(deviceWidth * 1.72);
+        //LOGD << "rowcount: " << rowcount;
+        //LOGD << "rowCol: " << rowCol;
+        //LOGD << "deviceWidth: " << deviceWidth;
+        //LOGD << "deviceHeight: " << deviceHeight;
+        //LOGD << "screenWidth: " << screenWidth;
+        //LOGD << "screenHeight: " << screenHeight;
+        if(rowcount * deviceHeight > screenHeight){
+            continue;
+        }else {
+            windowsRowCount = rowCol;
+            break;
+        }
+    }
+    if(windowsRowCount <= 0)
+        windowsRowCount = APP_MODEL->devicesRunningList().length();
+    LOGD << "windowsRowCount: " << windowsRowCount << " listRunning: " << APP_MODEL->devicesRunningList().length();
+
     if(configFile.open(QIODevice::ReadOnly)){
         ldConfigObj = QJsonDocument().fromJson(configFile.readAll()).object();
     }

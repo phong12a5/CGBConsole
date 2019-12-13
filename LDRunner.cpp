@@ -94,7 +94,7 @@ void LDRunner::onCheckConnection()
         configObj["timeout"] = 30;
         configObj["country"] = "Vietnam";
         configObj["appname"] = APP_MODEL->appName();
-        configObj["device_name"] = m_instanceName;
+        configObj["devicename"] = m_instanceName;
 
         QString startUpFile = "startup.config";
         QFile jsonFile(startUpFile);
