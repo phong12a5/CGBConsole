@@ -12,7 +12,9 @@
 
 LDRunner::LDRunner(QString instanceName):
     m_instanceName(instanceName),
-    m_setIsLDFile(false)
+    m_deviceStatus(LDService::E_DEVICE_DISCONNECT),
+    m_appStatus(LDService::E_APP_STOPPED),
+    m_missionStatus(LDService::E_MISSION_INCOMPLETED)
 {
     /* Remove check running file */
     QString runningFileName = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/LDPlayer/Applications/" + "." + instanceName + ".running";
@@ -21,7 +23,7 @@ LDRunner::LDRunner(QString instanceName):
     }
 
     /* Remove check running file */
-    QString endScriptFileName = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/LDPlayer/Applications/" + "." + instanceName + ".enscript";
+    QString endScriptFileName = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/LDPlayer/Applications/" + "." + instanceName + ".endscript";
     if(QFile(endScriptFileName).exists()){
         QFile::remove(endScriptFileName);
     }
@@ -44,23 +46,13 @@ void LDRunner::run()
 {
     LOGD << "Thread ID: " << QThread::currentThreadId();
 
-    m_checkConnectionTimer = new QTimer(this);
-    m_checkConnectionTimer->setInterval(30000);
-    m_checkConnectionTimer->setSingleShot(false);
-    connect(m_checkConnectionTimer,SIGNAL(timeout()),this,SLOT(onCheckConnection()));
-
-    m_checkEndScriptTimer = new QTimer(this);
-    m_checkEndScriptTimer->setInterval(30000);
-    m_checkEndScriptTimer->setSingleShot(false);
-    connect(m_checkEndScriptTimer,SIGNAL(timeout()),this,SLOT(onCheckEnscript()));
-
-    m_checkRunAppTimer = new QTimer(this);
-    m_checkRunAppTimer->setInterval(APP_MODEL->appConfig().m_openApkAfterNSeconds * 1000);
-    m_checkRunAppTimer->setSingleShot(false);
-    connect(m_checkRunAppTimer,SIGNAL(timeout()),this,SLOT(onCheckRunApp()));
+    connect(LDService::instance(), &LDService::updateDeviceStatus,  this,                   &LDRunner::onUpdateDeviceStatus);
+    connect(LDService::instance(), &LDService::updateAppStatus,     this,                   &LDRunner::onUpdateAppStatus);
+    connect(LDService::instance(), &LDService::updateMissionStatus, this,                   &LDRunner::onUpdateMissionStatus);
+    connect(this,                  &LDRunner::passConfigToDevice,   LDService::instance(),  &LDService::onPassConfigToDevice);
 
     m_checkRunningDevice = new QTimer(this);
-    m_checkRunningDevice->setInterval(20000);
+    m_checkRunningDevice->setInterval(180000);
     m_checkRunningDevice->setSingleShot(false);
     connect(m_checkRunningDevice,SIGNAL(timeout()),this,SLOT(onCheckRunningDevice()));
 
@@ -69,77 +61,14 @@ void LDRunner::run()
     m_checkRunningDevice->start();
 }
 
-void LDRunner::quitRunner()
-{
-    LOGD;
-    m_checkConnectionTimer->stop();
-    m_checkRunAppTimer->stop();
-    m_checkEndScriptTimer->stop();
-    m_checkRunningDevice->stop();
-}
-
-void LDRunner::onCheckConnection()
-{
-    if (LDCommand::instance()->checkConnection(m_instanceName) && !m_checkEndScriptTimer->isActive()){
-        LOGD << m_instanceName << " is connected";
-
-        // Set token
-        LOGD << "Passing token id .." << APP_MODEL->token();
-        QString value, error;
-
-        /* Create startup.config and pass to LD */
-        QJsonObject configObj;
-        configObj["token"] = APP_MODEL->token();
-        configObj["auto_startup"] = true;
-        configObj["timeout"] = 30;
-        configObj["country"] = "Vietnam";
-        configObj["appname"] = APP_MODEL->appName();
-        configObj["devicename"] = m_instanceName;
-
-        QString startUpFile = "startup.config";
-        QFile jsonFile(startUpFile);
-        jsonFile.open(QFile::WriteOnly);
-        jsonFile.write(QJsonDocument(configObj).toJson());
-        jsonFile.close();
-
-        LDCommand::instance()->pushFile(m_instanceName,QString(APP_DATA_FOLDER) + startUpFile,"./" + startUpFile);
-        QFile::remove(startUpFile);
-        /* Created startup.config and passed to Nox*/
-
-        // Run app
-        m_checkConnectionTimer->stop();
-        m_checkRunAppTimer->start();
-    }else {
-        LOGD << m_instanceName << " " << false;
-    }
-}
-
-void LDRunner::onCheckEnscript()
-{
-    if(LDCommand::instance()->checkEnscript(m_instanceName)){
-        LOGD << m_instanceName << " is done";
-        emit finished();
-    }
-}
-
-void LDRunner::onCheckRunApp()
-{
-    if (!LDCommand::instance()->isAppRunning(m_instanceName)) {
-        LDCommand::instance()->runApp(m_instanceName, FARM_PACKAGE_NAME);
-    }else {
-        LOGD << "App is run already";
-        m_checkRunAppTimer->stop();
-        m_checkEndScriptTimer->start();
-    }
-}
-
 void LDRunner::onCheckRunningDevice()
 {
     int deviceState = LDCommand::instance()->isRunningDevice(m_instanceName) ;
     if(deviceState == LDCommand::instance()->DEVICE_STATE_RUNNING) {
         LOGD << m_instanceName << " run already!";
-        m_checkRunningDevice->stop();
-        m_checkConnectionTimer->start();
+        if(m_deviceStatus != LDService::E_DEVICE_CONNECTED){
+            LDCommand::instance()->rebootInstance(m_instanceName);
+        }
     }else if(deviceState == LDCommand::instance()->DEVICE_STATE_STOP){
         LOGD << m_instanceName << " is not running now!";
         LDCommand::instance()->lunchInstance(m_instanceName);
@@ -147,3 +76,41 @@ void LDRunner::onCheckRunningDevice()
         LOGD << "Could not determine state of " <<  m_instanceName;
     }
 }
+
+void LDRunner::onUpdateDeviceStatus(QMap<QString,LDService::E_DEVICE_STATUS> *listDeviceStatus)
+{
+    if(listDeviceStatus->contains(m_instanceName)){
+        if (m_deviceStatus != listDeviceStatus->value(m_instanceName) && m_deviceStatus != LDService::E_DEVICE_CONNECTED) {
+            m_deviceStatus = listDeviceStatus->value(m_instanceName);
+            LOGD << m_instanceName << " is connected";
+            emit passConfigToDevice(m_instanceName);
+        }
+    }
+}
+
+void LDRunner::onUpdateAppStatus(QMap<QString,LDService::E_APP_STATUS> *listAppStatus)
+{
+    if(listAppStatus->contains(m_instanceName)){
+        if (listAppStatus->value(m_instanceName) != LDService::E_APP_RUNNING && \
+                m_appStatus != LDService::E_APP_RUNNING && \
+                m_deviceStatus == LDService::E_DEVICE_CONNECTED)
+        {
+            m_appStatus = listAppStatus->value(m_instanceName);
+            LDCommand::instance()->runApp(m_instanceName, FARM_PACKAGE_NAME);
+        }else if(listAppStatus->value(m_instanceName) == LDService::E_APP_RUNNING){
+            LOGD << m_instanceName << " xyz.autofarmer.app started!";
+        }
+    }
+}
+
+void LDRunner::onUpdateMissionStatus(QMap<QString,LDService::E_MISSION_STATUS> *listMissionpStatus)
+{
+    if(listMissionpStatus->contains(m_instanceName)){
+        m_missionStatus = listMissionpStatus->value(m_instanceName);
+        if(m_missionStatus == LDService::E_MISSION_COMPLETED){
+            LOGD << m_instanceName << ": Mission completed!";
+            emit finished();
+        }
+    }
+}
+

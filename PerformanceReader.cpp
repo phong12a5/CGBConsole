@@ -10,7 +10,6 @@ PerformanceReader::PerformanceReader(QObject *parent) : QObject(parent)
 double PerformanceReader::currentDiskUsage()
 {
     QString currentDisk =  QDir::currentPath().mid(0,2);
-    LOGD << "currentDisk: " << currentDisk;
     double retVal = -1.00;
     try
     {

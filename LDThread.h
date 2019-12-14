@@ -21,7 +21,6 @@ private:
 
 signals:
     void operate();
-    void quitThread();
     void missionCompleted(LDThread*);
 
 public slots:

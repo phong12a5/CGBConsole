@@ -2,7 +2,7 @@ QT += quick \
       widgets \
       sql
 
-CONFIG += c++11
+CONFIG += c++11 console
 DEFINES +=  \
 #           TEST_MODE\
             USE_FILE_STEADOF_ADB
@@ -35,7 +35,8 @@ SOURCES += \
     QAESEncryption.cpp \
     DbManager.cpp \
     PerformanceReader.cpp \
-    AutoUpdaterWorker.cpp
+    AutoUpdaterWorker.cpp \
+    LDService.cpp
 
 RESOURCES += qml.qrc
 
@@ -65,7 +66,8 @@ HEADERS += \
     DbManager.h \
     PerformanceReader.h \
     CPdhQuery.h \
-    AutoUpdaterWorker.h
+    AutoUpdaterWorker.h \
+    LDService.h
 
 LIBS += -L$$PWD/libs/ -lchilkat-9.5.0 -lws2_32 -lcrypt32 -ldnsapi
 LIBS += $$PWD/libs/Pdh.Lib

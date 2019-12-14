@@ -3,7 +3,7 @@
 #include "AppMain.h"
 #include <QtWidgets>
 #include <iostream>
-
+#include <LDService.h>
 
 int main(int argc, char *argv[])
 {
@@ -15,6 +15,8 @@ int main(int argc, char *argv[])
 
     AppMain appMain;
     appMain.initApplication();
+
+    LDService::instance()->startService();
 
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("AppModel",AppModel::instance());

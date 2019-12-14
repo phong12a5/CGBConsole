@@ -34,6 +34,7 @@ private:
     bool m_getAppConfig;
     QThread m_copyDevicesThread;
     QThread m_updateVersionThread;
+    QThread m_ldServiceThread;
     QQuickView * m_view;
     EmulatorWorker* m_emulaterWorker;
 
@@ -50,6 +51,8 @@ signals:
     void startCopyEmulator();
     void startAutoUpdater();
     void startCreateTemplateDevice();
+    void startLdService();
+    void stopLdService();
 };
 
 #endif // APPMAIN_H

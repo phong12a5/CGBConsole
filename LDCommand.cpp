@@ -29,7 +29,7 @@ LDCommand *LDCommand::instance()
 bool LDCommand::runLDCommand(QString args, int timeout)
 {
     QString cmd = QString("\"%1/dnconsole.exe\" %2").arg(APP_MODEL->ldIntallFolder()).arg(args);
-    LOGD << "Cmd: " << cmd;
+//    LOGD << "Cmd: " << cmd;
 
     QProcess m_process;
     m_process.start(cmd);
@@ -51,7 +51,7 @@ bool LDCommand::runLDCommand(QString args, int timeout)
 bool LDCommand::runLDCommand(QString args, QString &output, QString &error, int timeout)
 {
     QString cmd = QString("\"%1/dnconsole.exe\" %2").arg(APP_MODEL->ldIntallFolder()).arg(args);
-    LOGD << "Cmd: " << cmd;
+//    LOGD << "Cmd: " << cmd;
 
     QProcess m_process;
     m_process.start(cmd);
@@ -154,7 +154,7 @@ bool LDCommand::checkConnection(QString instanceName)
 #ifdef USE_FILE_STEADOF_ADB
     QString targetFileName = instanceName + ".checker";
     QFile::remove(targetFileName);
-    if(this->runLDCommand(QString("pull --name %1 --remote /sdcard/Applications/%2 --local ./%3").arg(instanceName).arg(CHECK_CONNECT_FILENAME).arg(targetFileName))){
+    if(this->runLDCommand(QString("pull --name %1 --remote /sdcard/Applications/%2 --local ./%3").arg(instanceName).arg(CHECK_CONNECT_FILENAME).arg(targetFileName),2000)){
         if(QFile(targetFileName).exists()){
             QFile::remove(targetFileName);
             return true;
@@ -247,7 +247,6 @@ bool LDCommand::sortWindow()
     }
     configFile.close();
     if(configFile.open(QIODevice::WriteOnly |QIODevice::Truncate)){
-        LOGD << "ldConfigObj: " << ldConfigObj;
         ldConfigObj["windowsRowCount"] = windowsRowCount;
         configFile.write(QJsonDocument(ldConfigObj).toJson());
     }

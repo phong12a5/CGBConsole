@@ -9,6 +9,7 @@
 #include <AutoUpdaterWorker.h>
 #include <QStandardPaths>
 #include <QScreen>
+#include <LDService.h>
 
 #define APP_MODEL   AppModel::instance()
 #define APP_CTRL    AppController::instance()
@@ -29,6 +30,10 @@ AppMain::AppMain(QObject *parent) : QObject(parent)
     connect(m_emulaterWorker, &EmulatorWorker::finishCopyDevice, this, &AppMain::onFinishCopyDevice);
     connect(m_emulaterWorker, &EmulatorWorker::finishCreateTemplateDevice, this, &AppMain::onFinishCreateTemplateDevice);
 
+    LDService::instance()->moveToThread(&m_ldServiceThread);
+    connect(this, &AppMain::startLdService, LDService::instance(), &LDService::startService);
+    connect(this, &AppMain::stopLdService, LDService::instance(), &LDService::stopService);
+
     connect(APP_MODEL, &AppModel::deviceCountChanged, this, &AppMain::startCopyEmulator);
 }
 
@@ -36,8 +41,10 @@ AppMain::~AppMain()
 {
     m_copyDevicesThread.quit();
     m_updateVersionThread.quit();
+    m_ldServiceThread.quit();
     m_copyDevicesThread.wait();
     m_updateVersionThread.wait();
+    m_ldServiceThread.wait();
     LDCommand::instance()->quitAll();
     this->onSaveConfig();
 }
@@ -53,6 +60,8 @@ void AppMain::initApplication()
 void AppMain::preSetup()
 {
     LOGD;
+    QFile::remove(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/LDPlayer/Pictures/temp");
+
     APP_MODEL->setCurrentDir(QDir::currentPath());
     QString checkConnectFilePath = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/LDPlayer/Applications/" + CHECK_CONNECT_FILENAME;
     if(QFile(checkConnectFilePath).exists() == false){
@@ -173,6 +182,10 @@ void AppMain::onStartProgram()
         }
     }else {
         APP_CTRL->startMultiTask();
+    }
+
+    if(!m_ldServiceThread.isRunning()){
+        m_ldServiceThread.start();
     }
 }
 

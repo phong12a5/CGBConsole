@@ -20,7 +20,6 @@ LDThread::LDThread(QObject *parent, LDIntance* ldInstance) :
     connect(m_workerThread, &QThread::finished, m_Worker, &LDRunner::deleteLater);
     connect(this, &LDThread::destroyed, m_workerThread, &QThread::quit);
     connect(this, &LDThread::operate, m_Worker, &LDRunner::run);
-    connect(this, &LDThread::quitThread, m_Worker, &LDRunner::quitRunner);
     connect(m_Worker, &LDRunner::finished, this, &LDThread::finishedATask);
     m_workerThread->start();
     emit this->operate();
@@ -29,7 +28,6 @@ LDThread::LDThread(QObject *parent, LDIntance* ldInstance) :
 LDThread::~LDThread()
 {
     APP_MODEL->popRunningDevice(m_ldInstance->instanceName());
-    emit quitThread();
 }
 
 void LDThread::finishedATask()
