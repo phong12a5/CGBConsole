@@ -285,11 +285,12 @@ bool LDCommand::pushFile(QString instanceName, QString filePath, QString target)
 {
     QMutex mutex;
     mutex.lock();
-    QString output, error;
-    bool success = this->runLDCommand(QString("push --name %1 --remote %2 --local %3").arg(instanceName).arg(filePath).arg(target),output,error);
-    if(output.contains("copy files failed!")){
-        QFile::remove(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/LDPlayer/Pictures/temp");
-    }mutex.unlock();
+    QString fileTemp = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/LDPlayer/Pictures/temp";
+    if(QFile(fileTemp).exists()){
+        QFile::remove(fileTemp);
+    }
+    bool success = this->runLDCommand(QString("push --name %1 --remote %2 --local %3").arg(instanceName).arg(filePath).arg(target));
+    mutex.unlock();
     return success;
 }
 
@@ -297,11 +298,11 @@ bool LDCommand::pullFile(QString instanceName, QString remoteFile, QString local
 {
     QMutex mutex;
     mutex.lock();
-    QString output, error;
-    bool success = this->runLDCommand(QString("pull --name %1 --remote %2 --local %3").arg(instanceName).arg(remoteFile).arg(localFile),output,error);
-    if(output.contains("copy files failed!")){
-        QFile::remove(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/LDPlayer/Pictures/temp");
+    QString fileTemp = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/LDPlayer/Pictures/temp";
+    if(QFile(fileTemp).exists()){
+        QFile::remove(fileTemp);
     }
+    bool success = this->runLDCommand(QString("pull --name %1 --remote %2 --local %3").arg(instanceName).arg(remoteFile).arg(localFile));
     mutex.unlock();
     return success;
 }
