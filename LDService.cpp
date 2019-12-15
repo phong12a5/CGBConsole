@@ -14,17 +14,9 @@ LDService::LDService(QObject *parent) : QObject(parent),
   m_listAppStatus(new QMap<QString,E_APP_STATUS>),
   m_listMissionStatus(new QMap<QString,E_MISSION_STATUS>)
 {
-    m_checkConnectTimer.setSingleShot(false);
-    m_checkConnectTimer.setInterval(60000);
-    connect(&m_checkConnectTimer, &QTimer::timeout, this, &LDService::onCheckDeviceStatus);
-
-    m_checkRunAppTimer.setSingleShot(false);
-    m_checkRunAppTimer.setInterval(60000);
-    connect(&m_checkRunAppTimer, &QTimer::timeout, this, &LDService::onCheckRunApp);
-
-    m_checkMissionSttTimer.setSingleShot(false);
-    m_checkMissionSttTimer.setInterval(60000);
-    connect(&m_checkMissionSttTimer, &QTimer::timeout, this, &LDService::onCheckMissionStatus);
+    m_checkConnectTimer = nullptr;
+    m_checkRunAppTimer = nullptr;
+    m_checkMissionSttTimer = nullptr;
 }
 
 LDService::~LDService()
@@ -45,16 +37,39 @@ LDService *LDService::instance()
 void LDService::startService()
 {
     LOGD;
-    m_checkConnectTimer.start();
-    m_checkRunAppTimer.start();
-    m_checkMissionSttTimer.start();
+    if(m_checkConnectTimer == nullptr){
+        m_checkConnectTimer = new QTimer(this);
+        m_checkConnectTimer->setSingleShot(false);
+        m_checkConnectTimer->setInterval(60000);
+        connect(m_checkConnectTimer, &QTimer::timeout, this, &LDService::onCheckDeviceStatus);
+    }
+
+
+    if(m_checkRunAppTimer == nullptr){
+        m_checkRunAppTimer = new QTimer(this);
+        m_checkRunAppTimer->setSingleShot(false);
+        m_checkRunAppTimer->setInterval(60000);
+        connect(m_checkRunAppTimer, &QTimer::timeout, this, &LDService::onCheckRunApp);
+    }
+
+    if(m_checkMissionSttTimer == nullptr){
+        m_checkMissionSttTimer = new QTimer(this);
+        m_checkMissionSttTimer->setSingleShot(false);
+        m_checkMissionSttTimer->setInterval(60000);
+        connect(m_checkMissionSttTimer, &QTimer::timeout, this, &LDService::onCheckMissionStatus);
+    }
+
+    m_checkConnectTimer->start();
+    m_checkRunAppTimer->start();
+    m_checkMissionSttTimer->start();
 }
 
 void LDService::stopService()
 {
-    m_checkConnectTimer.stop();
-    m_checkRunAppTimer.stop();
-    m_checkMissionSttTimer.stop();
+    LOGD;
+    m_checkConnectTimer->stop();
+    m_checkRunAppTimer->stop();
+    m_checkMissionSttTimer->stop();
 }
 
 void LDService::onCheckDeviceStatus()

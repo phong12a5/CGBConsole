@@ -187,12 +187,14 @@ void AppMain::onStartProgram()
     if(!m_ldServiceThread.isRunning()){
         m_ldServiceThread.start();
     }
+    emit startLdService();
 }
 
 void AppMain::onStoptProgram()
 {
     APP_MODEL->setAppStarted(false);
     APP_CTRL->stopMultiTask();
+    emit stopLdService();
 }
 
 void AppMain::onFinishCopyDevice(QString deviceName)

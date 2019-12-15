@@ -21,7 +21,7 @@ double PerformanceReader::currentDiskUsage()
             QString cc = QString::fromStdWString(itr->first);
             //            tcout << itr->first << " " << itr->second << std::endl;
             if(cc.contains(currentDisk)){
-                LOGD << "Usage of cucurrentDisk: " << itr->second;
+//                LOGD << "Usage of cucurrentDisk: " << itr->second;
                 retVal = itr->second;
                 break;
             }
@@ -47,7 +47,7 @@ double PerformanceReader::currentCPUUsage()
         {
             QString cc = QString::fromStdWString(itr->first);
             if(cc == "_Total"){
-                LOGD << "Usage of cucurrentCPU: " << itr->second;
+//                LOGD << "Usage of cucurrentCPU: " << itr->second;
                 retVal = itr->second;
                 break;
             }

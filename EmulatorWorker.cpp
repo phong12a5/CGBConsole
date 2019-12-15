@@ -30,14 +30,19 @@ void EmulatorWorker::onCoppyDevices()
         delay(2000);
     }
 
-    for (int i = 0; i < AppModel::instance()->deviceCount(); i++) {
-        QString deviceName = EMULATOR_NAME_PREFIX + QString("-%1").arg(i);
-        if(!existedDevices.contains(deviceName)){
-            AppModel::instance()->setTaskInProgress(QString("Creating device: %1").arg(deviceName));
-            LDCommand::instance()->coppyInstance(deviceName,ORIGIN_DEVICE_NAME);
-            emit finishCopyDevice(deviceName);
-            AppModel::instance()->setTaskInProgress("");
+    LOGD << "deviceCount: " << AppModel::instance()->deviceCount();
+    if(existedDevices.size() < AppModel::instance()->deviceCount()){
+        for (int i = 0; i < AppModel::instance()->deviceCount(); i++) {
+            QString deviceName = EMULATOR_NAME_PREFIX + QString("-%1").arg(i);
+            if(!existedDevices.contains(deviceName)){
+                AppModel::instance()->setTaskInProgress(QString("Creating device: %1").arg(deviceName));
+                LDCommand::instance()->coppyInstance(deviceName,ORIGIN_DEVICE_NAME);
+                emit finishCopyDevice(deviceName);
+                AppModel::instance()->setTaskInProgress("");
+            }
         }
+    } else {
+        LOGD <<  " --------------- Device List is created full --------------- ";
     }
 }
 

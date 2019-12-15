@@ -50,9 +50,9 @@ public slots:
 private:
     static LDService* m_instance;
 
-    QTimer m_checkConnectTimer;
-    QTimer m_checkRunAppTimer;
-    QTimer m_checkMissionSttTimer;
+    QTimer* m_checkConnectTimer;
+    QTimer* m_checkRunAppTimer;
+    QTimer* m_checkMissionSttTimer;
 
     QMap<QString,E_DEVICE_STATUS> * m_listDeviceStatus;
     QMap<QString,E_APP_STATUS> * m_listAppStatus;

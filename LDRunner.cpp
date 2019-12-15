@@ -57,7 +57,9 @@ void LDRunner::run()
     connect(m_checkRunningDevice,SIGNAL(timeout()),this,SLOT(onCheckRunningDevice()));
 
     LDCommand::instance()->lunchInstance(m_instanceName);
+#if 0
     QTimer::singleShot(3000, this, [] () { LDCommand::instance()->sortWindow();});
+#endif
     m_checkRunningDevice->start();
 }
 

@@ -16,8 +16,6 @@ int main(int argc, char *argv[])
     AppMain appMain;
     appMain.initApplication();
 
-    LDService::instance()->startService();
-
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("AppModel",AppModel::instance());
     engine.rootContext()->setContextProperty("AppMain",&appMain);

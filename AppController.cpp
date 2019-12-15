@@ -58,6 +58,8 @@ void AppController::aMissionCompleted(LDThread* threadAdd)
 
 void AppController::onUpdateLDThreadList()
 {
+    LOGD << "m_ldThreadList: " << m_ldThreadList.length() << " -- amountOfThread: " << APP_MODEL->amountOfThread() ;
+    LDCommand::instance()->sortWindow();
     double diskUsage = PerformanceReader::currentDiskUsage();
     if(diskUsage < 0 || diskUsage > AVAILBLE_DISK_USAGE ){
         LOGD << "Disk usage is too large ... NONE NEW DEVICE IS STARTED!";
