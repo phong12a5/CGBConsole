@@ -8,6 +8,10 @@
 int main(int argc, char *argv[])
 {
     QProcess::execute("Taskkill /IM adb.exe /F");
+    QProcess::execute("Taskkill /IM ld.exe /F");
+    QProcess::execute("Taskkill /IM dnconsole.exe /F");
+    QProcess::execute("Taskkill /IM dnplayer.exe /F");
+
     LDCommand::instance()->repairEmulator();
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
