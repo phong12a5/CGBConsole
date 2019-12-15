@@ -75,6 +75,7 @@ void LDService::stopService()
 void LDService::onCheckDeviceStatus()
 {
     LOGD;
+    QFile::remove(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/LDPlayer/Pictures/temp");
     QStringList existedDevices;
     existedDevices.clear();
     for (int i = 0; i < AppModel::instance()->devicesRunningList().length(); i++) {

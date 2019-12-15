@@ -108,16 +108,21 @@ QList<QObject *> AppModel::devicesRunningList() const
 
 void AppModel::appendRunningDevice(QString instanceName)
 {
+    LOGD << instanceName;
+    QMutex mtx;
+    mtx.lock();
     foreach(QObject* device, m_devicesRunningList) {
         if(dynamic_cast<LDIntance*>(device)->instanceName() == instanceName)
             return;
     }
     m_devicesRunningList.append(new LDIntance(this,instanceName,m_devicesRunningList.length()));
     emit devicesRunningListChanged();
+    mtx.unlock();
 }
 
 void AppModel::popRunningDevice(QString instanceName)
 {
+    LOGD << instanceName;
     foreach(QObject* device, m_devicesRunningList) {
         if(dynamic_cast<LDIntance*>(device)->instanceName() == instanceName)
             m_devicesRunningList.removeOne(device);

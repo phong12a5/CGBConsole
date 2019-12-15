@@ -50,15 +50,21 @@ void AppController::aMissionCompleted(LDThread* threadAdd)
 {
     if(threadAdd){
         if(m_ldThreadList.contains(threadAdd)){
-            m_ldThreadList.removeOne(threadAdd);
-            delete threadAdd;
+            if(m_ldThreadList.removeOne(threadAdd)){
+                delete threadAdd;
+            }else {
+                LOGD << " ---------------- Remove thread failure ----------- ";
+            }
         }
     }
 }
 
 void AppController::onUpdateLDThreadList()
 {
-    LOGD << "m_ldThreadList: " << m_ldThreadList.length() << " -- amountOfThread: " << APP_MODEL->amountOfThread() ;
+    if(m_ldThreadList.length() != APP_MODEL->devicesRunningList().length()){
+        LOGD << " -------------------------------- ERROR -------------------------------------------- ";
+    }
+    LOGD << "m_ldThreadList: " << m_ldThreadList.length() << " -- amountOfThread: " << APP_MODEL->amountOfThread() << " -- runningList: " << APP_MODEL->devicesRunningList().length() ;
     LDCommand::instance()->sortWindow();
     double diskUsage = PerformanceReader::currentDiskUsage();
     if(diskUsage < 0 || diskUsage > AVAILBLE_DISK_USAGE ){
