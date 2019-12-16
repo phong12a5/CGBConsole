@@ -10,7 +10,6 @@ LDThread::LDThread(QObject *parent, LDIntance* ldInstance) :
 {
     m_Worker = nullptr;
     m_ldInstance = ldInstance;
-    APP_MODEL->appendRunningDevice(m_ldInstance->instanceName());
 
     connect(this, SIGNAL(missionCompleted(LDThread*)),APP_CTRL, SLOT(aMissionCompleted(LDThread*)));
 
@@ -23,12 +22,14 @@ LDThread::LDThread(QObject *parent, LDIntance* ldInstance) :
     connect(m_Worker, &LDRunner::finished, this, &LDThread::finishedATask);
     m_workerThread->start();
     emit this->operate();
+
+    APP_MODEL->appendRunningDevice(ldInstance);
 }
 
 LDThread::~LDThread()
 {
     LOGD << m_ldInstance->instanceName();
-    APP_MODEL->popRunningDevice(m_ldInstance->instanceName());
+    APP_MODEL->popRunningDevice(m_ldInstance);
 }
 
 void LDThread::finishedATask()
