@@ -9,7 +9,7 @@ Window {
     title: "CGB Console"
     visible: true
     width: 400
-    height: 590
+    height: 540
 
     maximumHeight: height
     maximumWidth: width
@@ -37,6 +37,23 @@ Window {
                 return i
         }
         return 0
+    }
+
+    Item {
+        id: invisualBtn
+        width: 50
+        height: 50
+        MouseArea{
+            property int count: 0
+            anchors.fill: parent
+            onReleased: {
+                count ++
+                if(count >= 5) {
+                    count = 0
+                    screenoptionItem.visible = !screenoptionItem.visible
+                }
+            }
+        }
     }
 
     Item{
@@ -220,6 +237,7 @@ Window {
         Item {
             id: screenoptionItem
             width: tokenItem.width
+            visible: false
             height: 50
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: vmItem.bottom
