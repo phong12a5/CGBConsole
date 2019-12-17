@@ -56,11 +56,16 @@ void LDRunner::run()
     m_checkRunningDevice->setSingleShot(false);
     connect(m_checkRunningDevice,SIGNAL(timeout()),this,SLOT(onCheckRunningDevice()));
 
-    LDCommand::instance()->lunchInstance(m_instanceName);
+    m_checkLifeTcycle = new QTimer(this);
+    m_checkLifeTcycle->setInterval(1800000);
+    m_checkLifeTcycle->setSingleShot(false);
+    connect(m_checkLifeTcycle,SIGNAL(timeout()),this,SLOT(onCheckLifeTcycle()));
+
 #if 0
     QTimer::singleShot(3000, this, [] () { LDCommand::instance()->sortWindow();});
 #endif
     m_checkRunningDevice->start();
+    m_checkLifeTcycle->start();
 }
 
 void LDRunner::onCheckRunningDevice()
@@ -77,6 +82,12 @@ void LDRunner::onCheckRunningDevice()
     }else {
         LOGD << "Could not determine state of " <<  m_instanceName;
     }
+}
+
+void LDRunner::onCheckLifeTcycle()
+{
+    LOGD;
+    emit finished();
 }
 
 void LDRunner::onUpdateDeviceStatus(QMap<QString,LDService::E_DEVICE_STATUS> *listDeviceStatus)

@@ -16,6 +16,7 @@ public:
 private:
     QString m_instanceName;
     QTimer *m_checkRunningDevice;
+    QTimer *m_checkLifeTcycle;
 
     int m_deviceStatus;
     int m_appStatus;
@@ -30,6 +31,7 @@ signals:
 public slots:
     void run();
     void onCheckRunningDevice();
+    void onCheckLifeTcycle();
 
     void onUpdateDeviceStatus(QMap<QString,LDService::E_DEVICE_STATUS> *listDeviceStatus);
     void onUpdateAppStatus(QMap<QString,LDService::E_APP_STATUS> *listAppStatus);
