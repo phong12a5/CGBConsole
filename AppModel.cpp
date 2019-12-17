@@ -16,7 +16,7 @@ AppModel::AppModel(QObject *parent) : QObject(parent)
     m_currentDir = "";
     m_appName = "fblite";
     m_walletEmpty = false;
-    m_deviceCount = 30;
+    m_deviceCount = DEFAULT_MAX_VM_COUNT;
     m_maxNumberThread = DEFAULT_MAX_VM_THREAD;
     m_maxVMCount = DEFAULT_MAX_VM_COUNT;
     m_taskInProgress = "";

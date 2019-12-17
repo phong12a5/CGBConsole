@@ -169,7 +169,7 @@ Window {
                 id: threadSelItem
                 enabled: !AppModel.isLaunchMutiTask
                 currentIndex: AppModel.amountOfThread
-                model: AppModel.maxNumberThread
+                model: AppModel.maxNumberThread + 1
                 font.pixelSize: 17
                 width: 200
                 editable: true
@@ -217,7 +217,7 @@ Window {
                 id: vmCount
                 enabled: !AppModel.isLaunchMutiTask
                 currentIndex: AppModel.deviceCount
-                model: AppModel.maxVMCount
+                model: AppModel.maxVMCount + 1
                 width: 200
                 font.pixelSize: 17
                 anchors.right: parent.right
