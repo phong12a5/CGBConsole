@@ -13,5 +13,7 @@
         <file>image/background.jpg</file>
         <file>image/downIcon.png</file>
         <file>image/upIcon.png</file>
+        <file>qml/unit/InfoItem.qml</file>
+        <file>image/info-icon.png</file>
     </qresource>
 </RCC>

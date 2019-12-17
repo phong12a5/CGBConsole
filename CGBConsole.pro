@@ -2,7 +2,7 @@ QT += quick \
       widgets \
       sql
 
-CONFIG += c++11 console
+CONFIG += c++11
 DEFINES +=  \
 #           TEST_MODE\
             USE_FILE_STEADOF_ADB
@@ -77,6 +77,11 @@ INCLUDEPATH += $$PWD/include/chilkat_mingw/
 
 RC_ICONS = Logo.ico
 
-win32 {
- QMAKE_POST_LINK += mt -manifest $$PWD/manifest.xml -outputresource:$$OUT_PWD/release/$$TARGET".exe" $$escape_expand(\n\t)
+win32:CONFIG(release, debug|release): {
+    QMAKE_POST_LINK += mt -manifest $$PWD/manifest.xml -outputresource:$$OUT_PWD/release/$$TARGET".exe" $$escape_expand(\n\t)
 }
+else:win32:CONFIG(debug, debug|release): {
+    CONFIG += console
+    QMAKE_POST_LINK += mt -manifest $$PWD/manifest.xml -outputresource:$$OUT_PWD/debug/$$TARGET".exe" $$escape_expand(\n\t)
+}
+

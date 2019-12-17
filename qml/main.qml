@@ -56,10 +56,18 @@ Window {
         }
     }
 
+    InfoItem{
+        height: 20
+        anchors.right: parent.right
+        anchors.rightMargin: 5
+        anchors.bottom: parent.bottom
+    }
+
     Item{
         id: contentArea
         width: parent.width
         anchors.top: root.bottom
+        anchors.topMargin: 20
         height: emulatorOption.y + emulatorOption.height
 
         Item {
