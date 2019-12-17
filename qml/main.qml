@@ -9,7 +9,7 @@ Window {
     title: "CGB Console"
     visible: true
     width: 400
-    height: 500
+    height: 590
 
     maximumHeight: height
     maximumWidth: width
@@ -39,29 +39,10 @@ Window {
         return 0
     }
 
-    AdsComponent{
-        id: ads
-        width: 250
-        height: 40
-        anchors.top: parent.top
-        anchors.topMargin: 5
-        anchors.horizontalCenter: parent.horizontalCenter
-    }
-
-    Image {
-        id: backGround
-        source: "qrc:/image/background.jpg"
-        opacity: 0.2
-        y: 70
-        width: parent.width
-        height: parent.width
-        anchors.horizontalCenter: parent.horizontalCenter
-    }
-
     Item{
         id: contentArea
         width: parent.width
-        anchors.top: ads.bottom
+        anchors.top: root.bottom
         height: emulatorOption.y + emulatorOption.height
 
         Item {
@@ -315,13 +296,21 @@ Window {
         }
     }
 
+    AdsComponent{
+        id: ads
+        width: parent.width
+        height: 200
+        anchors.top: contentArea.bottom
+        anchors.topMargin: -10
+        anchors.horizontalCenter: parent.horizontalCenter
+    }
+
     Button{
         id: startBtn
-
         property bool selected: false
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.top: contentArea.bottom
-        anchors.topMargin: 20
+        anchors.top: ads.bottom
+        anchors.topMargin: -20
         font.pixelSize: 17
         width: 100
         height: 50
