@@ -18,11 +18,6 @@ WebAPI* WebAPI::s_instance = nullptr;
 WebAPI::WebAPI(QObject *parent) : QObject(parent)
 {
     // Do nothing
-    if (unlockChilkat()){
-        LOGD << "unlockChilkat successfully";
-    } else {
-        LOGD << "unlockChilkat Failure";
-    }
 }
 
 WebAPI *WebAPI::instance()
@@ -31,26 +26,6 @@ WebAPI *WebAPI::instance()
         s_instance = new WebAPI();
     }
     return s_instance;
-}
-
-bool WebAPI::unlockChilkat() {
-    LOGD << "unlockChilkat";
-    CkGlobal glob;
-    bool success_global = glob.UnlockBundle("VONGTH.CB4082020_9kru5rnD5R2h");
-    if (success_global != true) {
-        LOGD << "Error: " << QString(glob.lastErrorText());
-        return false;
-    }
-
-    int status = glob.get_UnlockStatus();
-    if (status == 2) {
-        LOGD << "Unlocked using purchased unlock code.";
-    } else {
-        LOGD <<"Unlocked in trial mode.";
-    }
-
-
-    return true;
 }
 
 void WebAPI::getConfig()

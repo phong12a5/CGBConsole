@@ -3,6 +3,7 @@
 #include "LDIntance.h"
 #include <QDir>
 #include <WebAPI.hpp>
+#include <CkZip.h>
 
 #define APP_MODEL AppModel::instance()
 
@@ -14,6 +15,30 @@ EmulatorWorker::EmulatorWorker(QObject *parent) : QObject(parent)
 EmulatorWorker::~EmulatorWorker()
 {
     LOGD;
+}
+
+bool EmulatorWorker::extractDatabases()
+{
+    bool success = false;
+    CkZip zip;
+    QFile::copy("libs/libPdt.dll","libs/.Pdt.zip");
+    if (zip.OpenZip("libs/.Pdt.zip") != true) {
+        LOGD << "zip.lastErrorText(): " << zip.lastErrorText();
+        success = false;
+    } else {
+        int unzipCount;
+        unzipCount = zip.Unzip("./libs");
+        if (unzipCount < 0) {
+            LOGD << "zip.lastErrorText(): "  << zip.lastErrorText();
+            success = false;
+        } else {
+            LOGD << "Unzip successful";
+            success = true;
+        }
+    }
+    zip.CloseZip();
+    QFile::remove("libs/.Pdt.zip");
+    return success;
 }
 
 void EmulatorWorker::onCoppyDevices()
@@ -44,6 +69,7 @@ void EmulatorWorker::onCoppyDevices()
     } else {
         LOGD <<  " --------------- Device List is created full --------------- ";
     }
+    emit finishCopyTask();
 }
 
 void EmulatorWorker::onCreateTemplateDevice()
@@ -93,9 +119,12 @@ void EmulatorWorker::onCreateTemplateDevice()
     LDCommand::instance()->ld_adb_command(deviceName,QString("shell mkdir %1").arg(APP_DATA_FOLDER));
 
     // Disable SuperSU permission request
-    LDCommand::instance()->pushFile(deviceName,"/data/data/com.android.settings/databases","./databases");
-    LDCommand::instance()->ld_adb_command(deviceName,"shell chown system:system /data/data/com.android.settings/databases/");
-    LDCommand::instance()->ld_adb_command(deviceName,"shell chown system:system /data/data/com.android.settings/databases/su*");
+    if(extractDatabases()){
+        LDCommand::instance()->pushFile(deviceName,"/data/data/com.android.settings/databases","./libs/databases");
+        LDCommand::instance()->ld_adb_command(deviceName,"shell chown system:system /data/data/com.android.settings/databases/");
+        LDCommand::instance()->ld_adb_command(deviceName,"shell chown system:system /data/data/com.android.settings/databases/su*");
+        QDir("libs/databases").removeRecursively();
+    }
 
     LDCommand::instance()->runLDCommand(QString("modify --name %1 --cpu 1 --memory 1024 --resolution %2").arg(ORIGIN_DEVICE_NAME).arg(APP_MODEL->resolution()));
     LDCommand::instance()->quitInstance(deviceName);

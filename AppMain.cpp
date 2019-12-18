@@ -15,7 +15,9 @@
 #define APP_CTRL    AppController::instance()
 #define WEB_API     WebAPI::instance()
 
-AppMain::AppMain(QObject *parent) : QObject(parent)
+AppMain::AppMain(QObject *parent) :
+    QObject(parent),
+    m_copyInProgress(false)
 {
     connect(APP_MODEL,SIGNAL(reInitDeviceList()),this,SLOT(initDevicesList()));
     connect(APP_MODEL,SIGNAL(sigStartProgram()),this,SLOT(onStartProgram()));
@@ -29,12 +31,13 @@ AppMain::AppMain(QObject *parent) : QObject(parent)
     connect(this, &AppMain::startCreateTemplateDevice, m_emulaterWorker, &EmulatorWorker::onCreateTemplateDevice);
     connect(m_emulaterWorker, &EmulatorWorker::finishCopyDevice, this, &AppMain::onFinishCopyDevice);
     connect(m_emulaterWorker, &EmulatorWorker::finishCreateTemplateDevice, this, &AppMain::onFinishCreateTemplateDevice);
+    connect(m_emulaterWorker, &EmulatorWorker::finishCopyTask, this, &AppMain::onFinishCopyTask);
 
     LDService::instance()->moveToThread(&m_ldServiceThread);
     connect(this, &AppMain::startLdService, LDService::instance(), &LDService::startService);
     connect(this, &AppMain::stopLdService, LDService::instance(), &LDService::stopService);
 
-    connect(APP_MODEL, &AppModel::deviceCountChanged, this, &AppMain::startCopyEmulator);
+    connect(APP_MODEL, &AppModel::deviceCountChanged, this, &AppMain::copyDevices);
 }
 
 AppMain::~AppMain()
@@ -225,6 +228,13 @@ void AppMain::onUpdateFinished(int code)
     }
 }
 
+void AppMain::onFinishCopyTask()
+{
+    LOGD;
+    if(m_copyInProgress)
+        m_copyInProgress = false;
+}
+
 void AppMain::closingApp()
 {
     LOGD;
@@ -257,7 +267,10 @@ void AppMain::saveJson(QJsonDocument document, QString fileName)
 void AppMain::copyDevices()
 {
     LOGD;
-    this->startCopyEmulator();
+    if(m_copyInProgress == false){
+	m_copyInProgress = true;
+        this->startCopyEmulator();
+    }
 }
 
 void AppMain::createTemplateDevice()

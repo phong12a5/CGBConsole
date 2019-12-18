@@ -18,7 +18,6 @@ class WebAPI : public QObject
 
 private:
     explicit WebAPI(QObject *parent = nullptr);
-    bool unlockChilkat();
 
 public:
     static WebAPI *instance();

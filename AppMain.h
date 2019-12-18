@@ -26,7 +26,6 @@ public:
 private:
     QJsonDocument loadJson(QString fileName);
     void saveJson(QJsonDocument document, QString fileName);
-    void copyDevices();
     void createTemplateDevice();
     void updateVersion();
 
@@ -38,7 +37,10 @@ private:
     QQuickView * m_view;
     EmulatorWorker* m_emulaterWorker;
 
+    bool m_copyInProgress;
+
 public slots:
+    void copyDevices();
     void onSaveConfig();
     void onLoadConfig();
     void initDevicesList();
@@ -47,6 +49,8 @@ public slots:
     void onFinishCopyDevice(QString deviceName);
     void onFinishCreateTemplateDevice();
     void onUpdateFinished(int code);
+    void onFinishCopyTask();
+
 signals:
     void startCopyEmulator();
     void startAutoUpdater();

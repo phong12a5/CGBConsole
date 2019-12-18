@@ -9,6 +9,8 @@ Item {
         height: parent.height
         width: height
         anchors.right: parent.horizontalCenter
+        smooth: true
+        antialiasing: true
     }
 
     Text {

@@ -11,9 +11,13 @@ public:
     explicit EmulatorWorker(QObject *parent = nullptr);
     ~EmulatorWorker();
 
+private:
+    bool extractDatabases();
+
 signals:
     void finishCopyDevice(QString deviceName);
     void finishCreateTemplateDevice();
+    void finishCopyTask();
 
 public slots:
     void onCoppyDevices();
