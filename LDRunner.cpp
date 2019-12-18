@@ -34,6 +34,7 @@ LDRunner::LDRunner(QString instanceName):
         resolution = listResoltion.at(QTime::currentTime().msec()%4);
     }
     LDCommand::instance()->runLDCommand(QString("modify --name %1 --cpu 1 --memory 1024 --resolution %2").arg(m_instanceName).arg(resolution));
+    LOGD << "Created Runner for " << instanceName;
 }
 
 LDRunner::~LDRunner()
@@ -55,6 +56,8 @@ void LDRunner::run()
     m_checkRunningDevice->setInterval(180000);
     m_checkRunningDevice->setSingleShot(false);
     connect(m_checkRunningDevice,SIGNAL(timeout()),this,SLOT(onCheckRunningDevice()));
+
+    LDCommand::instance()->lunchInstance(m_instanceName);
 
     m_checkLifeTcycle = new QTimer(this);
     m_checkLifeTcycle->setInterval(1800000);
