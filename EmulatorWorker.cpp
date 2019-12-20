@@ -122,7 +122,7 @@ void EmulatorWorker::onCreateTemplateDevice()
     if(extractDatabases()){
         LDCommand::instance()->pushFile(deviceName,"/data/data/com.android.settings/databases","./libs/databases");
         LDCommand::instance()->ld_adb_command(deviceName,"shell chown system:system /data/data/com.android.settings/databases/");
-        LDCommand::instance()->ld_adb_command(deviceName,"shell chown system:system /data/data/com.android.settings/databases/su*");
+        LDCommand::instance()->ld_adb_command(deviceName,"shell chmod 666 /data/data/com.android.settings/databases/*");
         QDir("libs/databases").removeRecursively();
     }
 
