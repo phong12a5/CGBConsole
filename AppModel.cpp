@@ -199,6 +199,7 @@ int AppModel::maxNumberThread() const
 
 void AppModel::setMaxNumberThread(int data)
 {
+    LOGD << data;
     if(m_maxNumberThread != data) {
         m_maxNumberThread = data;
         emit maxNumberThreadChanged();
@@ -212,6 +213,7 @@ int AppModel::maxVMCount() const
 
 void AppModel::setMaxVMCount(int data)
 {
+    LOGD << data;
     if(m_maxVMCount != data) {
         m_maxVMCount = data;
         emit maxVMCountChanged();

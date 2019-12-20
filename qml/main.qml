@@ -169,21 +169,22 @@ Window {
                 id: threadSelItem
                 enabled: !AppModel.isLaunchMutiTask
                 currentIndex: AppModel.amountOfThread
-                model: AppModel.maxNumberThread + 1
+                model: AppModel.maxNumberThread
                 font.pixelSize: 17
                 width: 200
                 editable: true
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
-                onUpdateValue: AppModel.amountOfThread = currentIndex
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
+                displayText: AppModel.amountOfThread
                 onEditTextChanged: {
+                    onModelChanged: console.log("onEditTextChanged: " + currentIndex)
                     if(isNaN(parseInt(editText,10))){
                         editText = 0
                     }else{
                         var value = parseInt(editText,10)
-                        if(value > AppModel.maxNumberThread){
-                            value = AppModel.maxNumberThread
+                        if(value > count){
+                            value = count
                         }else if(value < 0){
                             value = 0
                         }
@@ -193,6 +194,25 @@ Window {
                     }
                 }
 
+                onClickUp: {
+                    if(AppModel.amountOfThread < count - 1){
+                        AppModel.amountOfThread ++
+                    }
+                }
+
+                onClickDown: {
+                    if(AppModel.amountOfThread > 0){
+                        AppModel.amountOfThread --
+                    }
+                }
+
+                onCurrentIndexChanged: {
+                    onModelChanged: console.log("onCurrentIndexChanged: " + currentIndex)
+                    if(currentIndex !== AppModel.amountOfThread)
+                        currentIndex = AppModel.amountOfThread
+                }
+
+                onModelChanged: console.log("onModelChanged: " + model)
             }
         }
 
@@ -223,7 +243,6 @@ Window {
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
                 editable: true
-                onUpdateValue: AppModel.deviceCount = currentIndex
                 onEditTextChanged: {
                     if(isNaN(parseInt(editText,10))){
                         editText = 0
@@ -237,6 +256,17 @@ Window {
 
                         editText = value
                         AppModel.deviceCount = value
+                    }
+                }
+                onClickUp: {
+                    if(AppModel.deviceCount < vmCount.count - 1){
+                        AppModel.deviceCount ++
+                    }
+                }
+
+                onClickDown: {
+                    if(AppModel.deviceCount > 0){
+                        AppModel.deviceCount --
                     }
                 }
             }
