@@ -169,7 +169,7 @@ Window {
                 id: threadSelItem
                 enabled: !AppModel.isLaunchMutiTask
                 currentIndex: AppModel.amountOfThread
-                model: AppModel.maxNumberThread
+                model: AppModel.maxNumberThread + 1
                 font.pixelSize: 17
                 width: 200
                 editable: true
@@ -178,7 +178,6 @@ Window {
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 displayText: AppModel.amountOfThread
                 onEditTextChanged: {
-                    onModelChanged: console.log("onEditTextChanged: " + currentIndex)
                     if(isNaN(parseInt(editText,10))){
                         editText = 0
                     }else{
@@ -205,14 +204,6 @@ Window {
                         AppModel.amountOfThread --
                     }
                 }
-
-                onCurrentIndexChanged: {
-                    onModelChanged: console.log("onCurrentIndexChanged: " + currentIndex)
-                    if(currentIndex !== AppModel.amountOfThread)
-                        currentIndex = AppModel.amountOfThread
-                }
-
-                onModelChanged: console.log("onModelChanged: " + model)
             }
         }
 
