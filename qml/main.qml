@@ -25,8 +25,9 @@ Window {
 
     function getCurrentAppNameIndex(currentAppName) {
         for(var i = 0; i < appNameModel.length; i++) {
-            if(currentAppName === appNameModel[i])
+            if(currentAppName === appNameModel[i].toLowerCase()){
                 return i
+            }
         }
         return 0
     }
@@ -142,7 +143,7 @@ Window {
                 anchors.verticalCenter: parent.verticalCenter
                 currentIndex: getCurrentAppNameIndex(AppModel.appName)
                 onActivated: {
-                    AppModel.appName = appNameModel[currentIndex]
+                    AppModel.appName = appNameModel[currentIndex].toLowerCase()
                 }
             }
         }
