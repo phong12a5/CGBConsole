@@ -50,10 +50,7 @@ void EmulatorWorker::onCoppyDevices()
         existedDevices << dynamic_cast<LDIntance*>(AppModel::instance()->devicesList().at(i))->instanceName();
     }
 
-    if(!LDCommand::instance()->isExistedDevice(ORIGIN_DEVICE_NAME)){
-        LOGD << ORIGIN_DEVICE_NAME << " don't exist";
-        delay(2000);
-    }
+    delay(10000);
 
     LOGD << "deviceCount: " << AppModel::instance()->deviceCount();
     if(existedDevices.size() < AppModel::instance()->deviceCount()){
