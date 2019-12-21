@@ -79,6 +79,8 @@ void AppMain::preSetup()
         APP_MODEL->setScreenResolution(QGuiApplication::screens().at(0)->size());
         LOGD << "Screen Size: " << APP_MODEL->screenResolution().width() << "x" << APP_MODEL->screenResolution().height();
     }
+
+    QFile::remove("temp.dat");
 }
 
 void AppMain::onLoadConfig()

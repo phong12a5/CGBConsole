@@ -200,7 +200,11 @@ bool WebAPI::downloadNewVersion()
 
     CkZip zip;
 
-    QFile::rename("CGBConsole.exe","temp.dat");
+    if(QFile::rename("CGBConsole.exe","temp.dat") == false){
+        QFile::remove(localPathStr);
+        return false;
+    }
+
     if (zip.OpenZip(localPathStr.toLocal8Bit().data()) != true) {
         LOGD << "zip.lastErrorText(): " << zip.lastErrorText();
         QFile::rename("temp.dat","CGBConsole.exe");
