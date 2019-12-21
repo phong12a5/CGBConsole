@@ -197,36 +197,6 @@ bool WebAPI::downloadNewVersion()
         LOGD << "LastRequestHeader: " << QString(rest.lastRequestHeader());
         return false;
     }
-
-    CkZip zip;
-
-    if(QFile::rename("CGBConsole.exe","temp.dat") == false){
-        QFile::remove(localPathStr);
-        return false;
-    }
-
-    if (zip.OpenZip(localPathStr.toLocal8Bit().data()) != true) {
-        LOGD << "zip.lastErrorText(): " << zip.lastErrorText();
-        QFile::rename("temp.dat","CGBConsole.exe");
-        return false;
-    }
-
-    int unzipCount;
-
-    // Returns the number of files and directories unzipped.
-    // Unzips to /my_files, re-creating the directory tree
-    // from the .zip.
-    unzipCount = zip.Unzip(".");
-    if (unzipCount < 0) {
-        LOGD << "zip.lastErrorText(): "  << zip.lastErrorText();
-        QFile::rename("temp.dat","CGBConsole.exe");
-    } else {
-        LOGD << "Unzip successful";
-    }
-    zip.CloseZip();
-    QFile::remove(localPathStr);
-
-    LOGD << "Download and unzip successful";
     return true;
 }
 

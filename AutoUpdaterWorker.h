@@ -2,6 +2,7 @@
 #define AUTOUPDATERWORKER_H
 
 #include <QObject>
+#include <QTimer>
 
 class AutoUpdaterWorker : public QObject
 {
@@ -19,7 +20,11 @@ signals:
     void updateFinished(int code);
 
 public slots:
-    void doWork();
+    void onStartAutoUpdater();
+    void onCheckUpdate();
+
+private:
+    QTimer* m_checkingTimer;
 };
 
 #endif // AUTOUPDATERWORKER_H

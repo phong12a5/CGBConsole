@@ -128,11 +128,8 @@ void AppMain::onLoadConfig()
         /* Load version */
             APP_MODEL->setVersionCode(version[VERSION_KEY].toInt());
     }
-    if(APP_MODEL->versionCode() != APP_MODEL->appConfig().m_cgbconsole_versioncode){
-        LOGD << "Current version:" << APP_MODEL->versionCode();
-        LOGD << "New version:" << APP_MODEL->appConfig().m_cgbconsole_versioncode;
-        updateVersion();
-    }
+
+    updateVersion();
 }
 
 void AppMain::onSaveConfig()
@@ -225,6 +222,7 @@ void AppMain::onUpdateFinished(int code)
         QJsonObject config;
         config[VERSION_KEY] = APP_MODEL->appConfig().m_cgbconsole_versioncode;
         this->saveJson(QJsonDocument(config),VERSION_FILENAME);
+        restartApplication();
     } else {
         APP_MODEL->setIsShowRestartPopup(false);
     }
@@ -287,7 +285,7 @@ void AppMain::updateVersion()
     AutoUpdaterWorker* autoUpdateWorker = new AutoUpdaterWorker();
     autoUpdateWorker->moveToThread(&m_updateVersionThread);
     connect(&m_updateVersionThread, &QThread::finished, autoUpdateWorker, &QObject::deleteLater);
-    connect(this, &AppMain::startAutoUpdater, autoUpdateWorker, &AutoUpdaterWorker::doWork);
+    connect(this, &AppMain::startAutoUpdater, autoUpdateWorker, &AutoUpdaterWorker::onStartAutoUpdater);
     connect(autoUpdateWorker, &AutoUpdaterWorker::updateFinished, this, &AppMain::onUpdateFinished);
     m_updateVersionThread.start();
     this->startAutoUpdater();
