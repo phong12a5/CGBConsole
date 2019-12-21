@@ -33,7 +33,7 @@ private:
     QByteArray getEncodedString(QString action) const;
 
 public:
-    void getConfig();
+    bool getConfig();
     bool downloadFIle(QString url, QString savedPath);
     bool downloadApk(int version);
     bool downloadNewVersion();

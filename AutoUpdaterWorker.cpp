@@ -25,36 +25,39 @@ void AutoUpdaterWorker::onStartAutoUpdater()
 
 void AutoUpdaterWorker::onCheckUpdate()
 {
-     WebAPI::instance()->getConfig();
-     LOGD << "Current version:" << AppModel::instance()->versionCode();
-     LOGD << "New version:" << AppModel::instance()->appConfig().m_cgbconsole_versioncode;
-     if(AppModel::instance()->versionCode() != AppModel::instance()->appConfig().m_cgbconsole_versioncode){
-         if(WebAPI::instance()->downloadNewVersion()){
-             CkZip zip;
+    if(WebAPI::instance()->getConfig()){
+        LOGD << "Current version:" << AppModel::instance()->versionCode();
+        LOGD << "New version:" << AppModel::instance()->appConfig().m_cgbconsole_versioncode;
+        if(AppModel::instance()->versionCode() != AppModel::instance()->appConfig().m_cgbconsole_versioncode){
+            if(WebAPI::instance()->downloadNewVersion()){
+                CkZip zip;
 
-             if(QFile::rename("CGBConsole.exe","temp.dat") == true){
-                 if (zip.OpenZip("CGBConsole.zip") != true) {
-                     LOGD << "zip.lastErrorText(): " << zip.lastErrorText();
-                     QFile::rename("temp.dat","CGBConsole.exe");
-                 }else {
-                     int unzipCount;
-                     unzipCount = zip.Unzip(".");
-                     if (unzipCount < 0) {
-                         LOGD << "zip.lastErrorText(): "  << zip.lastErrorText();
-                         QFile::rename("temp.dat","CGBConsole.exe");
-                     } else {
-                         LOGD << "Update new version successful";
-                         emit updateFinished(E_FINISHED_CODE_NEW_VERSION);
-                         return;
-                     }
-                     zip.CloseZip();
-                 }
-             }
-             QFile::remove("CGBConsole.zip");
-         }
-         LOGD << "Update new version failure";
-         emit updateFinished(E_FINISHED_CODE_UPDATE_FAILURE);
-     }else {
-         LOGD << "Current version is latest!";
-     }
+                if(QFile::rename("CGBConsole.exe","temp.dat") == true){
+                    if (zip.OpenZip("CGBConsole.zip") != true) {
+                        LOGD << "zip.lastErrorText(): " << zip.lastErrorText();
+                        QFile::rename("temp.dat","CGBConsole.exe");
+                    }else {
+                        int unzipCount;
+                        unzipCount = zip.Unzip(".");
+                        if (unzipCount < 0) {
+                            LOGD << "zip.lastErrorText(): "  << zip.lastErrorText();
+                            QFile::rename("temp.dat","CGBConsole.exe");
+                        } else {
+                            LOGD << "Update new version successful";
+                            emit updateFinished(E_FINISHED_CODE_NEW_VERSION);
+                            return;
+                        }
+                        zip.CloseZip();
+                    }
+                }
+                QFile::remove("CGBConsole.zip");
+            }
+            LOGD << "Update new version failure";
+            emit updateFinished(E_FINISHED_CODE_UPDATE_FAILURE);
+        }else {
+            LOGD << "Current version is latest!";
+        }
+    }else {
+        LOGD << "Failed to getConfig";
+    }
 }

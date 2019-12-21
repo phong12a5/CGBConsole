@@ -174,8 +174,10 @@ void AppModel::setToken(QString data)
     LOGD << data;
     if(m_token != data ){
         m_token = data;
+        if(!WebAPI::instance()->getConfig()){
+            m_token = "";
+        }
         emit tokenChanged();
-        WebAPI::instance()->getConfig();
     }
 }
 

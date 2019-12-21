@@ -125,6 +125,7 @@ Window {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: tokenItem.bottom
             anchors.topMargin:  5
+            enabled: AppModel.token != ""
             Text {
                 id: appnameTitle
                 text: qsTr("App Name: ")
@@ -156,6 +157,7 @@ Window {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: appNameItem.bottom
             anchors.topMargin: 5
+            enabled: AppModel.token != ""
 
             Text {
                 id: threadSelTitle
@@ -215,6 +217,7 @@ Window {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: threadItem.bottom
             anchors.topMargin: 5
+            enabled: AppModel.token != ""
 
             Text {
                 id: vmTitle
@@ -272,6 +275,7 @@ Window {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: vmItem.bottom
             anchors.topMargin: 5
+            enabled: AppModel.token != ""
 
             Text {
                 id: screenoptionTile
@@ -304,7 +308,7 @@ Window {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: screenoptionItem.visible? screenoptionItem.bottom : vmItem.bottom
             anchors.topMargin: 5
-            enabled: false
+            enabled: false && AppModel.token != ""
 
             Text {
                 text: qsTr("LD Player")
@@ -362,7 +366,7 @@ Window {
         font.pixelSize: 17
         width: 100
         height: 50
-        enabled: AppModel.token != "" || token.text != ""
+        enabled: AppModel.token != ""
         text: selected? "Stop" : "Start"
         onClicked: {
             selected = !selected

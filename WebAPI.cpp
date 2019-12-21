@@ -28,8 +28,9 @@ WebAPI *WebAPI::instance()
     return s_instance;
 }
 
-void WebAPI::getConfig()
+bool WebAPI::getConfig()
 {
+    bool success = false;
     QString url = API_SERVER + QString("config?token=%1").arg(MODEL->token());
     QUrl serviceUrl = QUrl(url);
     QNetworkRequest request(serviceUrl);
@@ -59,7 +60,7 @@ void WebAPI::getConfig()
                 QJsonDocument jdoc = QJsonDocument::fromJson(encryption.removePadding(decodeText));
                 QJsonObject jsonResponsedObj = jdoc.object();
                 LOGD << jsonResponsedObj;
-                if(!jsonResponsedObj.isEmpty()){
+                if(!jsonResponsedObj.isEmpty() && jsonResponsedObj["updated"] != "failed"){
                     APP_CONFIG config;
                     config.timeout = jsonResponsedObj["timeout"].toString().toInt();
                     config.reset_3g = jsonResponsedObj["reset3g"].toString().toInt();
@@ -84,6 +85,7 @@ void WebAPI::getConfig()
                     LOGD << "config.dropboxaccesstoken: " << config.m_dropboxaccesstoken;
                     LOGD << "config.cgbconsole_versioncode: " << config.m_cgbconsole_versioncode;
                     MODEL->setAppConfig(config);
+                    success = true;
                 }
 
             } else {
@@ -93,6 +95,7 @@ void WebAPI::getConfig()
             LOGD << "resp->bodyStr() is NULL";
         }
     }
+    return success;
 }
 
 bool WebAPI::downloadApk(int version) {
