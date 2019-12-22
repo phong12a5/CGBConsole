@@ -99,6 +99,9 @@ public:
     QSize screenResolution() const;
     void setScreenResolution(const QSize& data);
 
+    QString serialNumber() const;
+    void setSerialNumber(QString data);
+
 public:
     Q_INVOKABLE void startProgram();
     Q_INVOKABLE void stopProgarm();
@@ -150,6 +153,7 @@ private:
     int m_versionCode;
     bool m_appStarted;
     QSize m_screenResolution;
+    QString m_serialNumber;
 
 public slots:
 };

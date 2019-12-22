@@ -154,6 +154,7 @@ void LDService::onPassConfigToDevice(QString instanceName)
     configObj["timeout"] = 30;
     configObj["country"] = "Vietnam";
     configObj["appname"] = AppModel::instance()->appName();
+    configObj["machineid"] = AppModel::instance()->serialNumber();
     configObj["devicename"] = instanceName;
 
     QString startUpFile = "startup.config";

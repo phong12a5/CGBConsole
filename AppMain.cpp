@@ -122,6 +122,14 @@ void AppMain::onLoadConfig()
         this->onSaveConfig();
     }
 
+    QProcess process;
+    process.start("wmic bios get serialnumber");
+    process.waitForFinished(-1);
+    QStringList serial = QString(process.readAllStandardOutput()).simplified().split(" ");
+    if(serial.length() == 2 && serial.at(0) == "SerialNumber"){
+        APP_MODEL->setSerialNumber(serial.at(1));
+    }
+
     QFile version(VERSION_FILENAME);
     if(version.exists()){
         QJsonObject version = this->loadJson(VERSION_FILENAME).object();

@@ -24,6 +24,7 @@ AppModel::AppModel(QObject *parent) : QObject(parent)
     m_isShowRestartPopup = false;
     m_versionCode = 0;
     m_appStarted = false;
+    m_serialNumber = false;
 
     if(QFile(QDir::currentPath() + QString("/LDSetup/ldconsole.exe")).exists()){
         m_ldIntallFolder = QDir::currentPath() + QString("/LDSetup");
@@ -349,6 +350,19 @@ void AppModel::setScreenResolution(const QSize &data)
 {
     if(data != m_screenResolution){
         m_screenResolution = data;
+    }
+}
+
+QString AppModel::serialNumber() const
+{
+    return m_serialNumber;
+}
+
+void AppModel::setSerialNumber(QString data)
+{
+    LOGD << data;
+    if(m_serialNumber != data){
+        m_serialNumber = data;
     }
 }
 
