@@ -15,5 +15,6 @@
         <file>image/upIcon.png</file>
         <file>qml/unit/InfoItem.qml</file>
         <file>image/info-icon.png</file>
+        <file>qml/unit/CustomizedInputField.qml</file>
     </qresource>
 </RCC>

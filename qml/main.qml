@@ -168,44 +168,18 @@ Window {
                 font.bold: true
             }
 
-            CustomizedComboBox {
-                id: threadSelItem
+            CustomizedInputField{
                 enabled: !AppModel.isLaunchMutiTask
-                currentIndex: AppModel.amountOfThread
-                model: AppModel.maxNumberThread + 1
-                font.pixelSize: 17
+                value: AppModel.amountOfThread
+                maxValue: AppModel.deviceCount > AppModel.maxNumberThread? AppModel.maxNumberThread : AppModel.deviceCount
+                minValue: 0
+                valStep: 1
                 width: 200
-                editable: true
+                height: appNameComb.height
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
-                displayText: AppModel.amountOfThread
-                onEditTextChanged: {
-                    if(isNaN(parseInt(editText,10))){
-                        editText = 0
-                    }else{
-                        var value = parseInt(editText,10)
-                        if(value > count){
-                            value = count
-                        }else if(value < 0){
-                            value = 0
-                        }
-
-                        editText = value
-                        AppModel.amountOfThread = value
-                    }
-                }
-
-                onClickUp: {
-                    if(AppModel.amountOfThread < count - 1){
-                        AppModel.amountOfThread ++
-                    }
-                }
-
-                onClickDown: {
-                    if(AppModel.amountOfThread > 0){
-                        AppModel.amountOfThread --
-                    }
+                onValueChanged: {
+                    AppModel.amountOfThread = value
                 }
             }
         }
@@ -228,41 +202,18 @@ Window {
                 font.bold: true
             }
 
-            CustomizedComboBox {
-                id: vmCount
+            CustomizedInputField{
                 enabled: !AppModel.isLaunchMutiTask
-                currentIndex: AppModel.deviceCount
-                model: AppModel.maxVMCount + 1
+                value: AppModel.deviceCount
+                maxValue: AppModel.maxVMCount
+                minValue: 0
+                valStep: 5
                 width: 200
-                font.pixelSize: 17
+                height: appNameComb.height
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
-                editable: true
-                onEditTextChanged: {
-                    if(isNaN(parseInt(editText,10))){
-                        editText = 0
-                    }else{
-                        var value = parseInt(editText,10)
-                        if(value > AppModel.maxVMCount){
-                            value = AppModel.maxVMCount
-                        }else if(value < 0){
-                            value = 0
-                        }
-
-                        editText = value
-                        AppModel.deviceCount = value
-                    }
-                }
-                onClickUp: {
-                    if(AppModel.deviceCount < vmCount.count - 1){
-                        AppModel.deviceCount ++
-                    }
-                }
-
-                onClickDown: {
-                    if(AppModel.deviceCount > 0){
-                        AppModel.deviceCount --
-                    }
+                onValueChanged: {
+                    AppModel.deviceCount = value
                 }
             }
         }
@@ -366,7 +317,7 @@ Window {
         font.pixelSize: 17
         width: 100
         height: 50
-        enabled: AppModel.token != ""
+        enabled: AppModel.token != "" && AppModel.amountOfThread > 0
         text: selected? "Stop" : "Start"
         onClicked: {
             selected = !selected
