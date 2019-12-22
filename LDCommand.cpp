@@ -29,7 +29,7 @@ LDCommand *LDCommand::instance()
 bool LDCommand::runLDCommand(QString args, int timeout)
 {
     QString cmd = QString("\"%1/dnconsole.exe\" %2").arg(APP_MODEL->ldIntallFolder()).arg(args);
-    LOGD << "Cmd: " << args;
+    LOGD("Cmd: " + args);
 
     QProcess m_process;
     m_process.start(cmd);
@@ -37,11 +37,11 @@ bool LDCommand::runLDCommand(QString args, int timeout)
     QString output = m_process.readAllStandardOutput();
     QString error = m_process.readAllStandardError();
     if(error != "")
-        LOGD << "error: " << error;
+        LOGD("error: " + error);
     if(output != "")
-        LOGD << "output: " << output;
+        LOGD("output: " + output);
     if(error != ""){
-        LOGD << error;
+        LOGD(error);
         return false;
     }else{
         return true;
@@ -51,7 +51,7 @@ bool LDCommand::runLDCommand(QString args, int timeout)
 bool LDCommand::runLDCommand(QString args, QString &output, QString &error, int timeout)
 {
     QString cmd = QString("\"%1/dnconsole.exe\" %2").arg(APP_MODEL->ldIntallFolder()).arg(args);
-    LOGD << "Cmd: " << args;
+    LOGD("Cmd: " + args);
 
     QProcess m_process;
     m_process.start(cmd);
@@ -59,9 +59,9 @@ bool LDCommand::runLDCommand(QString args, QString &output, QString &error, int 
     output = m_process.readAllStandardOutput();
     error = m_process.readAllStandardError();
     if(error != "")
-        LOGD << "error: " << error;
+        LOGD("error: " + error);
     if(output != "")
-        LOGD << "output: " << output;
+        LOGD("output: " + output);
     if(error != ""){
         return false;
     }else{
@@ -71,7 +71,7 @@ bool LDCommand::runLDCommand(QString args, QString &output, QString &error, int 
 
 bool LDCommand::lunchInstance(QString instanceName)
 {
-    LOGD << instanceName;
+    LOGD(instanceName);
     QMutex mutex;
     mutex.lock();
     bool success = this->runLDCommand(QString("launch --name %1").arg(instanceName));
@@ -81,7 +81,7 @@ bool LDCommand::lunchInstance(QString instanceName)
 
 bool LDCommand::runApp(QString instanceName, QString packageName)
 {
-    LOGD << "instanceName: " << instanceName << " -- packageName: " << packageName;
+    LOGD("instanceName: " + instanceName + " -- packageName: " + packageName);
     QMutex mutex;
     mutex.lock();
     bool success = this->runLDCommand(QString("runapp --name %1 --packagename %2").arg(instanceName).arg(packageName));
@@ -91,7 +91,7 @@ bool LDCommand::runApp(QString instanceName, QString packageName)
 
 bool LDCommand::addInstance(QString instanceName)
 {
-    LOGD << instanceName;
+    LOGD(instanceName);
     QMutex mutex;
     mutex.lock();
     bool success = this->runLDCommand(QString("add --name %1").arg(instanceName));
@@ -121,7 +121,7 @@ QString LDCommand::ld_adb_command(QString instanceName, QString cmd, int timeout
 
 bool LDCommand::quitInstance(QString instanceName)
 {
-    LOGD << instanceName;
+    LOGD(instanceName);
     QMutex mutex;
     mutex.lock();
     bool success = this->runLDCommand(QString("quit --name %1").arg(instanceName));
@@ -131,7 +131,7 @@ bool LDCommand::quitInstance(QString instanceName)
 
 bool LDCommand::quitAll()
 {
-    LOGD;
+    LOGD("");
     QMutex mutex;
     mutex.lock();
     bool success = this->runLDCommand("quitall");
@@ -141,7 +141,7 @@ bool LDCommand::quitAll()
 
 bool LDCommand::rebootInstance(QString instanceName)
 {
-    LOGD << instanceName;
+    LOGD(instanceName);
     QMutex mutex;
     mutex.lock();
     bool success = this->runLDCommand(QString("reboot --name %1").arg(instanceName));
@@ -191,7 +191,7 @@ bool LDCommand::checkEnscript(QString instanceName)
 
 bool LDCommand::coppyInstance(QString instanceName, QString fromInstanceName)
 {
-    LOGD << instanceName << " from "  << fromInstanceName;
+    LOGD(instanceName + " from " + fromInstanceName);
     QMutex mutex;
     mutex.lock();
     bool success = this->runLDCommand(QString("copy --name %1 --from %2").arg(instanceName).arg(fromInstanceName));
@@ -240,7 +240,7 @@ bool LDCommand::sortWindow()
     }
     if(windowsRowCount <= 0)
         windowsRowCount = 4;
-    LOGD << "windowsRowCount: " << windowsRowCount << " listRunning: " << APP_MODEL->devicesRunningList().length();
+    LOGD("windowsRowCount: " + QString::number(windowsRowCount) + " listRunning: " + QString::number(APP_MODEL->devicesRunningList().length()));
 
     if(configFile.open(QIODevice::ReadOnly)){
         ldConfigObj = QJsonDocument().fromJson(configFile.readAll()).object();
@@ -269,11 +269,11 @@ bool LDCommand::isExistedPackage(QString instanceName,QString packageName)
     Q_UNUSED(instanceName)
     QFile file("LDSetup/data/apps.text");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        LOGD << "Open file fail";
+        LOGD("Open file fail");
     }
     while (!file.atEnd()) {
         QString line = QString(file.readLine());
-        LOGD << "line: " << line;
+        LOGD("line: " + line);
         if(line.contains(packageName))
             return true;
     }
@@ -327,7 +327,7 @@ bool LDCommand::repairEmulator()
 {
     QString exeFileName = QDir::toNativeSeparators("\"" + QDir::currentPath() + "/LDSetup/dnrepairer.exe\"");
     int result = (int)::ShellExecuteA(nullptr, "runas", exeFileName.toUtf8().constData(), nullptr, nullptr, SW_SHOWNORMAL);
-    LOGD << "result: " << result;
+    LOGD("result: " + QString::number(result));
     return (result >= 32? true : false);
 }
 
@@ -337,7 +337,7 @@ bool LDCommand::isExistedDevice(QString instanceName)
     QString error;
     if(this->runLDCommand("list", deviceList, error)){
         if(deviceList.contains(instanceName)){
-            LOGD << "Device " << instanceName << " existed already";
+            LOGD("Device " + instanceName + " existed already");
             return  true;
         } else {
             return false;

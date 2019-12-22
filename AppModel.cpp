@@ -63,7 +63,7 @@ void AppModel::setLDIntallFolder(const QString path, bool standardPath)
 {
     QString tmp_path = path;
     if(m_ldIntallFolder != "") {
-        LOGD << "There is a valid Path already!";
+        LOGD("There is a valid Path already!");
         return;
     }
     if(standardPath == false)
@@ -71,7 +71,7 @@ void AppModel::setLDIntallFolder(const QString path, bool standardPath)
     else
         tmp_path = path;
 
-    LOGD << "path: " << tmp_path;
+    LOGD("path: " + tmp_path);
 
     if(QFile(tmp_path + "/ldconsole.exe").exists()){
         if(m_ldIntallFolder != tmp_path ){
@@ -79,7 +79,7 @@ void AppModel::setLDIntallFolder(const QString path, bool standardPath)
             emit ldIntallFolderChanged();
         }
     }else{
-        LOGD << "Invalid folder.";
+        LOGD("Invalid folder.");
         return;
     }
 
@@ -108,13 +108,13 @@ QList<QObject *> AppModel::devicesRunningList() const
 
 void AppModel::appendRunningDevice(LDIntance* instance)
 {
-    LOGD << instance->instanceName();
+    LOGD(instance->instanceName());
     m_devicesRunningList.append(instance);
 }
 
 void AppModel::popRunningDevice(LDIntance* instance)
 {
-    LOGD << instance->instanceName();
+    LOGD(instance->instanceName());
     m_devicesRunningList.removeOne(instance);
 }
 
@@ -125,7 +125,6 @@ uint AppModel::amountOfThread() const
 
 void AppModel::setAmountOfThread(const uint data)
 {
-    LOGD << data;
     if(data != m_amountOfThread){
         m_amountOfThread = data;
         emit amountOfThreadChanged();
@@ -139,7 +138,6 @@ bool AppModel::isLaunchMutiTask() const
 
 void AppModel::setIsLaunchMutiTask(const bool data)
 {
-    LOGD << data;
     if(m_isLaunchMutiTask != data){
         m_isLaunchMutiTask = data;
         emit isLaunchMutiTaskChanged();
@@ -172,7 +170,7 @@ QString AppModel::token() const
 
 void AppModel::setToken(QString data)
 {
-    LOGD << data;
+    LOGD(data);
     if(m_token != data ){
         m_token = data;
         if(!WebAPI::instance()->getConfig()){
@@ -202,7 +200,7 @@ int AppModel::maxNumberThread() const
 
 void AppModel::setMaxNumberThread(int data)
 {
-    LOGD << data;
+    LOGD(data);
     if(m_maxNumberThread != data) {
         m_maxNumberThread = data;
         emit maxNumberThreadChanged();
@@ -216,7 +214,7 @@ int AppModel::maxVMCount() const
 
 void AppModel::setMaxVMCount(int data)
 {
-    LOGD << data;
+    LOGD(data);
     if(m_maxVMCount != data) {
         m_maxVMCount = data;
         emit maxVMCountChanged();
@@ -244,7 +242,6 @@ QString AppModel::currentDir() const
 void AppModel::setCurrentDir(QString data)
 {
     m_currentDir = data;
-    LOGD << m_currentDir;
 }
 
 QString AppModel::appName() const
@@ -254,6 +251,7 @@ QString AppModel::appName() const
 
 void AppModel::setAppName(QString data)
 {
+    LOGD(data);
     if(m_appName != data){
         m_appName = data;
         emit appNameChanged();
@@ -280,7 +278,7 @@ int AppModel::deviceCount() const
 
 void AppModel::setDeviceCount(int data)
 {
-    LOGD << data;
+    LOGD(data);
     if(m_deviceCount != data) {
         m_deviceCount = data;
         emit deviceCountChanged();
@@ -307,7 +305,7 @@ QString AppModel::resolution() const
 
 void AppModel::setResolution(QString data)
 {
-    LOGD << data;
+    LOGD(data);
     if (m_resolution != data) {
         m_resolution = data;
         emit resolutionChanged();;
@@ -360,7 +358,7 @@ QString AppModel::serialNumber() const
 
 void AppModel::setSerialNumber(QString data)
 {
-    LOGD << data;
+    LOGD(data);
     if(m_serialNumber != data){
         m_serialNumber = data;
     }

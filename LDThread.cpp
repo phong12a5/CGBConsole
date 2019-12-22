@@ -28,7 +28,7 @@ LDThread::LDThread(QObject *parent, LDIntance* ldInstance) :
 
 LDThread::~LDThread()
 {
-    LOGD << m_ldInstance->instanceName();
+    LOGD(m_ldInstance->instanceName());
     APP_MODEL->popRunningDevice(m_ldInstance);
 }
 

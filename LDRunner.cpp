@@ -34,19 +34,17 @@ LDRunner::LDRunner(QString instanceName):
         resolution = listResoltion.at(QTime::currentTime().msec()%4);
     }
     LDCommand::instance()->runLDCommand(QString("modify --name %1 --cpu 1 --memory 1024 --resolution %2").arg(m_instanceName).arg(resolution));
-    LOGD << "Created Runner for " << instanceName;
+    LOGD("Created Runner for " +  instanceName);
 }
 
 LDRunner::~LDRunner()
 {
-    LOGD << m_instanceName;
+    LOGD(m_instanceName);
     LDCommand::instance()->quitInstance(m_instanceName);
 }
 
 void LDRunner::run()
 {
-    LOGD << "Thread ID: " << QThread::currentThreadId();
-
     connect(LDService::instance(), &LDService::updateDeviceStatus,  this,                   &LDRunner::onUpdateDeviceStatus);
     connect(LDService::instance(), &LDService::updateAppStatus,     this,                   &LDRunner::onUpdateAppStatus);
     connect(LDService::instance(), &LDService::updateMissionStatus, this,                   &LDRunner::onUpdateMissionStatus);
@@ -75,21 +73,21 @@ void LDRunner::onCheckRunningDevice()
 {
     int deviceState = LDCommand::instance()->isRunningDevice(m_instanceName) ;
     if(deviceState == LDCommand::instance()->DEVICE_STATE_RUNNING) {
-        LOGD << m_instanceName << " run already!";
+        LOGD(m_instanceName + " run already!");
         if(m_deviceStatus != LDService::E_DEVICE_CONNECTED){
             LDCommand::instance()->rebootInstance(m_instanceName);
         }
     }else if(deviceState == LDCommand::instance()->DEVICE_STATE_STOP){
-        LOGD << m_instanceName << " is not running now!";
+        LOGD(m_instanceName + " is not running now!");
         LDCommand::instance()->lunchInstance(m_instanceName);
     }else {
-        LOGD << "Could not determine state of " <<  m_instanceName;
+        LOGD("Could not determine state of " +  m_instanceName);
     }
 }
 
 void LDRunner::onCheckLifeTcycle()
 {
-    LOGD;
+    LOGD("");
     emit finished();
 }
 
@@ -98,7 +96,7 @@ void LDRunner::onUpdateDeviceStatus(QMap<QString,LDService::E_DEVICE_STATUS> *li
     if(listDeviceStatus->contains(m_instanceName)){
         if (m_deviceStatus != listDeviceStatus->value(m_instanceName) && m_deviceStatus != LDService::E_DEVICE_CONNECTED) {
             m_deviceStatus = listDeviceStatus->value(m_instanceName);
-            LOGD << m_instanceName << " is connected";
+            LOGD(m_instanceName + " is connected");
             emit passConfigToDevice(m_instanceName);
         }
     }
@@ -114,7 +112,7 @@ void LDRunner::onUpdateAppStatus(QMap<QString,LDService::E_APP_STATUS> *listAppS
             m_appStatus = listAppStatus->value(m_instanceName);
             LDCommand::instance()->runApp(m_instanceName, FARM_PACKAGE_NAME);
         }else if(listAppStatus->value(m_instanceName) == LDService::E_APP_RUNNING){
-            LOGD << m_instanceName << " xyz.autofarmer.app started!";
+            LOGD(m_instanceName + " xyz.autofarmer.app started!");
         }
     }
 }
@@ -124,7 +122,7 @@ void LDRunner::onUpdateMissionStatus(QMap<QString,LDService::E_MISSION_STATUS> *
     if(listMissionpStatus->contains(m_instanceName)){
         m_missionStatus = listMissionpStatus->value(m_instanceName);
         if(m_missionStatus == LDService::E_MISSION_COMPLETED){
-            LOGD << m_instanceName << ": Mission completed!";
+            LOGD(m_instanceName + ": Mission completed!");
             emit finished();
         }
     }

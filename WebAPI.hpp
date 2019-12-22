@@ -37,6 +37,7 @@ public:
     bool downloadFIle(QString url, QString savedPath);
     bool downloadApk(int version);
     bool downloadNewVersion();
+    void dologging(const char * moduleName, const char * funcName, QString msg);
 
 public slots:
 

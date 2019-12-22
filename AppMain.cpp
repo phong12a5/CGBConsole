@@ -54,7 +54,7 @@ AppMain::~AppMain()
 
 void AppMain::initApplication()
 {
-    LOGD;
+    LOGD("");
     this->preSetup();
     this->onLoadConfig();
     APP_CTRL->initAppController();
@@ -62,7 +62,7 @@ void AppMain::initApplication()
 
 void AppMain::preSetup()
 {
-    LOGD;
+    LOGD("");
     QFile::remove(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/LDPlayer/Pictures/temp");
 
     APP_MODEL->setCurrentDir(QDir::currentPath());
@@ -70,14 +70,14 @@ void AppMain::preSetup()
     if(QFile(checkConnectFilePath).exists() == false){
         QFile file(checkConnectFilePath);
         if (!file.open(QIODevice::WriteOnly | QIODevice::Text)){
-            LOGD << "Create " << CHECK_CONNECT_FILENAME << "failure";
+            LOGD(QString("Create ") + CHECK_CONNECT_FILENAME + "failure");
         }
     }
 
     QList<QScreen*> listSrc = QGuiApplication::screens();
     if(!listSrc.isEmpty()){
         APP_MODEL->setScreenResolution(QGuiApplication::screens().at(0)->size());
-        LOGD << "Screen Size: " << APP_MODEL->screenResolution().width() << "x" << APP_MODEL->screenResolution().height();
+        LOGD("Screen Size: " + QString::number(APP_MODEL->screenResolution().width()) + "x" + QString::number(APP_MODEL->screenResolution().height()));
     }
 
     QFile::remove("temp.dat");
@@ -85,10 +85,10 @@ void AppMain::preSetup()
 
 void AppMain::onLoadConfig()
 {
-    LOGD;
+    LOGD("");
     if(APP_MODEL->ldIntallFolder() == "")
     {
-        LOGD << "LD installation folder has not set yet";
+        LOGD("LD installation folder has not set yet");
     }else{
         this->initDevicesList();
     }
@@ -142,7 +142,7 @@ void AppMain::onLoadConfig()
 
 void AppMain::onSaveConfig()
 {
-    LOGD;
+    LOGD("");
     QJsonObject config;
     config[INSTALL_FOLDER_PROP_KEY] = APP_MODEL->ldIntallFolder();
     config[TOKEN_PROP_KEY] = APP_MODEL->token();
@@ -154,15 +154,15 @@ void AppMain::onSaveConfig()
 
 void AppMain::initDevicesList()
 {
-    LOGD;
+    LOGD("");
     if(APP_MODEL->ldIntallFolder() == ""){
-        LOGD << "Installation folder has not set up yet!";
+        LOGD("Installation folder has not set up yet!");
         return;
     }else{
         QString output, error;
         LDCommand::instance()->runLDCommand("list", output, error);
         if(error != ""){
-            LOGD << "ERROR: " << error;
+            LOGD(QString("ERROR: ") + error);
         }else{
             QStringList listNameDevices = QString(output).split("\r\n",QString::SkipEmptyParts);
             for (int i = 0; i < listNameDevices.length(); i++) {
@@ -176,7 +176,7 @@ void AppMain::initDevicesList()
 
 void AppMain::onStartProgram()
 {
-    LOGD;
+    LOGD("");
     APP_MODEL->setAppStarted(true);
     if(!m_copyDevicesThread.isRunning()){
             m_copyDevicesThread.start();
@@ -209,13 +209,13 @@ void AppMain::onStoptProgram()
 
 void AppMain::onFinishCopyDevice(QString deviceName)
 {
-    LOGD << deviceName;
+    LOGD(deviceName);
     APP_MODEL->appendDevice(deviceName);
 }
 
 void AppMain::onFinishCreateTemplateDevice()
 {
-    LOGD;
+    LOGD("");
     if(APP_MODEL->appStarted()){
         this->copyDevices();
         APP_CTRL->startMultiTask();
@@ -224,7 +224,7 @@ void AppMain::onFinishCreateTemplateDevice()
 
 void AppMain::onUpdateFinished(int code)
 {
-    LOGD << code;
+    LOGD(code);
     if(code == AutoUpdaterWorker::E_FINISHED_CODE_NEW_VERSION) {
         APP_MODEL->setIsShowRestartPopup(true);
         QJsonObject config;
@@ -238,27 +238,27 @@ void AppMain::onUpdateFinished(int code)
 
 void AppMain::onFinishCopyTask()
 {
-    LOGD;
+    LOGD("");
     if(m_copyInProgress)
         m_copyInProgress = false;
 }
 
 void AppMain::closingApp()
 {
-    LOGD;
+    LOGD("");
     QCoreApplication::quit();
 }
 
 int AppMain::restartApplication()
 {
-    LOGD;
+    LOGD("");
     QProcess::startDetached(QApplication::applicationFilePath());
     exit(12);
 }
 
 QJsonDocument AppMain::loadJson(QString fileName)
 {
-    LOGD << "[AppMain]";
+    LOGD("");
     QFile jsonFile(fileName);
     jsonFile.open(QFile::ReadOnly);
     return QJsonDocument().fromJson(jsonFile.readAll());
@@ -266,7 +266,7 @@ QJsonDocument AppMain::loadJson(QString fileName)
 
 void AppMain::saveJson(QJsonDocument document, QString fileName)
 {
-    LOGD << "[AppMain]";
+    LOGD("");
     QFile jsonFile(fileName);
     jsonFile.open(QFile::WriteOnly);
     jsonFile.write(document.toJson());
@@ -274,7 +274,7 @@ void AppMain::saveJson(QJsonDocument document, QString fileName)
 
 void AppMain::copyDevices()
 {
-    LOGD;
+    LOGD("");
     if(m_copyInProgress == false){
 	m_copyInProgress = true;
         this->startCopyEmulator();
@@ -283,13 +283,13 @@ void AppMain::copyDevices()
 
 void AppMain::createTemplateDevice()
 {
-    LOGD;
+    LOGD("");
     this->startCreateTemplateDevice();
 }
 
 void AppMain::updateVersion()
 {
-    LOGD;
+    LOGD("");
     AutoUpdaterWorker* autoUpdateWorker = new AutoUpdaterWorker();
     autoUpdateWorker->moveToThread(&m_updateVersionThread);
     connect(&m_updateVersionThread, &QThread::finished, autoUpdateWorker, &QObject::deleteLater);

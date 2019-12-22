@@ -48,7 +48,7 @@ bool WebAPI::getConfig()
     CkHttpResponse *resp = nullptr;
     resp = http.PostJson2(url.toLocal8Bit().data(), "application/json", jsonData.data());
     if (http.get_LastMethodSuccess() != true) {
-        LOGD << "Http error: " << QString(http.lastErrorText());
+        LOGD("Http error: " + QString(http.lastErrorText()));
     } else {
         if (resp->bodyStr()) {
             CkJsonObject jsonResponse;
@@ -59,7 +59,7 @@ bool WebAPI::getConfig()
                 QByteArray decodeText = encryption.decode(QByteArray::fromBase64(data.toUtf8()), getKey().toLocal8Bit(), getIV().toLocal8Bit());
                 QJsonDocument jdoc = QJsonDocument::fromJson(encryption.removePadding(decodeText));
                 QJsonObject jsonResponsedObj = jdoc.object();
-                LOGD << jsonResponsedObj;
+                LOGD(QJsonDocument(jsonResponsedObj).toJson(QJsonDocument::Compact));
                 if(!jsonResponsedObj.isEmpty() && jsonResponsedObj["updated"] != "failed"){
                     APP_CONFIG config;
                     config.timeout = jsonResponsedObj["timeout"].toString().toInt();
@@ -73,55 +73,55 @@ bool WebAPI::getConfig()
                     config.m_android_versioncode = jsonResponsedObj["android_versioncode"].toString().toInt();
                     config.m_dropboxaccesstoken = jsonResponsedObj["dropboxaccesstoken"].toString();
                     config.m_cgbconsole_versioncode = jsonResponsedObj["cgbconsole_versioncode"].toString().toInt();
-                    LOGD << "config.timeout: " << config.timeout;
-                    LOGD << "config.reset_3g: " << config.reset_3g;
-                    LOGD << "config.debug_mode: " << config.debug_mode;
-                    LOGD << "config.user_type: " << config.user_type;
-                    LOGD << "config.m_maxVmCount: " << config.m_maxVmCount;
-                    LOGD << "config.m_maxVmThread: " << config.m_maxVmThread;
-                    LOGD << "config.balance: " << config.m_balance;
-                    LOGD << "config.openApkAfterNSeconds: " << config.m_openApkAfterNSeconds;
-                    LOGD << "config.android_versioncode: " << config.m_android_versioncode;
-                    LOGD << "config.dropboxaccesstoken: " << config.m_dropboxaccesstoken;
-                    LOGD << "config.cgbconsole_versioncode: " << config.m_cgbconsole_versioncode;
+                    LOGD("config.timeout: " + QString::number(config.timeout));
+                    LOGD("config.reset_3g: "   + QString::number(config.reset_3g));
+                    LOGD("config.debug_mode: "  + config.debug_mode);
+                    LOGD("config.user_type: "  + QString::number( config.user_type));
+                    LOGD("config.m_maxVmCount: "  + QString::number( config.m_maxVmCount));
+                    LOGD("config.m_maxVmThread: "  + QString::number( config.m_maxVmThread));
+                    LOGD("config.balance: "  + QString::number( config.m_balance));
+                    LOGD("config.openApkAfterNSeconds: "  + QString::number( config.m_openApkAfterNSeconds));
+                    LOGD("config.android_versioncode: "  + QString::number( config.m_android_versioncode));
+                    LOGD("config.dropboxaccesstoken: "  + config.m_dropboxaccesstoken);
+                    LOGD("config.cgbconsole_versioncode: "  + QString::number(config.m_cgbconsole_versioncode));
                     MODEL->setAppConfig(config);
                     success = true;
                 }
 
             } else {
-                LOGD << "Could not load resp->bodyStr() -> JsonObject";
+                LOGD("Could not load resp->bodyStr() -> JsonObject");
             }
         } else {
-            LOGD << "resp->bodyStr() is NULL";
+            LOGD("resp->bodyStr() is NULL");
         }
     }
     return success;
 }
 
 bool WebAPI::downloadApk(int version) {
-    LOGD << "downloadApk -> Version: " << version;
+    LOGD("downloadApk -> Version: " +  QString::number(version));
     CkRest rest;
 
     //  Connect to Dropbox
     bool success = rest.Connect("content.dropboxapi.com", 443, true, true);
     if (success != true) {
-        LOGD << "Connect error: " << QString(rest.lastErrorText());
+        LOGD("Connect error: " + QString(rest.lastErrorText()));
         return success;
     }
 
     //  Add request headers.
     QString tokenStr = "Bearer " + AppModel::instance()->appConfig().m_dropboxaccesstoken;
-    LOGD << "Token: " << tokenStr;
+    LOGD("Token: " + tokenStr);
     rest.AddHeader("Authorization", tokenStr.toLocal8Bit().data());
 
     QJsonObject json;
     QString clouldPathStr = "/apk/xyz.autofarmer.app." + QString::number(version) + ".apk";
-    LOGD << "clouldPathStr: " << clouldPathStr;
+    LOGD("clouldPathStr: " + clouldPathStr);
     json["path"] = clouldPathStr;
     rest.AddHeader("Dropbox-API-Arg", QJsonDocument(json).toJson().data());
 
     QString localPathStr = "xyz.autofarmer.app." + QString::number(version) + ".apk";
-    LOGD << "localPathStr: " << localPathStr;
+    LOGD("localPathStr: " + localPathStr);
     CkStream fileStream;
     fileStream.put_SinkFile(localPathStr.toLocal8Bit().data());
 
@@ -130,51 +130,51 @@ bool WebAPI::downloadApk(int version) {
 
     const char *responseStr = rest.fullRequestNoBody("POST", "/2/files/download");
     if (rest.get_LastMethodSuccess() != true) {
-        LOGD << "responseStr error: " << QString(rest.lastErrorText());
+        LOGD("responseStr error: " + QString(rest.lastErrorText()));
         return false;
     } else {
-        LOGD << "responseStr: " << QString(responseStr);
+        LOGD("responseStr: " + QString(responseStr));
     }
 
     //  When successful, Dropbox responds with a 200 response code.
     if (rest.get_ResponseStatusCode() != 200) {
         //  Examine the request/response to see what happened.
-        LOGD << "response status code = " << QString(rest.get_ResponseStatusCode());
-        LOGD << "response status text = " << QString(rest.responseStatusText());
-        LOGD << "response header: " << QString(rest.responseHeader());
-        LOGD << "response body (if any): " << QString(responseStr);
-        LOGD << "LastRequestStartLine: " << QString(rest.lastRequestStartLine());
-        LOGD << "LastRequestHeader: " << QString(rest.lastRequestHeader());
+        LOGD("response status code = " + QString(rest.get_ResponseStatusCode()));
+        LOGD("response status text = " + QString(rest.responseStatusText()));
+        LOGD("response header: " + QString(rest.responseHeader()));
+        LOGD("response body (if any): " + QString(responseStr));
+        LOGD("LastRequestStartLine: " + QString(rest.lastRequestStartLine()));
+        LOGD("LastRequestHeader: " + QString(rest.lastRequestHeader()));
         return false;
     }
-    LOGD << "Download successful";
+    LOGD("Download successful");
     return true;
 }
 
 bool WebAPI::downloadNewVersion()
 {
-    LOGD;
+    LOGD("");
     CkRest rest;
     //  Connect to Dropbox
     bool success = rest.Connect("content.dropboxapi.com", 443, true, true);
     if (success != true) {
-        LOGD << "Connect error: " << QString(rest.lastErrorText());
+        LOGD("Connect error: " + QString(rest.lastErrorText()));
         return success;
     }
 
     //  Add request headers.
     QString tokenStr = "Bearer " + AppModel::instance()->appConfig().m_dropboxaccesstoken;
-    LOGD << "Token: " << tokenStr;
+    LOGD("Token: " + tokenStr);
     rest.AddHeader("Authorization", tokenStr.toLocal8Bit().data());
 
     QJsonObject json;
     QString clouldPathStr = "/CGBConsole/CGBConsole.zip";
-    LOGD << "clouldPathStr: " << clouldPathStr;
+    LOGD("clouldPathStr: " + clouldPathStr);
     json["path"] = clouldPathStr;
     rest.AddHeader("Dropbox-API-Arg", QJsonDocument(json).toJson().data());
 
     QString localPathStr = "CGBConsole.zip";
-    LOGD << "localPathStr: " << localPathStr;
+    LOGD("localPathStr: " + localPathStr);
     CkStream fileStream;
     fileStream.put_SinkFile(localPathStr.toLocal8Bit().data());
 
@@ -183,24 +183,69 @@ bool WebAPI::downloadNewVersion()
 
     const char *responseStr = rest.fullRequestNoBody("POST", "/2/files/download");
     if (rest.get_LastMethodSuccess() != true) {
-        LOGD << "responseStr error: " << QString(rest.lastErrorText());
+        LOGD("responseStr error: " + QString(rest.lastErrorText()));
         return false;
     } else {
-        LOGD << "responseStr: " << QString(responseStr);
+        LOGD("responseStr: " + QString(responseStr));
     }
 
     //  When successful, Dropbox responds with a 200 response code.
     if (rest.get_ResponseStatusCode() != 200) {
         //  Examine the request/response to see what happened.
-        LOGD << "response status code = " << QString(rest.get_ResponseStatusCode());
-        LOGD << "response status text = " << QString(rest.responseStatusText());
-        LOGD << "response header: " << QString(rest.responseHeader());
-        LOGD << "response body (if any): " << QString(responseStr);
-        LOGD << "LastRequestStartLine: " << QString(rest.lastRequestStartLine());
-        LOGD << "LastRequestHeader: " << QString(rest.lastRequestHeader());
+        LOGD("response status code = " + QString(rest.get_ResponseStatusCode()));
+        LOGD("response status text = " + QString(rest.responseStatusText()));
+        LOGD("response header: " + QString(rest.responseHeader()));
+        LOGD("response body (if any): " + QString(responseStr));
+        LOGD("LastRequestStartLine: " + QString(rest.lastRequestStartLine()));
+        LOGD("LastRequestHeader: " + QString(rest.lastRequestHeader()));
         return false;
     }
     return true;
+}
+
+void WebAPI::dologging(const char *moduleName, const char *funcName, QString msg)
+{
+    if(MODEL->token() == ""){
+        LLOGD("Missing toke");
+        return;
+    }
+
+//    std::string url = std::string(API_SERVER) + std::string("DoLogging?token=") + std::string(AppModel::instance()->token());
+//    CkJsonObject jsonReqBody;
+//    jsonReqBody.AddStringAt(-1, "action", "logging");
+//    jsonReqBody.AddStringAt(-1, "appname", "");
+//    jsonReqBody.AddStringAt(-1, "info", "");
+//    jsonReqBody.AddStringAt(-1, "module", moduleName);
+//    jsonReqBody.AddStringAt(-1, "tag", funcName);
+//    jsonReqBody.AddStringAt(-1, "message", msg);
+//    CkHttpRequest req;
+//    CkHttp http;
+//    CkHttpResponse *resp = nullptr;
+//    resp = http.PostJson2(url.c_str(), "application/json", jsonReqBody.emit());
+//    if (resp) delete resp;
+
+    /////////////
+    QString url = API_SERVER + QString("DoLogging?token=%1").arg(MODEL->token());
+    QUrl serviceUrl = QUrl(url);
+    QNetworkRequest request(serviceUrl);
+    QJsonObject json;
+
+    json.insert("action", "logging");
+    json.insert("appname", MODEL->appName().toLower());
+    json.insert("info", "CGBConsole");
+    json.insert("module", QString(moduleName));
+    json.insert("tag",  QString(funcName));
+    json.insert("message",  msg);
+
+    QByteArray jsonData = QJsonDocument(json).toJson();
+
+    CkHttpRequest req;
+    CkHttp http;
+
+    CkHttpResponse *resp = nullptr;
+    resp = http.PostJson2(url.toLocal8Bit().data(), "application/json", jsonData.data());
+    LLOGD("Error: " + QString(resp->lastErrorText()));
+    if (resp) delete resp;
 }
 
 QString WebAPI::getKey() const
@@ -241,12 +286,12 @@ bool WebAPI::downloadFIle(QString url, QString savedPath)
     QNetworkReply::NetworkError error = reply->error();
     if(error != QNetworkReply::NoError){
         status = false;
-        LOGD << "Error: " << reply->errorString();
+        LOGD("Error: " + reply->errorString());
     }else{
         QByteArray content = reply->readAll();
         if(content.isEmpty())
         {
-            LOGD << "Responed content is empty";
+            LOGD("Responed content is empty");
         }else{
             QFile *file = new QFile(savedPath);
             if(file->open(QIODevice::WriteOnly))
@@ -257,7 +302,7 @@ bool WebAPI::downloadFIle(QString url, QString savedPath)
                 status = true;
             }else{
                 status = false;
-                LOGD << "Failed to open file";
+                LOGD("Failed to open file");
             }
             delete file;
         }

@@ -36,7 +36,7 @@ LDService *LDService::instance()
 
 void LDService::startService()
 {
-    LOGD;
+    LOGD("");
     if(m_checkConnectTimer == nullptr){
         m_checkConnectTimer = new QTimer(this);
         m_checkConnectTimer->setSingleShot(false);
@@ -66,7 +66,7 @@ void LDService::startService()
 
 void LDService::stopService()
 {
-    LOGD;
+    LOGD("");
     m_checkConnectTimer->stop();
     m_checkRunAppTimer->stop();
     m_checkMissionSttTimer->stop();
@@ -74,7 +74,7 @@ void LDService::stopService()
 
 void LDService::onCheckDeviceStatus()
 {
-    LOGD;
+    LOGD("");
     QFile::remove(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/LDPlayer/Pictures/temp");
     QStringList existedDevices;
     existedDevices.clear();
@@ -91,13 +91,15 @@ void LDService::onCheckDeviceStatus()
             m_listDeviceStatus->insert(instanceName,E_DEVICE_STATUS::E_DEVICE_DISCONNECT);
         }
     }
-    LOGD << *m_listDeviceStatus;
+    foreach(QString deviceName, m_listDeviceStatus->keys()){
+        LOGD(QString("%1 : %2").arg(deviceName).arg(m_listDeviceStatus->value(deviceName) == 0? "connected" : "disconnected"));
+    }
     emit updateDeviceStatus(m_listDeviceStatus);
 }
 
 void LDService::onCheckRunApp()
 {
-    LOGD;
+    LOGD("");
     QStringList existedDevices;
     existedDevices.clear();
     for (int i = 0; i < AppModel::instance()->devicesRunningList().length(); i++) {
@@ -121,7 +123,7 @@ void LDService::onCheckRunApp()
 
 void LDService::onCheckMissionStatus()
 {
-    LOGD;
+    LOGD("");
     QStringList existedDevices;
     existedDevices.clear();
     for (int i = 0; i < AppModel::instance()->devicesRunningList().length(); i++) {
@@ -145,7 +147,7 @@ void LDService::onCheckMissionStatus()
 
 void LDService::onPassConfigToDevice(QString instanceName)
 {
-    LOGD << instanceName << " Passing token id .." << AppModel::instance()->token();
+    LOGD(instanceName + " Passing token id .." + AppModel::instance()->token());
 
     /* Create startup.config and pass to LD */
     QJsonObject configObj;

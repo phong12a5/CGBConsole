@@ -23,19 +23,19 @@ AppController *AppController::instance()
 
 void AppController::initAppController()
 {
-    LOGD;
+    LOGD("");
 }
 
 void AppController::startMultiTask()
 {
-    LOGD;
+    LOGD("");
     this->onUpdateLDThreadList();
     m_updateLDThreadList.start();
 }
 
 void AppController::stopMultiTask()
 {
-    LOGD;
+    LOGD("");
     LDCommand::instance()->quitAll();
     while (!m_ldThreadList.isEmpty()) {
         delete m_ldThreadList.at(0);
@@ -53,7 +53,7 @@ void AppController::aMissionCompleted(LDThread* threadAdd)
             if(m_ldThreadList.removeOne(threadAdd)){
                 delete threadAdd;
             }else {
-                LOGD << " ---------------- Remove thread failure ----------- ";
+                LOGD(" ---------------- Remove thread failure ----------- ");
             }
         }
     }
@@ -62,19 +62,21 @@ void AppController::aMissionCompleted(LDThread* threadAdd)
 void AppController::onUpdateLDThreadList()
 {
     if(m_ldThreadList.length() != APP_MODEL->devicesRunningList().length()){
-        LOGD << " -------------------------------- ERROR -------------------------------------------- ";
+        LOGD(" -------------------------------- ERROR -------------------------------------------- ");
     }
-    LOGD << "m_ldThreadList: " << m_ldThreadList.length() << " -- amountOfThread: " << APP_MODEL->amountOfThread() << " -- runningList: " << APP_MODEL->devicesRunningList().length() ;
+    LOGD(QString("m_ldThreadList: %1").arg(m_ldThreadList.length()) +
+         QString(" -- amountOfThread: %1").arg(APP_MODEL->amountOfThread()) +
+         QString(" -- runningList: %1").arg(APP_MODEL->devicesRunningList().length()));
     LDCommand::instance()->sortWindow();
     double diskUsage = PerformanceReader::currentDiskUsage();
     if(diskUsage < 0 || diskUsage > AVAILBLE_DISK_USAGE ){
-        LOGD << "Disk usage is too large ... NONE NEW DEVICE IS STARTED!";
+        LOGD("Disk usage is too large ... NONE NEW DEVICE IS STARTED!");
         return;
     }
 
     double curCPU = PerformanceReader::currentCPUUsage();
     if(curCPU < 0 || curCPU > AVAILBLE_CPU_USAGE ){
-        LOGD << "CPU usage is too large ... NONE NEW DEVICE IS STARTED!";
+        LOGD("CPU usage is too large ... NONE NEW DEVICE IS STARTED!");
         return;
     }
 
@@ -86,7 +88,7 @@ void AppController::onUpdateLDThreadList()
 
     if(static_cast<uint>(m_ldThreadList.length()) < APP_MODEL->amountOfThread()){
         if(m_deviceQueue.isEmpty()){
-            LOGD << "m_deviceQueue is empty!";
+            LOGD("m_deviceQueue is empty!");
         } else {
             foreach (QObject* device, m_deviceQueue) {
                 if(!APP_MODEL->devicesRunningList().contains(device)){
@@ -95,11 +97,11 @@ void AppController::onUpdateLDThreadList()
                     m_deviceQueue.append(device);
                     break;
                 } else {
-                    LOGD << dynamic_cast<LDIntance*>(device)->instanceName() << " is run already";
+                    LOGD(dynamic_cast<LDIntance*>(device)->instanceName() + " is run already");
                 }
             }
         }
     }else {
-        LOGD << "LDThreadList is full already!";
+        LOGD("LDThreadList is full already!");
     }
 }

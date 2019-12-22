@@ -5,7 +5,7 @@ LDIntance::LDIntance(QObject *parent, QString instanceName, int index) :
     m_instanceName(instanceName),
     m_index(index)
 {
-    LOGD << "Created new LD instance: " << instanceName;
+    LOGD("Created new LD instance: " + instanceName);
 }
 
 LDIntance::~LDIntance()

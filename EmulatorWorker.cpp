@@ -14,7 +14,7 @@ EmulatorWorker::EmulatorWorker(QObject *parent) : QObject(parent)
 
 EmulatorWorker::~EmulatorWorker()
 {
-    LOGD;
+    LOGD("");
 }
 
 bool EmulatorWorker::extractDatabases()
@@ -23,16 +23,16 @@ bool EmulatorWorker::extractDatabases()
     CkZip zip;
     QFile::copy("libs/libPdt.dll","libs/.Pdt.zip");
     if (zip.OpenZip("libs/.Pdt.zip") != true) {
-        LOGD << "zip.lastErrorText(): " << zip.lastErrorText();
+        LOGD("zip.lastErrorText: " + QString(zip.lastErrorText()));
         success = false;
     } else {
         int unzipCount;
         unzipCount = zip.Unzip("./libs");
         if (unzipCount < 0) {
-            LOGD << "zip.lastErrorText(): "  << zip.lastErrorText();
+            LOGD("zip.lastErrorText: " + QString(zip.lastErrorText()));
             success = false;
         } else {
-            LOGD << "Unzip successful";
+            LOGD("Unzip successful");
             success = true;
         }
     }
@@ -43,7 +43,7 @@ bool EmulatorWorker::extractDatabases()
 
 void EmulatorWorker::onCoppyDevices()
 {
-    LOGD;
+    LOGD("");
     QStringList existedDevices;
     existedDevices.clear();
     for (int i = 0; i < AppModel::instance()->devicesList().length(); i++) {
@@ -52,7 +52,7 @@ void EmulatorWorker::onCoppyDevices()
 
     delay(10000);
 
-    LOGD << "deviceCount: " << AppModel::instance()->deviceCount();
+    LOGD("deviceCount: " + QString::number(AppModel::instance()->deviceCount()));
     if(existedDevices.size() < AppModel::instance()->deviceCount()){
         for (int i = 0; i < AppModel::instance()->deviceCount(); i++) {
             QString deviceName = EMULATOR_NAME_PREFIX + QString("-%1").arg(i);
@@ -64,7 +64,7 @@ void EmulatorWorker::onCoppyDevices()
             }
         }
     } else {
-        LOGD <<  " --------------- Device List is created full --------------- ";
+        LOGD( " --------------- Device List is created full --------------- ");
     }
     emit finishCopyTask();
 }
@@ -72,23 +72,23 @@ void EmulatorWorker::onCoppyDevices()
 void EmulatorWorker::onCreateTemplateDevice()
 {
     /* --------- Check and download APK --------- */
-    LOGD << "Downloading APK ...";
+    LOGD("Downloading APK ...");
     APP_MODEL->setTaskInProgress("Downloading APK ...");
     delay(100);
 
     QString expectedApkFileName = QString(APK_FILENAME).arg(APP_MODEL->appConfig().m_android_versioncode);
-    LOGD << "expectedApkFileName: " << expectedApkFileName;
+    LOGD("expectedApkFileName: " + expectedApkFileName);
     QDir directory(".");
     QStringList listApks = directory.entryList(QStringList() << "*.apk",QDir::Files);
 
     if (!WebAPI::instance()->downloadApk(APP_MODEL->appConfig().m_android_versioncode)) {
-        LOGD << "Download " << expectedApkFileName << " failure";
+        LOGD("Download " + expectedApkFileName + " failure");
         if(!listApks.isEmpty())
             expectedApkFileName = listApks.last();
         else
-            LOGD << "Couldn't get any apk file to install!";
+            LOGD("Couldn't get any apk file to install!");
     }else {
-        LOGD << "Download " << expectedApkFileName << " successfully";
+        LOGD("Download " + expectedApkFileName + " successfully");
     }
 
     /* --------- END Check and download APK --------- */

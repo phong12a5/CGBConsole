@@ -5,8 +5,13 @@
 #include <QEventLoop>
 #include <QTimer>
 
-#define LOGD qDebug() << "[" << __FUNCTION__ << "][" << __LINE__ << "] "
-#define LOGE qFatal() << "[" << __FUNCTION__ << "][" << __LINE__ << "] "
+#ifdef RELEASE_MODE
+#define LOGD(x) WebAPI::instance()->dologging("CGBConsole",__FUNCTION__,QString(x))
+#else
+#define LOGD(x) LLOGD(x)
+#endif
+
+#define LLOGD(x) qDebug() << "[" << __FUNCTION__ << "][" << __LINE__ << "] " << x
 
 #define FARM_PACKAGE_NAME       "xyz.autofarmer.app"
 #define CONFIG_FILE_NAME        "config.json"
