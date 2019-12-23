@@ -310,24 +310,25 @@ Window {
 
     Button{
         id: startBtn
-        property bool selected: false
+        property bool selected: AppModel.appStarted
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: ads.bottom
         anchors.topMargin: -20
         font.pixelSize: 17
         width: 100
         height: 50
-        enabled: AppModel.token != "" && AppModel.amountOfThread > 0
         text: selected? "Stop" : "Start"
         onClicked: {
-            selected = !selected
-            if(selected){
-                AppModel.initializing = true
-                AppModel.token = token.text
-                AppModel.startProgram()
+            AppModel.token = token.text
+            if(AppModel.token != ""){
+                AppModel.appStarted = !AppModel.appStarted
+                if(AppModel.appStarted){
+                    AppModel.initializing = true
+                    AppModel.startProgram()
+                }
+                else
+                    AppModel.stopProgarm()
             }
-            else
-                AppModel.stopProgarm()
         }
     }
 
