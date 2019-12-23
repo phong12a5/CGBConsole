@@ -110,12 +110,14 @@ void AppModel::appendRunningDevice(LDIntance* instance)
 {
     LOGD(instance->instanceName());
     m_devicesRunningList.append(instance);
+    emit devicesRunningListChanged();
 }
 
 void AppModel::popRunningDevice(LDIntance* instance)
 {
     LOGD(instance->instanceName());
     m_devicesRunningList.removeOne(instance);
+    emit devicesRunningListChanged();
 }
 
 uint AppModel::amountOfThread() const

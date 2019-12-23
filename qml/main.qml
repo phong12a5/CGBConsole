@@ -336,17 +336,21 @@ Window {
     Rectangle{
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        color: "black"
         width: parent.width
         height: 30
-        visible: AppModel.taskInProgress !== ""
+        visible: AppModel.taskInProgress !== "" || AppModel.devicesRunningList.length > 0
         opacity: 0.8
+        gradient: Gradient {
+            GradientStop { position: 0.0; color: "transparent" }
+            GradientStop { position: 1.0; color: "#63ff42" }
+        }
         Text {
             id: name
-            text: AppModel.taskInProgress
+            text: AppModel.taskInProgress !== "" ? AppModel.taskInProgress :
+                                                   (AppModel.devicesRunningList.length > 0 ? ("Running list: " + AppModel.devicesRunningList.length) : "")
             anchors.centerIn: parent
             font.pixelSize: 15
-            color: "white"
+            color: "black"
         }
     }
 

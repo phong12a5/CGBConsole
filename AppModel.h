@@ -14,6 +14,7 @@ class AppModel : public QObject
 
     Q_PROPERTY(QString ldIntallFolder READ ldIntallFolder WRITE setLDIntallFolder NOTIFY ldIntallFolderChanged)
     Q_PROPERTY(QList<QObject*> devicesList READ devicesList NOTIFY devicesListChanged)
+    Q_PROPERTY(QList<QObject*> devicesRunningList READ devicesRunningList NOTIFY devicesRunningListChanged)
     Q_PROPERTY(uint amountOfThread READ amountOfThread WRITE setAmountOfThread NOTIFY amountOfThreadChanged)
     Q_PROPERTY(bool isLaunchMutiTask READ isLaunchMutiTask WRITE setIsLaunchMutiTask NOTIFY isLaunchMutiTaskChanged)
     Q_PROPERTY(QString token READ token WRITE setToken NOTIFY tokenChanged)
@@ -109,6 +110,7 @@ public:
 signals:
     void ldIntallFolderChanged();
     void devicesListChanged();
+    void devicesRunningListChanged();
     void amountOfThreadChanged();
     void isLaunchMutiTaskChanged();
     void tokenChanged();
