@@ -9,7 +9,7 @@ AppController::AppController(QObject *parent) : QObject(parent)
 {
     m_deviceQueue.clear();
     m_ldThreadList.clear();
-    m_updateLDThreadList.setInterval(5000);
+    m_updateLDThreadList.setInterval(10000);
     m_updateLDThreadList.setSingleShot(false);
     connect(&m_updateLDThreadList, SIGNAL(timeout()), this, SLOT(onUpdateLDThreadList()));
 }
@@ -68,13 +68,13 @@ void AppController::onUpdateLDThreadList()
          QString(" -- amountOfThread: %1").arg(APP_MODEL->amountOfThread()) +
          QString(" -- runningList: %1").arg(APP_MODEL->devicesRunningList().length()));
     LDCommand::instance()->sortWindow();
-    double diskUsage = PerformanceReader::currentDiskUsage();
+    double diskUsage = PerformanceReader::instance()->avgDiskUsage();
     if(diskUsage < 0 || diskUsage > AVAILBLE_DISK_USAGE ){
         LOGD("Disk usage is too large ... NONE NEW DEVICE IS STARTED!");
         return;
     }
 
-    double curCPU = PerformanceReader::currentCPUUsage();
+    double curCPU = PerformanceReader::instance()->currentCPUUsage();
     if(curCPU < 0 || curCPU > AVAILBLE_CPU_USAGE ){
         LOGD("CPU usage is too large ... NONE NEW DEVICE IS STARTED!");
         return;

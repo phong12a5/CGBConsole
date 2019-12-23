@@ -195,7 +195,7 @@ Window {
 
             Text {
                 id: vmTitle
-                text: qsTr("VM: ")
+                text: qsTr("Max LD: ")
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
                 font.pixelSize: 17

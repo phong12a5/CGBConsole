@@ -2,9 +2,23 @@
 #include <QDir>
 #include <AppDefines.h>
 
+PerformanceReader* PerformanceReader::m_instance = nullptr;
+
 PerformanceReader::PerformanceReader(QObject *parent) : QObject(parent)
 {
+    m_listDiskUsage.clear();
+    m_collectDiskUsage.setInterval(10000);
+    m_collectDiskUsage.setSingleShot(false);
+    connect(&m_collectDiskUsage, &QTimer::timeout, this, &PerformanceReader::onCollectDiskUsage);
+    m_collectDiskUsage.start();
+}
 
+PerformanceReader *PerformanceReader::instance()
+{
+    if(m_instance == nullptr){
+        m_instance = new PerformanceReader();
+    }
+    return m_instance;
 }
 
 double PerformanceReader::currentDiskUsage()
@@ -59,4 +73,25 @@ double PerformanceReader::currentCPUUsage()
         tcout << e.What() << std::endl;
     }
     return retVal;
+}
+
+double PerformanceReader::avgDiskUsage()
+{
+    double sum = 0;
+    foreach(double diskusage, m_listDiskUsage){
+        sum += diskusage;
+    }
+    if(m_listDiskUsage.length() == 0)
+        return this->currentDiskUsage();
+    else
+        return sum/static_cast<double>(m_listDiskUsage.length());
+}
+
+void PerformanceReader::onCollectDiskUsage()
+{
+    if(m_listDiskUsage.length() > 6)
+        m_listDiskUsage.removeFirst();
+    m_listDiskUsage.append(this->currentDiskUsage());
+    qDebug() << m_listDiskUsage;
+    qDebug() << this->avgDiskUsage();
 }

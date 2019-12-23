@@ -51,7 +51,7 @@ void LDRunner::run()
     connect(this,                  &LDRunner::passConfigToDevice,   LDService::instance(),  &LDService::onPassConfigToDevice);
 
     m_checkRunningDevice = new QTimer(this);
-    m_checkRunningDevice->setInterval(180000);
+    m_checkRunningDevice->setInterval(300000);
     m_checkRunningDevice->setSingleShot(false);
     connect(m_checkRunningDevice,SIGNAL(timeout()),this,SLOT(onCheckRunningDevice()));
 

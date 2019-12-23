@@ -27,8 +27,6 @@ private:
     QList<LDThread* > m_ldThreadList;
     QTimer m_updateLDThreadList;
 
-signals:
-
 public slots:
     void aMissionCompleted(LDThread* threadAdd = nullptr);
     void onUpdateLDThreadList();
