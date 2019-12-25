@@ -338,18 +338,15 @@ bool WebAPI::downloadFileFromDropbox(QString acessToken, QString cloudPath, QStr
 
     //  Add request headers.
     QString tokenStr = "Bearer " + acessToken;
-    LOGD("Token: " + tokenStr);
     rest.AddHeader("Authorization", tokenStr.toLocal8Bit().data());
 
     QJsonObject json;
     QString clouldPathStr = cloudPath;
 
-    LOGD("clouldPathStr: " + clouldPathStr);
     json["path"] = clouldPathStr;
     rest.AddHeader("Dropbox-API-Arg", QJsonDocument(json).toJson().data());
 
     QString localPathStr = localPath;
-    LOGD("localPathStr: " + localPathStr);
 
     CkStream fileStream;
     fileStream.put_SinkFile(localPathStr.toLocal8Bit().data());

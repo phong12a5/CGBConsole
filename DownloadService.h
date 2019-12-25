@@ -19,6 +19,8 @@ signals:
 
 private:
     QMap<QString, QString> getListContentOfFolder(QString folderPath);
+    bool downloadTrainedData(QString langCode);
+    void downloadApp();
 
 public slots:
     void run();

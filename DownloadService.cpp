@@ -7,6 +7,7 @@
 #include <QFile>
 #include <QStandardPaths>
 #include <WebAPI.hpp>
+#include <CkZip.h>
 
 #define APP_MODEL   AppModel::instance()
 #define WEB_API     WebAPI::instance()
@@ -24,27 +25,8 @@ DownloadService::DownloadService(QObject *parent) : QObject(parent)
 void DownloadService::run()
 {
     LOGD("");
-    qDebug() << QThread::currentThreadId();
-    QMap<QString, QString> listSub = this->getListContentOfFolder("/" + APP_MODEL->appName().toLower() + "/simulator");
-    QStringList keys = listSub.keys();
-    QString apkfolderName = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/LDPlayer/Applications/" + FARM_PACKAGE_NAME + "/" + APP_MODEL->appName().toLower();
-    QDir().mkpath(apkfolderName);
-
-    foreach(QString item, keys){
-        if(listSub.value(item) == "file"){
-            QString itemPath = apkfolderName + "/" + item;
-            LOGD("itemPath: " + itemPath);
-            if(QFile(itemPath).exists() == false){
-                if(WEB_API->downloadFileFromDropbox(APP_MODEL->appConfig().m_dropboxaccesstoken,
-                                                    "/" + APP_MODEL->appName().toLower() + "/simulator" + "/" + item,
-                                                    itemPath)){
-                    LOGD("Download " + item + " succesfully");
-                }
-            }else {
-                    LOGD(item + " existed already");
-            }
-        }
-    }
+    this->downloadTrainedData("eng");
+    this->downloadApp();
 }
 
 QMap<QString, QString> DownloadService::getListContentOfFolder(QString folderPath) {
@@ -108,4 +90,76 @@ QMap<QString, QString> DownloadService::getListContentOfFolder(QString folderPat
     }
     qDebug() << "result: " << result;
     return result;
+}
+
+bool DownloadService::downloadTrainedData(QString langCode)
+{
+    LOGD(langCode);
+    bool success = false;
+    QString fileName = langCode + ".traineddata.zip";
+    QString unzippedFileName = langCode + ".traineddata";
+    QString cloudPath = "/languages/" + fileName;
+    QString langFolderPath = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/LDPlayer/Applications/" + FARM_PACKAGE_NAME + "/languages/";
+    QString localPath = langFolderPath + fileName;
+    QString unzippedLocalPath = langFolderPath + unzippedFileName;
+    QDir().mkpath(langFolderPath);
+
+    QMap<QString, QString> listSub = this->getListContentOfFolder("/languages");
+    if(listSub.contains(fileName)){
+        if(listSub.value(fileName) == "file"){
+            if(QFile(unzippedLocalPath).exists() == false){
+                if(WEB_API->downloadFileFromDropbox(APP_MODEL->appConfig().m_dropboxaccesstoken,
+                                                    cloudPath,
+                                                    localPath)){
+                    LOGD("Download " + fileName + " succesfully");
+                    CkZip zip;
+                    if (zip.OpenZip(localPath.toLocal8Bit().data()) != true) {
+                        LOGD(QString("zip.lastErrorText: ") + zip.lastErrorText());
+                    }else {
+                        int unzipCount;
+                        unzipCount = zip.Unzip(langFolderPath.toLocal8Bit().data());
+                        if (unzipCount < 0) {
+                            LOGD(QString("zip.lastErrorText: ") + zip.lastErrorText());
+                        } else {
+                            LOGD("Extracted " + fileName + " succesfully");
+                            success = true;
+                        }
+                        zip.CloseZip();
+                    }
+                }
+            }else {
+                LOGD(fileName + " existed already");
+            }
+            QFile::remove(localPath);
+        }else {
+            LOGD(fileName + " doesn't existed in cloud");
+        }
+    }else {
+        LOGD(fileName + " doesn't existed in cloud");
+    }
+    return success;
+}
+
+void DownloadService::downloadApp()
+{
+    QMap<QString, QString> listSub = this->getListContentOfFolder("/" + APP_MODEL->appName().toLower() + "/simulator");
+    QStringList keys = listSub.keys();
+    QString apkfolderName = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/LDPlayer/Applications/" + FARM_PACKAGE_NAME + "/" + APP_MODEL->appName().toLower();
+    QDir().mkpath(apkfolderName);
+
+    foreach(QString item, keys){
+        if(listSub.value(item) == "file"){
+            QString itemPath = apkfolderName + "/" + item;
+            LOGD("itemPath: " + itemPath);
+            if(QFile(itemPath).exists() == false){
+                if(WEB_API->downloadFileFromDropbox(APP_MODEL->appConfig().m_dropboxaccesstoken,
+                                                    "/" + APP_MODEL->appName().toLower() + "/simulator" + "/" + item,
+                                                    itemPath)){
+                    LOGD("Download " + item + " succesfully");
+                }
+            }else {
+                    LOGD(item + " existed already");
+            }
+        }
+    }
 }
