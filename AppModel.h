@@ -29,6 +29,7 @@ class AppModel : public QObject
     Q_PROPERTY(bool isShowRestartPopup READ isShowRestartPopup WRITE setIsShowRestartPopup NOTIFY isShowRestartPopupChanged)
     Q_PROPERTY(int versionCode READ versionCode WRITE setVersionCode NOTIFY versionCodeChanged)
     Q_PROPERTY(bool appStarted READ appStarted WRITE setAppStarted NOTIFY appStartedChanged)
+    Q_PROPERTY(bool testMode READ testMode WRITE setTestMode NOTIFY testModeChanged)
 
 private:
     explicit AppModel(QObject *parent = nullptr);
@@ -103,6 +104,9 @@ public:
     QString serialNumber() const;
     void setSerialNumber(QString data);
 
+    bool testMode() const;
+    void setTestMode(bool data);
+
 public:
     Q_INVOKABLE void startProgram();
     Q_INVOKABLE void stopProgarm();
@@ -125,6 +129,7 @@ signals:
     void isShowRestartPopupChanged();
     void versionCodeChanged();
     void appStartedChanged();
+    void testModeChanged();
 
     void reInitDeviceList();
 
@@ -156,6 +161,7 @@ private:
     bool m_appStarted;
     QSize m_screenResolution;
     QString m_serialNumber;
+    bool m_testMode;
 
 public slots:
 };

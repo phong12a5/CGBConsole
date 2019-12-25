@@ -76,12 +76,25 @@ void EmulatorWorker::onCreateTemplateDevice()
     APP_MODEL->setTaskInProgress("Downloading APK ...");
     delay(100);
 
-    QString expectedApkFileName = QString(APK_FILENAME).arg(APP_MODEL->appConfig().m_android_versioncode);
+    QString expectedApkFileName;
+
+    int versionCode;
+    if(APP_MODEL->testMode())
+       versionCode = APP_MODEL->appConfig().m_android_testversioncode;
+    else
+       versionCode = APP_MODEL->appConfig().m_android_versioncode;
+
+    if(APP_MODEL->testMode())
+        expectedApkFileName = QString(APK_FILENAME).arg(QString::number(versionCode) + ".test");
+    else
+        expectedApkFileName = QString(APK_FILENAME).arg(versionCode);
+
     LOGD("expectedApkFileName: " + expectedApkFileName);
+
     QDir directory(".");
     QStringList listApks = directory.entryList(QStringList() << "*.apk",QDir::Files);
 
-    if (!WebAPI::instance()->downloadApk(APP_MODEL->appConfig().m_android_versioncode)) {
+    if (!WebAPI::instance()->downloadApk(versionCode,APP_MODEL->testMode())) {
         LOGD("Download " + expectedApkFileName + " failure");
         if(!listApks.isEmpty())
             expectedApkFileName = listApks.last();

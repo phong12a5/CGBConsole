@@ -52,6 +52,7 @@ typedef struct app_config_struct {
     int m_balance;
     int m_openApkAfterNSeconds;
     int m_android_versioncode;
+    int m_android_testversioncode;
     QString m_dropboxaccesstoken;
     int m_cgbconsole_versioncode;
 

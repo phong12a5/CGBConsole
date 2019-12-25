@@ -34,7 +34,8 @@ SOURCES += \
     DbManager.cpp \
     PerformanceReader.cpp \
     AutoUpdaterWorker.cpp \
-    LDService.cpp
+    LDService.cpp \
+    DownloadService.cpp
 
 RESOURCES += qml.qrc
 
@@ -65,7 +66,8 @@ HEADERS += \
     PerformanceReader.h \
     CPdhQuery.h \
     AutoUpdaterWorker.h \
-    LDService.h
+    LDService.h \
+    DownloadService.h
 
 LIBS += -L$$PWD/libs/ -lchilkat-9.5.0 -lws2_32 -lcrypt32 -ldnsapi
 LIBS += $$PWD/libs/Pdh.Lib

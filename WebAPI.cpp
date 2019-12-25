@@ -71,6 +71,7 @@ bool WebAPI::getConfig()
                     config.m_balance = jsonResponsedObj["balance"].toInt();
                     config.m_openApkAfterNSeconds = jsonResponsedObj["openapkafternseconds"].toString().toInt();
                     config.m_android_versioncode = jsonResponsedObj["android_versioncode"].toString().toInt();
+                    config.m_android_testversioncode = jsonResponsedObj["apktestversion"].toString().toInt();
                     config.m_dropboxaccesstoken = jsonResponsedObj["dropboxaccesstoken"].toString();
                     config.m_cgbconsole_versioncode = jsonResponsedObj["cgbconsole_versioncode"].toString().toInt();
                     LOGD("config.timeout: " + QString::number(config.timeout));
@@ -82,6 +83,7 @@ bool WebAPI::getConfig()
                     LOGD("config.balance: "  + QString::number( config.m_balance));
                     LOGD("config.openApkAfterNSeconds: "  + QString::number( config.m_openApkAfterNSeconds));
                     LOGD("config.android_versioncode: "  + QString::number( config.m_android_versioncode));
+                    LOGD("config.android_testversioncode: "  + QString::number(config.m_android_testversioncode));
                     LOGD("config.dropboxaccesstoken: "  + config.m_dropboxaccesstoken);
                     LOGD("config.cgbconsole_versioncode: "  + QString::number(config.m_cgbconsole_versioncode));
                     MODEL->setAppConfig(config);
@@ -98,7 +100,7 @@ bool WebAPI::getConfig()
     return success;
 }
 
-bool WebAPI::downloadApk(int version) {
+bool WebAPI::downloadApk(int version, bool testMode) {
     LOGD("downloadApk -> Version: " +  QString::number(version));
     CkRest rest;
 
@@ -115,12 +117,21 @@ bool WebAPI::downloadApk(int version) {
     rest.AddHeader("Authorization", tokenStr.toLocal8Bit().data());
 
     QJsonObject json;
-    QString clouldPathStr = "/apk/xyz.autofarmer.app." + QString::number(version) + ".apk";
+    QString clouldPathStr;
+    if(testMode)
+        clouldPathStr = "/apk/xyz.autofarmer.app." + QString::number(version) + ".test.apk";
+    else
+        clouldPathStr = "/apk/xyz.autofarmer.app." + QString::number(version) + ".apk";
+
     LOGD("clouldPathStr: " + clouldPathStr);
     json["path"] = clouldPathStr;
     rest.AddHeader("Dropbox-API-Arg", QJsonDocument(json).toJson().data());
 
     QString localPathStr = "xyz.autofarmer.app." + QString::number(version) + ".apk";
+    if(testMode)
+        localPathStr = "xyz.autofarmer.app." + QString::number(version) + ".test.apk";
+    else
+        localPathStr = "xyz.autofarmer.app." + QString::number(version) + ".apk";
     LOGD("localPathStr: " + localPathStr);
     CkStream fileStream;
     fileStream.put_SinkFile(localPathStr.toLocal8Bit().data());

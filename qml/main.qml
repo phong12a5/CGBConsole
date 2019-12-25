@@ -51,7 +51,7 @@ Window {
                 count ++
                 if(count >= 5) {
                     count = 0
-                    screenoptionItem.visible = !screenoptionItem.visible
+                    AppModel.testMode = !AppModel.testMode
                 }
             }
         }
@@ -221,7 +221,7 @@ Window {
         Item {
             id: screenoptionItem
             width: tokenItem.width
-            visible: false
+            visible: AppModel.testMode
             height: 50
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: vmItem.bottom
@@ -306,6 +306,16 @@ Window {
         anchors.top: contentArea.bottom
         anchors.topMargin: -10
         anchors.horizontalCenter: parent.horizontalCenter
+    }
+
+    Text{
+        anchors.horizontalCenter: parent.horizontalCenter
+        visible: AppModel.testMode
+        text: "TEST MODE"
+        opacity: 0.2
+        font.pixelSize: 30
+        anchors.bottom: startBtn.top
+        anchors.bottomMargin: 20
     }
 
     Button{

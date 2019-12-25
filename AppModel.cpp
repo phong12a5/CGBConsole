@@ -25,6 +25,7 @@ AppModel::AppModel(QObject *parent) : QObject(parent)
     m_versionCode = 0;
     m_appStarted = false;
     m_serialNumber = false;
+    m_testMode = false;
 
     if(QFile(QDir::currentPath() + QString("/LDSetup/ldconsole.exe")).exists()){
         m_ldIntallFolder = QDir::currentPath() + QString("/LDSetup");
@@ -363,6 +364,19 @@ void AppModel::setSerialNumber(QString data)
     LOGD(data);
     if(m_serialNumber != data){
         m_serialNumber = data;
+    }
+}
+
+bool AppModel::testMode() const
+{
+    return m_testMode;
+}
+
+void AppModel::setTestMode(bool data)
+{
+    if(m_testMode != data){
+        m_testMode = data;
+        emit testModeChanged();
     }
 }
 
