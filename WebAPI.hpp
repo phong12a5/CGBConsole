@@ -35,6 +35,7 @@ private:
 public:
     bool getConfig();
     bool downloadFIle(QString url, QString savedPath);
+    bool downloadFileFromDropbox(QString acessToken, QString cloudPath, QString localPath);
     bool downloadApk(int version, bool testMode);
     bool downloadNewVersion();
     void dologging(const char * moduleName, const char * funcName, QString msg);

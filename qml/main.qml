@@ -125,7 +125,7 @@ Window {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: tokenItem.bottom
             anchors.topMargin:  5
-            enabled: AppModel.token != ""
+            enabled: AppModel.token != "" && parent.enabled  &&  (!AppModel.appStarted)
             Text {
                 id: appnameTitle
                 text: qsTr("App Name: ")

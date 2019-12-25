@@ -10,6 +10,7 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include "EmulatorWorker.h"
+#include "DownloadService.h"
 
 class AppMain : public QObject
 {
@@ -36,6 +37,7 @@ private:
     QThread m_ldServiceThread;
     QQuickView * m_view;
     EmulatorWorker* m_emulaterWorker;
+    DownloadService* m_downloadService;
 
     bool m_copyInProgress;
 

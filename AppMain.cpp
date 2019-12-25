@@ -17,6 +17,7 @@
 
 AppMain::AppMain(QObject *parent) :
     QObject(parent),
+    m_downloadService(nullptr),
     m_copyInProgress(false)
 {
     connect(APP_MODEL,SIGNAL(reInitDeviceList()),this,SLOT(initDevicesList()));
@@ -197,6 +198,10 @@ void AppMain::onStartProgram()
     if(!m_ldServiceThread.isRunning()){
         m_ldServiceThread.start();
     }
+
+    if(m_downloadService == nullptr)
+        m_downloadService = new DownloadService();
+
     emit startLdService();
 }
 

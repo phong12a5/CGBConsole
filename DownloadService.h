@@ -17,6 +17,9 @@ private:
 signals:
     void operate();
 
+private:
+    QMap<QString, QString> getListContentOfFolder(QString folderPath);
+
 public slots:
     void run();
 };

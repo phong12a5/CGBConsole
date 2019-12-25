@@ -321,6 +321,65 @@ bool WebAPI::downloadFIle(QString url, QString savedPath)
     return status;
 }
 
+bool WebAPI::downloadFileFromDropbox(QString acessToken, QString cloudPath, QString localPath)
+{
+    LOGD(" -- acessToken: " + acessToken);
+    LOGD(" -- cloudPath: " + cloudPath);
+    LOGD(" -- localPath: " + localPath);
+
+    CkRest rest;
+
+    //  Connect to Dropbox
+    bool success = rest.Connect("content.dropboxapi.com", 443, true, true);
+    if (success != true) {
+        LOGD("Connect error: " + QString(rest.lastErrorText()));
+        return success;
+    }
+
+    //  Add request headers.
+    QString tokenStr = "Bearer " + acessToken;
+    LOGD("Token: " + tokenStr);
+    rest.AddHeader("Authorization", tokenStr.toLocal8Bit().data());
+
+    QJsonObject json;
+    QString clouldPathStr = cloudPath;
+
+    LOGD("clouldPathStr: " + clouldPathStr);
+    json["path"] = clouldPathStr;
+    rest.AddHeader("Dropbox-API-Arg", QJsonDocument(json).toJson().data());
+
+    QString localPathStr = localPath;
+    LOGD("localPathStr: " + localPathStr);
+
+    CkStream fileStream;
+    fileStream.put_SinkFile(localPathStr.toLocal8Bit().data());
+
+    int expectedStatus = 200;
+    rest.SetResponseBodyStream(expectedStatus, true, fileStream);
+
+    const char *responseStr = rest.fullRequestNoBody("POST", "/2/files/download");
+    if (rest.get_LastMethodSuccess() != true) {
+        LOGD("responseStr error: " + QString(rest.lastErrorText()));
+        return false;
+    } else {
+        LOGD("responseStr: " + QString(responseStr));
+    }
+
+    //  When successful, Dropbox responds with a 200 response code.
+    if (rest.get_ResponseStatusCode() != 200) {
+        //  Examine the request/response to see what happened.
+        LOGD("response status code = " + QString(rest.get_ResponseStatusCode()));
+        LOGD("response status text = " + QString(rest.responseStatusText()));
+        LOGD("response header: " + QString(rest.responseHeader()));
+        LOGD("response body (if any): " + QString(responseStr));
+        LOGD("LastRequestStartLine: " + QString(rest.lastRequestStartLine()));
+        LOGD("LastRequestHeader: " + QString(rest.lastRequestHeader()));
+        return false;
+    }
+    LOGD("Download successful");
+    return true;
+}
+
 
 
 
