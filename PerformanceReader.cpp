@@ -4,6 +4,9 @@
 
 PerformanceReader* PerformanceReader::m_instance = nullptr;
 
+CPdhQuery PerformanceReader::m_pdhCpuQuery = CPdhQuery(std::tstring(_T("\\Processor(*)\\% Processor Time")));
+CPdhQuery PerformanceReader::m_pdhDiskQuery = CPdhQuery(std::tstring(_T("\\PhysicalDisk(*)\\% Disk Time")));
+
 PerformanceReader::PerformanceReader(QObject *parent) : QObject(parent)
 {
     m_listDiskUsage.clear();
@@ -27,8 +30,7 @@ double PerformanceReader::currentDiskUsage()
     double retVal = -1.00;
     try
     {
-        static CPdhQuery m_pdhQuery(std::tstring(_T("\\PhysicalDisk(*)\\% Disk Time")));
-        std::map<std::tstring, double> m = m_pdhQuery.CollectQueryData();
+        std::map<std::tstring, double> m = m_pdhDiskQuery.CollectQueryData();
         std::map<std::tstring, double>::const_iterator itr = m.begin();
         while(m.end() != itr)
         {
@@ -54,8 +56,7 @@ double PerformanceReader::currentCPUUsage()
     double retVal = -1.00;
     try
     {
-        static CPdhQuery m_pdhQuery(std::tstring(_T("\\Processor(*)\\% Processor Time")));
-        std::map<std::tstring, double> m = m_pdhQuery.CollectQueryData();
+        std::map<std::tstring, double> m = m_pdhCpuQuery.CollectQueryData();
         std::map<std::tstring, double>::const_iterator itr = m.begin();
         while(m.end() != itr)
         {
@@ -73,6 +74,30 @@ double PerformanceReader::currentCPUUsage()
         tcout << e.What() << std::endl;
     }
     return retVal;
+}
+
+int PerformanceReader::cpuCoreCount()
+{
+    int count = 0;
+    try
+    {
+        std::map<std::tstring, double> m = m_pdhCpuQuery.CollectQueryData();
+        std::map<std::tstring, double>::const_iterator itr = m.begin();
+        while(m.end() != itr)
+        {
+            QString cc = QString::fromStdWString(itr->first);
+            if(cc == "_Total"){
+                break;
+            }
+            ++count;
+            ++itr;
+        }
+    }
+    catch (CPdhQuery::CException const &e)
+    {
+        tcout << e.What() << std::endl;
+    }
+    return count;
 }
 
 double PerformanceReader::avgDiskUsage()

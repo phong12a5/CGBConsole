@@ -17,6 +17,7 @@ public:
     static PerformanceReader* instance();
     double currentDiskUsage();
     double currentCPUUsage();
+    int cpuCoreCount();
     double avgDiskUsage();
 
 private slots:
@@ -26,6 +27,9 @@ private:
     QList<double> m_listDiskUsage;
     static PerformanceReader* m_instance;
     QTimer m_collectDiskUsage;
+    static CPdhQuery m_pdhCpuQuery;
+    static CPdhQuery m_pdhDiskQuery;
+
 };
 
 #endif // PERFORMANCEREADER_H

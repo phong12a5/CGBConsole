@@ -26,6 +26,7 @@ AppModel::AppModel(QObject *parent) : QObject(parent)
     m_appStarted = false;
     m_serialNumber = false;
     m_testMode = false;
+    m_cpuCoreCount = PerformanceReader::instance()->cpuCoreCount();
 
     if(QFile(QDir::currentPath() + QString("/LDSetup/ldconsole.exe")).exists()){
         m_ldIntallFolder = QDir::currentPath() + QString("/LDSetup");
@@ -378,6 +379,11 @@ void AppModel::setTestMode(bool data)
         m_testMode = data;
         emit testModeChanged();
     }
+}
+
+int AppModel::cpuCoreCount() const
+{
+    return m_cpuCoreCount;
 }
 
 void AppModel::startProgram()

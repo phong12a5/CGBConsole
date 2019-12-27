@@ -15,7 +15,7 @@ private:
     QThread* m_thread;
 
 signals:
-    void operate();
+    void startService();
 
 private:
     QMap<QString, QString> getListContentOfFolder(QString folderPath);

@@ -201,6 +201,7 @@ void AppMain::onStartProgram()
 
     if(m_downloadService == nullptr)
         m_downloadService = new DownloadService();
+    emit m_downloadService->startService();
 
     emit startLdService();
 }

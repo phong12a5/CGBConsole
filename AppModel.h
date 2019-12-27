@@ -107,6 +107,8 @@ public:
     bool testMode() const;
     void setTestMode(bool data);
 
+    int cpuCoreCount() const;
+
 public:
     Q_INVOKABLE void startProgram();
     Q_INVOKABLE void stopProgarm();
@@ -162,6 +164,7 @@ private:
     QSize m_screenResolution;
     QString m_serialNumber;
     bool m_testMode;
+    int m_cpuCoreCount;
 
 public slots:
 };
