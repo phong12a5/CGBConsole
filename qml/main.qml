@@ -96,12 +96,12 @@ Window {
                 anchors.right: parent.right
                 width: contentWidth > 300? contentWidth : 300
                 horizontalAlignment: Text.AlignHCenter
-                onAccepted: {
-                    AppModel.token = text
-                }
-                onFocusChanged: {
-                    if(!focus)
+                onTextChanged: {
+                    if(text.length == 32){
                         AppModel.token = text
+                    }else if(text == ""){
+                        AppModel.token = ""
+                    }
                 }
             }
 
@@ -115,7 +115,6 @@ Window {
                 font.pixelSize: 17
                 opacity: 0.2
             }
-
         }
 
         Item{
@@ -125,7 +124,7 @@ Window {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: tokenItem.bottom
             anchors.topMargin:  5
-            enabled: AppModel.token != "" && parent.enabled  &&  (!AppModel.appStarted)
+            enabled: false && AppModel.token != "" && parent.enabled  &&  (!AppModel.appStarted)
             Text {
                 id: appnameTitle
                 text: qsTr("App Name: ")
@@ -328,6 +327,7 @@ Window {
         width: 100
         height: 50
         text: selected? "Stop" : "Start"
+        enabled: AppModel.token != ""
         onClicked: {
             AppModel.token = token.text
             if(AppModel.token != ""){
