@@ -26,6 +26,7 @@ AppModel::AppModel(QObject *parent) : QObject(parent)
     m_appStarted = false;
     m_serialNumber = false;
     m_testMode = false;
+    m_validToken = false;
     m_cpuCoreCount = PerformanceReader::instance()->cpuCoreCount();
 
     if(QFile(QDir::currentPath() + QString("/LDSetup/ldconsole.exe")).exists()){
@@ -177,8 +178,10 @@ void AppModel::setToken(QString data)
     LOGD(data);
     if(m_token != data ){
         m_token = data;
-        if(!WebAPI::instance()->getConfig()){
-            m_token = "";
+        if(m_token.length() == 32 && WebAPI::instance()->getConfig() == true){
+            this->setValidToken(true);
+        }else {
+            this->setValidToken(false);
         }
         emit tokenChanged();
     }
@@ -378,6 +381,19 @@ void AppModel::setTestMode(bool data)
     if(m_testMode != data){
         m_testMode = data;
         emit testModeChanged();
+    }
+}
+
+bool AppModel::validToken() const
+{
+    return m_validToken;
+}
+
+void AppModel::setValidToken(bool data)
+{
+    if(m_validToken != data){
+        m_validToken = data;
+        emit validTokenChanged();
     }
 }
 

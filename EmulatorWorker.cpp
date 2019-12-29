@@ -55,7 +55,7 @@ void EmulatorWorker::onCoppyDevices()
     LOGD("deviceCount: " + QString::number(AppModel::instance()->deviceCount()));
     if(existedDevices.size() < AppModel::instance()->deviceCount()){
         for (int i = 0; i < AppModel::instance()->deviceCount(); i++) {
-            QString deviceName = EMULATOR_NAME_PREFIX + QString("-%1").arg(i);
+            QString deviceName = EMULATOR_NAME_PREFIX + QString("-%1").arg(i+1);
             if(!existedDevices.contains(deviceName)){
                 AppModel::instance()->setTaskInProgress(QString("Creating device: %1").arg(deviceName));
                 LDCommand::instance()->coppyInstance(deviceName,ORIGIN_DEVICE_NAME);
@@ -102,6 +102,8 @@ void EmulatorWorker::onCreateTemplateDevice()
             LOGD("Couldn't get any apk file to install!");
     }else {
         LOGD("Download " + expectedApkFileName + " successfully");
+        emit finishCreateTemplateDevice(E_CREATE_TEMPDEVICE_GET_APK_FAIL);
+        return;
     }
 
     /* --------- END Check and download APK --------- */
@@ -140,5 +142,5 @@ void EmulatorWorker::onCreateTemplateDevice()
     LDCommand::instance()->quitInstance(deviceName);
     APP_MODEL->setTaskInProgress("");
     APP_MODEL->setInitializing(false);
-    emit finishCreateTemplateDevice();
+    emit finishCreateTemplateDevice(E_CREATE_TEMPDEVICE_SUCESS);
 }

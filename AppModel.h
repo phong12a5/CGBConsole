@@ -30,6 +30,7 @@ class AppModel : public QObject
     Q_PROPERTY(int versionCode READ versionCode WRITE setVersionCode NOTIFY versionCodeChanged)
     Q_PROPERTY(bool appStarted READ appStarted WRITE setAppStarted NOTIFY appStartedChanged)
     Q_PROPERTY(bool testMode READ testMode WRITE setTestMode NOTIFY testModeChanged)
+    Q_PROPERTY(bool validToken READ validToken WRITE setValidToken NOTIFY validTokenChanged)
 
 private:
     explicit AppModel(QObject *parent = nullptr);
@@ -107,6 +108,9 @@ public:
     bool testMode() const;
     void setTestMode(bool data);
 
+    bool validToken() const;
+    void setValidToken(bool data);
+
     int cpuCoreCount() const;
 
 public:
@@ -132,6 +136,7 @@ signals:
     void versionCodeChanged();
     void appStartedChanged();
     void testModeChanged();
+    void validTokenChanged();
 
     void reInitDeviceList();
 
@@ -164,6 +169,7 @@ private:
     QSize m_screenResolution;
     QString m_serialNumber;
     bool m_testMode;
+    bool m_validToken;
     int m_cpuCoreCount;
 
 public slots:

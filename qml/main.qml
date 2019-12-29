@@ -91,17 +91,21 @@ Window {
             TextField {
                 id: token
                 text: AppModel.token
-                font.pixelSize: 17
+                font.pixelSize: 16
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.right
                 width: contentWidth > 300? contentWidth : 300
                 horizontalAlignment: Text.AlignHCenter
                 onTextChanged: {
-                    if(text.length == 32){
-                        AppModel.token = text
-                    }else if(text == ""){
-                        AppModel.token = ""
-                    }
+                    AppModel.token = text
+                    background.border.color = activeFocus? (AppModel.validToken? "#0066ff" : "#cc0000"):"#bdbdbd"
+                }
+                height: 30
+                onActiveFocusChanged: {
+                    background.border.color = activeFocus? (AppModel.validToken? "#0066ff" : "#cc0000"):"#0066ff"
+                }
+                Component.onCompleted: {
+                    background.border.color = activeFocus? (AppModel.validToken? "#0066ff" : "#cc0000"):"#0066ff"
                 }
             }
 
@@ -114,6 +118,25 @@ Window {
                 anchors.verticalCenter: token.verticalCenter
                 font.pixelSize: 17
                 opacity: 0.2
+            }
+
+            Rectangle{
+                anchors.left: token.left
+                anchors.top: token.bottom
+                anchors.topMargin: 5
+                width: 6
+                height: 6
+                radius: width/2
+                color: AppModel.validToken? "#0066ff" : "#cc0000"
+                Text {
+                    text: AppModel.validToken? "Valid token" : "Invalid token"
+                    font.pixelSize: 12
+                    anchors.left: parent.right
+                    anchors.leftMargin: 5
+                    anchors.verticalCenter: parent.verticalCenter
+                    opacity: 0.6
+                    color: AppModel.validToken? "#0066ff" : "#cc0000"
+                }
             }
         }
 
@@ -327,7 +350,7 @@ Window {
         width: 100
         height: 50
         text: selected? "Stop" : "Start"
-        enabled: AppModel.token != ""
+        enabled: AppModel.validToken
         onClicked: {
             AppModel.token = token.text
             if(AppModel.token != ""){
