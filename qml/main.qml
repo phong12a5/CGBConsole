@@ -57,13 +57,6 @@ Window {
         }
     }
 
-    InfoItem{
-        height: 20
-        anchors.right: parent.right
-        anchors.rightMargin: 5
-        anchors.bottom: parent.bottom
-    }
-
     Item{
         id: contentArea
         width: parent.width
@@ -371,7 +364,7 @@ Window {
         anchors.bottom: parent.bottom
         width: parent.width
         height: 30
-        visible: AppModel.taskInProgress !== "" || AppModel.devicesRunningList.length > 0
+        visible: AppModel.devicesRunningList.length > 0
         opacity: 0.8
         gradient: Gradient {
             GradientStop { position: 0.0; color: "transparent" }
@@ -379,17 +372,51 @@ Window {
         }
         Text {
             id: name
-            text: AppModel.taskInProgress !== "" ? AppModel.taskInProgress :
-                                                   (AppModel.devicesRunningList.length > 0 ? ("Running list: " + AppModel.devicesRunningList.length) : "")
+            text: "Running list: " + AppModel.devicesRunningList.length
             anchors.centerIn: parent
             font.pixelSize: 15
             color: "black"
         }
     }
 
+
+    Item{
+        id: inprogressItem
+        width: parent.width
+        height: 40
+        anchors.bottom: parent.bottom
+        visible:  AppModel.taskInProgress !== ""
+        Text {
+            id: txt
+            text: AppModel.taskInProgress
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.top: parent.top
+            anchors.topMargin: 5
+            font.pixelSize: 13
+            color: "#006600"
+        }
+        ProgressBar {
+            id: control
+            width: parent.width
+            height: 20
+            indeterminate: true
+            anchors.bottom: parent.bottom
+        }
+    }
+
+
+
     RestartPopup{
         id: startPopup
         visible: AppModel.isShowRestartPopup
+    }
+
+    InfoItem{
+        height: 20
+        anchors.right: parent.right
+        anchors.rightMargin: 5
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: inprogressItem.visible? 10 : 0
     }
 
     Component.onDestruction: AppMain.closingApp()

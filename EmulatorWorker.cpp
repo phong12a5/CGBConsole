@@ -98,12 +98,13 @@ void EmulatorWorker::onCreateTemplateDevice()
         LOGD("Download " + expectedApkFileName + " failure");
         if(!listApks.isEmpty())
             expectedApkFileName = listApks.last();
-        else
+        else {
             LOGD("Couldn't get any apk file to install!");
+            emit finishCreateTemplateDevice(E_CREATE_TEMPDEVICE_GET_APK_FAIL);
+            return;
+        }
     }else {
         LOGD("Download " + expectedApkFileName + " successfully");
-        emit finishCreateTemplateDevice(E_CREATE_TEMPDEVICE_GET_APK_FAIL);
-        return;
     }
 
     /* --------- END Check and download APK --------- */
@@ -123,9 +124,11 @@ void EmulatorWorker::onCreateTemplateDevice()
     // Install AutoFarmer
     APP_MODEL->setTaskInProgress("Installing APK ...");
     QFile::remove("LDSetup/data/apps.text");
-    LDCommand::instance()->runLDCommand(QString("installapp --name %1 --filename %2").arg(deviceName).arg(expectedApkFileName));
-    while (!LDCommand::instance()->isExistedPackage(deviceName, FARM_PACKAGE_NAME)) {
-        delay(1000);
+    if(!LDCommand::instance()->isExistedPackage(deviceName, FARM_PACKAGE_NAME)){
+        LDCommand::instance()->runLDCommand(QString("installapp --name %1 --filename %2").arg(deviceName).arg(expectedApkFileName));
+        while (!LDCommand::instance()->isExistedPackage(deviceName, FARM_PACKAGE_NAME)) {
+            delay(1000);
+        }
     }
 
     LDCommand::instance()->ld_adb_command(deviceName,QString("shell mkdir %1").arg(APP_DATA_FOLDER));
@@ -140,6 +143,7 @@ void EmulatorWorker::onCreateTemplateDevice()
 
     LDCommand::instance()->runLDCommand(QString("modify --name %1 --cpu 1 --memory 1024 --resolution %2").arg(ORIGIN_DEVICE_NAME).arg(APP_MODEL->resolution()));
     LDCommand::instance()->quitInstance(deviceName);
+    delay(2000);
     APP_MODEL->setTaskInProgress("");
     APP_MODEL->setInitializing(false);
     emit finishCreateTemplateDevice(E_CREATE_TEMPDEVICE_SUCESS);
