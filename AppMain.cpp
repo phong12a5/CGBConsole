@@ -91,6 +91,7 @@ void AppMain::onLoadConfig()
     {
         LOGD("LD installation folder has not set yet");
     }else{
+        this->changDevicesName();
         this->initDevicesList();
     }
 
@@ -139,6 +140,31 @@ void AppMain::onLoadConfig()
     }
 
     updateVersion();
+}
+
+void AppMain::changDevicesName()
+{
+    LOGD("");
+    if(APP_MODEL->ldIntallFolder() == ""){
+        LOGD("Installation folder has not set up yet!");
+        return;
+    }else{
+        QString output, error;
+        LDCommand::instance()->runLDCommand("list", output, error);
+        if(error != ""){
+            LOGD(QString("ERROR: ") + error);
+        }else{
+            QStringList listNameDevices = QString(output).split("\r\n",QString::SkipEmptyParts);
+            for (int i = 0; i < listNameDevices.length(); i++) {
+                if(listNameDevices.at(i) == ORIGIN_DEVICE_NAME_OLD){
+                    LDCommand::instance()->renameDevice(ORIGIN_DEVICE_NAME_OLD,ORIGIN_DEVICE_NAME);
+                }else if(listNameDevices.at(i).contains("CGBDevice")){
+                    QString newName = QString(EMULATOR_NAME_PREFIX) + "-" + QString::number(i);
+                    LDCommand::instance()->renameDevice(listNameDevices.at(i),newName);
+                }
+            }
+        }
+    }
 }
 
 void AppMain::onSaveConfig()

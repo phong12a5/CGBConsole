@@ -45,6 +45,7 @@ public slots:
     void copyDevices();
     void onSaveConfig();
     void onLoadConfig();
+    void changDevicesName();
     void initDevicesList();
     void onStartProgram();
     void onStoptProgram();

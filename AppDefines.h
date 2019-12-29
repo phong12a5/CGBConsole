@@ -21,8 +21,9 @@
 #define INITSCRIPT_FILENAME     "/sdcard/DCIM/initApp.st"
 #define APK_FILENAME            "xyz.autofarmer.app.%1.apk"
 #define API_SERVER              "https://api.autofarmer.xyz/api/v2/"
-#define EMULATOR_NAME_PREFIX    "CGBDevice"
-#define ORIGIN_DEVICE_NAME      "OrgDevice"
+#define EMULATOR_NAME_PREFIX    "LDPlayer"
+#define ORIGIN_DEVICE_NAME      "LDPlayer"
+#define ORIGIN_DEVICE_NAME_OLD  "OrgDevice"
 
 #define DEFAULT_MAX_VM_THREAD   3
 #define DEFAULT_MAX_VM_COUNT    20

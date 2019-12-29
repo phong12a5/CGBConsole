@@ -38,6 +38,7 @@ public:
     int isRunningDevice(QString instanceName);
     bool repairEmulator();
     bool isExistedDevice(QString instanceName);
+    bool renameDevice(QString deviceNameOld, QString deviceNameNew);
 
 private:
     static LDCommand* m_instance;

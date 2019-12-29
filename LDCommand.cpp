@@ -346,3 +346,13 @@ bool LDCommand::isExistedDevice(QString instanceName)
         return false;
     }
 }
+
+bool LDCommand::renameDevice(QString deviceNameOld, QString deviceNameNew)
+{
+    LOGD(deviceNameOld);
+    QMutex mutex;
+    mutex.lock();
+    bool success = this->runLDCommand(QString("rename --name %1 --title %2").arg(deviceNameOld).arg(deviceNameNew));
+    mutex.unlock();
+    return success;
+}
