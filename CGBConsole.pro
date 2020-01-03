@@ -35,7 +35,8 @@ SOURCES += \
     PerformanceReader.cpp \
     AutoUpdaterWorker.cpp \
     LDService.cpp \
-    DownloadService.cpp
+    DownloadService.cpp \
+    LogService.cpp
 
 RESOURCES += qml.qrc
 
@@ -67,7 +68,8 @@ HEADERS += \
     CPdhQuery.h \
     AutoUpdaterWorker.h \
     LDService.h \
-    DownloadService.h
+    DownloadService.h \
+    LogService.h
 
 LIBS += -L$$PWD/libs/ -lchilkat-9.5.0 -lws2_32 -lcrypt32 -ldnsapi
 LIBS += $$PWD/libs/Pdh.Lib
@@ -79,8 +81,8 @@ RC_ICONS = Logo.ico
 
 win32:CONFIG(release, debug|release): {
     QMAKE_POST_LINK += mt -manifest $$PWD/manifest.xml -outputresource:$$OUT_PWD/release/$$TARGET".exe" $$escape_expand(\n\t)
-#    CONFIG += console
-#    DEFINES += RELEASE_MODE
+    CONFIG += console
+    DEFINES += RELEASE_MODE
 }
 else:win32:CONFIG(debug, debug|release): {
     CONFIG += console

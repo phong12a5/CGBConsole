@@ -12,11 +12,16 @@ bool unlockChilkat();
 
 int main(int argc, char *argv[])
 {
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QGuiApplication app(argc, argv);
+
     if (unlockChilkat()){
-        LOGD("unlockChilkat successfully");
+        LLOGD("unlockChilkat successfully");
     } else {
-        LOGD("unlockChilkat Failure");
+        LLOGD("unlockChilkat Failure");
     }
+
+    AppModel::instance();
 
     QProcess::execute("Taskkill /IM adb.exe /F");
     QProcess::execute("Taskkill /IM ld.exe /F");
@@ -25,8 +30,6 @@ int main(int argc, char *argv[])
 
     LDCommand::instance()->repairEmulator();
 
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-    QGuiApplication app(argc, argv);
 
     AppMain appMain;
     appMain.initApplication();
@@ -43,18 +46,16 @@ int main(int argc, char *argv[])
 
 
 bool unlockChilkat() {
-    LOGD("unlockChilkat");
     bool success_global = glob.UnlockBundle("VONGTH.CB4082020_9kru5rnD5R2h");
     if (success_global != true) {
-        LOGD("Error: " + QString(glob.lastErrorText()));
+        LLOGD("Error: " + QString(glob.lastErrorText()));
         return false;
     }
 
     int status = glob.get_UnlockStatus();
     if (status == 2) {
-        LOGD("Unlocked using purchased unlock code.");
+        return false;
     } else {
-        LOGD("Unlocked in trial mode.");
+        return false;
     }
-    return true;
 }

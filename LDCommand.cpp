@@ -327,7 +327,6 @@ bool LDCommand::repairEmulator()
 {
     QString exeFileName = QDir::toNativeSeparators("\"" + QDir::currentPath() + "/LDSetup/dnrepairer.exe\"");
     int result = (int)::ShellExecuteA(nullptr, "runas", exeFileName.toUtf8().constData(), nullptr, nullptr, SW_SHOWNORMAL);
-    LOGD("result: " + QString::number(result));
     return (result >= 32? true : false);
 }
 

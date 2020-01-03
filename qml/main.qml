@@ -364,7 +364,7 @@ Window {
         anchors.bottom: parent.bottom
         width: parent.width
         height: 30
-        visible: AppModel.devicesRunningList.length > 0
+        visible: AppModel.devicesRunningList.length > 0 && inprogressItem.visible == false
         opacity: 0.8
         gradient: Gradient {
             GradientStop { position: 0.0; color: "transparent" }

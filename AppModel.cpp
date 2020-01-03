@@ -207,7 +207,7 @@ int AppModel::maxNumberThread() const
 
 void AppModel::setMaxNumberThread(int data)
 {
-    LOGD(data);
+    LOGD(QString::number(data));
     if(m_maxNumberThread != data) {
         m_maxNumberThread = data;
         emit maxNumberThreadChanged();
@@ -221,7 +221,7 @@ int AppModel::maxVMCount() const
 
 void AppModel::setMaxVMCount(int data)
 {
-    LOGD(data);
+    LOGD(QString::number(data));
     if(m_maxVMCount != data) {
         m_maxVMCount = data;
         emit maxVMCountChanged();
@@ -285,7 +285,7 @@ int AppModel::deviceCount() const
 
 void AppModel::setDeviceCount(int data)
 {
-    LOGD(data);
+    LOGD(QString::number(data));
     if(m_deviceCount != data) {
         m_deviceCount = data;
         emit deviceCountChanged();

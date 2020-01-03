@@ -117,6 +117,4 @@ void PerformanceReader::onCollectDiskUsage()
     if(m_listDiskUsage.length() > 6)
         m_listDiskUsage.removeFirst();
     m_listDiskUsage.append(this->currentDiskUsage());
-    qDebug() << m_listDiskUsage;
-    qDebug() << this->avgDiskUsage();
 }

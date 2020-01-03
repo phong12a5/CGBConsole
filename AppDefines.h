@@ -4,14 +4,15 @@
 #include <QDebug>
 #include <QEventLoop>
 #include <QTimer>
+#include <LogService.h>
 
 #ifdef RELEASE_MODE
-#define LOGD(x) WebAPI::instance()->dologging("CGBConsole",__FUNCTION__,QString(x))
+#define LOGD(x) emit LogService::instance()->dologging("CGBConsole",__FUNCTION__,QString(x))
 #else
 #define LOGD(x) LLOGD(x)
 #endif
 
-#define LLOGD(x) qDebug() << "[" << __FUNCTION__ << "][" << __LINE__ << "] " << x
+#define LLOGD(x) qDebug() << "[" << __FUNCTION__ << "][" << __LINE__ << "]" << x
 
 #define FARM_PACKAGE_NAME       "xyz.autofarmer.app"
 #define CONFIG_FILE_NAME        "config.json"
