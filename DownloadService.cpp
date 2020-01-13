@@ -17,11 +17,11 @@ DownloadService::DownloadService(QObject *parent) : QObject(parent)
     m_thread = new QThread();
     this->moveToThread(m_thread);
     connect(this, &DownloadService::destroyed, m_thread, &QThread::quit);
-    connect(this, &DownloadService::startService, this, &DownloadService::run);
+    connect(this, &DownloadService::startService, this, &DownloadService::onStartService);
     m_thread->start();
 }
 
-void DownloadService::run()
+void DownloadService::onStartService()
 {
     LOGD("");
     this->downloadTrainedData("eng");
@@ -141,7 +141,8 @@ bool DownloadService::downloadTrainedData(QString langCode)
 
 void DownloadService::downloadApp()
 {
-    QMap<QString, QString> listSub = this->getListContentOfFolder("/" + APP_MODEL->appName().toLower() + "/simulator");
+    LOGD("");
+    QMap<QString, QString> listSub = this->getListContentOfFolder("/" + APP_MODEL->appName().toLower() + "/simulator/");
     QStringList keys = listSub.keys();
     QString apkfolderName = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/LDPlayer/Applications/" + FARM_PACKAGE_NAME + "/" + APP_MODEL->appName().toLower();
     QDir().mkpath(apkfolderName);

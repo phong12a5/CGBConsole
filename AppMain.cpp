@@ -193,7 +193,7 @@ void AppMain::initDevicesList()
         }else{
             QStringList listNameDevices = QString(output).split("\r\n",QString::SkipEmptyParts);
             for (int i = 0; i < listNameDevices.length(); i++) {
-                if(listNameDevices.at(i).contains(EMULATOR_NAME_PREFIX)) {
+                if(listNameDevices.at(i).contains(EMULATOR_NAME_PREFIX) && listNameDevices.at(i) != ORIGIN_DEVICE_NAME) {
                     APP_MODEL->appendDevice(listNameDevices.at(i));
                 }
             }

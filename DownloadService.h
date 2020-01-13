@@ -23,7 +23,7 @@ private:
     void downloadApp();
 
 public slots:
-    void run();
+    void onStartService();
 };
 
 #endif // DOWNLOADSERVICE_H
