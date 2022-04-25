@@ -4,7 +4,6 @@
 #include <QDebug>
 #include <QEventLoop>
 #include <QTimer>
-#include <LogService.h>
 
 #ifdef RELEASE_MODE
 #define LOGD(x) emit LogService::instance()->dologging("CGBConsole",__FUNCTION__,QString(x))
@@ -26,7 +25,7 @@
 #define ORIGIN_DEVICE_NAME      "LDPlayer"
 #define ORIGIN_DEVICE_NAME_OLD  "OrgDevice"
 
-#define DEFAULT_MAX_VM_THREAD   3
+#define DEFAULT_MAX_VM_THREAD   5
 #define DEFAULT_MAX_VM_COUNT    20
 #define DEFAULT_OPENAPK_TIME    20 // Unit seconds
 

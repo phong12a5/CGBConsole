@@ -4,63 +4,44 @@
 #include <QObject>
 #include <QTimer>
 #include <QMap>
+#include <QThread>
+
+class LDWorker;
 
 class LDService : public QObject
 {
     Q_OBJECT
 public:
-
-    enum E_DEVICE_STATUS: int {
-        E_DEVICE_DISCONNECT = 0,
-        E_DEVICE_CONNECTED
+    enum E_SERVICE_STATUS: int {
+        E_SERVICE_STATUS_INITIALIZING = 0,
+        E_SERVICE_STATUS_RUNNING,
+        E_SERVICE_STATUS_STOPPED,
+        E_SERVICE_STATUS_UNKNOWN
     };
 
-    enum E_APP_STATUS: int {
-        E_APP_STOPPED = 0,
-        E_APP_RUNNING
-    };
-
-    enum E_MISSION_STATUS: int {
-        E_MISSION_INCOMPLETED = 0,
-        E_MISSION_COMPLETED
-    };
-
-private:
-    explicit LDService(QObject *parent = nullptr);
+    explicit LDService(int serviceId, QObject *parent = nullptr);
     ~LDService();
 
-public:
-    static LDService* instance();
+    E_SERVICE_STATUS serviceStatus() const;
+    void setServiceStatus(E_SERVICE_STATUS);
 
-signals:
-    void updateDeviceStatus(QMap<QString,E_DEVICE_STATUS> *listDeviceStatus);
-    void updateAppStatus(QMap<QString,E_APP_STATUS> *listAppStatus);
-    void updateMissionStatus(QMap<QString,E_MISSION_STATUS> *listMissionpStatus);
+    void disposeService();
+    void startService();
 
 public slots:
-    void startService();
-    void stopService();
+    void onThreadStarted();
+    void onThreadFinished();
 
-    void onCheckDeviceStatus();
-    void onCheckRunApp();
-    void onCheckMissionStatus();
-
-    void onPassConfigToDevice(QString instanceName);
+signals:
+    void statusChanged(int);
 
 private:
     static LDService* m_instance;
 
-    QTimer* m_checkConnectTimer;
-    QTimer* m_checkRunAppTimer;
-    QTimer* m_checkMissionSttTimer;
-
-    QMap<QString,E_DEVICE_STATUS> * m_listDeviceStatus;
-    QMap<QString,E_APP_STATUS> * m_listAppStatus;
-    QMap<QString,E_MISSION_STATUS> * m_listMissionStatus;
+    int m_serviceId;
+    E_SERVICE_STATUS m_serviceStatus;
+    QThread* m_ldThread;
+    LDWorker* m_ldWorker;
 };
-
-Q_DECLARE_METATYPE(LDService::E_DEVICE_STATUS);
-Q_DECLARE_METATYPE(LDService::E_APP_STATUS);
-Q_DECLARE_METATYPE(LDService::E_MISSION_STATUS);
 
 #endif // LDSERVICE_H

@@ -5,8 +5,8 @@
 #include <QTimer>
 #include "AppDefines.h"
 #include "AppModel.h"
-#include "LDThread.h"
 #include "PerformanceReader.h"
+#include <LDService.h>
 
 class AppController : public QObject
 {
@@ -18,18 +18,23 @@ public:
     static AppController* instance();
     void initAppController();
 
-    void startMultiTask();
-    void stopMultiTask();
+    void startLDPlayers();
+    void stopLDPlayers();
+
+private:
+    LDService* createLDService();
+
+public slots:
+    void onLDServiceUpdate(int serviceId);
+    void onCheckLDServices();
 
 private:
     static AppController* m_instance;
-    QList<QObject*> m_deviceQueue;
-    QList<LDThread* > m_ldThreadList;
-    QTimer m_updateLDThreadList;
+
+    QMap<int, LDService*> m_ldServiceMap;
+    QTimer* m_ldObserver;
 
 public slots:
-    void aMissionCompleted(LDThread* threadAdd = nullptr);
-    void onUpdateLDThreadList();
 };
 
 #endif // APPCONTROLLER_H

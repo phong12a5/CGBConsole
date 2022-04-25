@@ -1,6 +1,5 @@
 #include "AppModel.h"
 #include "AppMain.h"
-#include "WebAPI.hpp"
 #include <QFile>
 #include <QDir>
 
@@ -29,11 +28,7 @@ AppModel::AppModel(QObject *parent) : QObject(parent)
     m_validToken = false;
     m_cpuCoreCount = PerformanceReader::instance()->cpuCoreCount();
 
-    if(QFile(QDir::currentPath() + QString("/LDSetup/ldconsole.exe")).exists()){
-        m_ldIntallFolder = QDir::currentPath() + QString("/LDSetup");
-    }else {
-        m_ldIntallFolder = "";
-    }
+    m_ldIntallFolder = "C:/LDPlayer/LDPlayer4.0";
 }
 
 AppModel *AppModel::instance()
@@ -62,28 +57,18 @@ QString AppModel::ldIntallFolder() const
     return m_ldIntallFolder;
 }
 
-void AppModel::setLDIntallFolder(const QString path, bool standardPath)
+void AppModel::setLDIntallFolder(const QString path)
 {
-    QString tmp_path = path;
-    if(m_ldIntallFolder != "") {
-        LOGD("There is a valid Path already!");
-        return;
-    }
-    if(standardPath == false)
-        tmp_path = path.mid(8);
-    else
-        tmp_path = path;
-
-    LOGD("path: " + tmp_path);
-
-    if(QFile(tmp_path + "/ldconsole.exe").exists()){
-        if(m_ldIntallFolder != tmp_path ){
-            m_ldIntallFolder = tmp_path;
+    LOGD("path: " + path);
+    QString ldconsolePath = path.endsWith("/")? "ldconsole.exe" : "/ldconsole.exe";
+    if(path.endsWith("/"))
+    if(QFile(ldconsolePath).exists()){
+        if(m_ldIntallFolder != path ){
+            m_ldIntallFolder = path;
             emit ldIntallFolderChanged();
         }
-    }else{
+    } else {
         LOGD("Invalid folder.");
-        return;
     }
 
     emit reInitDeviceList();
@@ -94,33 +79,9 @@ QList<QObject*> AppModel::devicesList() const
     return m_devicesList;
 }
 
-void AppModel::appendDevice(QString instanceName)
-{
-    foreach(QObject* device, m_devicesList) {
-        if(dynamic_cast<LDIntance*>(device)->instanceName() == instanceName)
-            return;
-    }
-    m_devicesList.append(new LDIntance(this,instanceName,m_devicesList.length()));
-    emit devicesListChanged();
-}
-
 QList<QObject *> AppModel::devicesRunningList() const
 {
     return m_devicesRunningList;
-}
-
-void AppModel::appendRunningDevice(LDIntance* instance)
-{
-    LOGD(instance->instanceName());
-    m_devicesRunningList.append(instance);
-    emit devicesRunningListChanged();
-}
-
-void AppModel::popRunningDevice(LDIntance* instance)
-{
-    LOGD(instance->instanceName());
-    m_devicesRunningList.removeOne(instance);
-    emit devicesRunningListChanged();
 }
 
 uint AppModel::amountOfThread() const
@@ -178,11 +139,6 @@ void AppModel::setToken(QString data)
     LOGD(data);
     if(m_token != data ){
         m_token = data;
-        if(m_token.length() == 32 && WebAPI::instance()->getConfig() == true){
-            this->setValidToken(true);
-        }else {
-            this->setValidToken(false);
-        }
         emit tokenChanged();
     }
 }

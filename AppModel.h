@@ -4,7 +4,6 @@
 #include <QObject>
 #include "AppDefines.h"
 #include "LDCommand.h"
-#include "LDIntance.h"
 #include <QMutex>
 #include <QSize>
 
@@ -42,14 +41,12 @@ public:
     void setAppStarted(bool data);
 
     QString ldIntallFolder() const;
-    void setLDIntallFolder(const QString path, bool standardPath = false);
+    void setLDIntallFolder(const QString path);
 
     QList<QObject*> devicesList() const;
     void appendDevice(QString instanceName);
 
     QList<QObject*> devicesRunningList() const;
-    void appendRunningDevice(LDIntance* instance);
-    void popRunningDevice(LDIntance* instance);
 
     uint amountOfThread() const;
     void setAmountOfThread(const uint data);

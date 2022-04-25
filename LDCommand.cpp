@@ -28,8 +28,8 @@ LDCommand *LDCommand::instance()
 
 bool LDCommand::runLDCommand(QString args, int timeout)
 {
-    QString cmd = QString("\"%1/dnconsole.exe\" %2").arg(APP_MODEL->ldIntallFolder()).arg(args);
-    LOGD("Cmd: " + args);
+    QString cmd = QString("\"%1/ldconsole.exe\" %2").arg(APP_MODEL->ldIntallFolder()).arg(args);
+    LOGD("Cmd: " + cmd);
 
     QProcess m_process;
     m_process.start(cmd);
@@ -50,8 +50,8 @@ bool LDCommand::runLDCommand(QString args, int timeout)
 
 bool LDCommand::runLDCommand(QString args, QString &output, QString &error, int timeout)
 {
-    QString cmd = QString("\"%1/dnconsole.exe\" %2").arg(APP_MODEL->ldIntallFolder()).arg(args);
-    LOGD("Cmd: " + args);
+    QString cmd = QString("\"%1/ldconsole.exe\" %2").arg(APP_MODEL->ldIntallFolder()).arg(args);
+    LOGD("Cmd: " + cmd);
 
     QProcess m_process;
     m_process.start(cmd);

@@ -1,5 +1,5 @@
 #include "AppController.h"
-#include "LDIntance.h"
+#include <PerformanceReader.h>
 
 #define APP_MODEL AppModel::instance()
 
@@ -7,11 +7,8 @@ AppController* AppController::m_instance = nullptr;
 
 AppController::AppController(QObject *parent) : QObject(parent)
 {
-    m_deviceQueue.clear();
-    m_ldThreadList.clear();
-    m_updateLDThreadList.setInterval(10000);
-    m_updateLDThreadList.setSingleShot(false);
-    connect(&m_updateLDThreadList, SIGNAL(timeout()), this, SLOT(onUpdateLDThreadList()));
+    m_ldServiceMap.clear();
+    m_ldObserver = nullptr;
 }
 
 AppController *AppController::instance()
@@ -26,82 +23,61 @@ void AppController::initAppController()
     LOGD("");
 }
 
-void AppController::startMultiTask()
+void AppController::startLDPlayers()
 {
-    LOGD("");
-    this->onUpdateLDThreadList();
-    m_updateLDThreadList.start();
-}
-
-void AppController::stopMultiTask()
-{
-    LOGD("");
-    LDCommand::instance()->quitAll();
-    while (!m_ldThreadList.isEmpty()) {
-        delete m_ldThreadList.at(0);
-        m_ldThreadList.removeAt(0);
+    if(m_ldObserver == nullptr) {
+        m_ldObserver = new QTimer(this);
+        m_ldObserver->setInterval(5000);
+        m_ldObserver->setSingleShot(false);
+        connect(m_ldObserver, &QTimer::timeout, this, &AppController::onCheckLDServices);
     }
-    m_deviceQueue.clear();
-    LDCommand::instance()->quitAll();
-    m_updateLDThreadList.stop();
+
+    if(!m_ldObserver->isActive())
+        m_ldObserver->start();
 }
 
-void AppController::aMissionCompleted(LDThread* threadAdd)
+void AppController::stopLDPlayers()
 {
-    if(threadAdd){
-        if(m_ldThreadList.contains(threadAdd)){
-            if(m_ldThreadList.removeOne(threadAdd)){
-                delete threadAdd;
-            }else {
-                LOGD(" ---------------- Remove thread failure ----------- ");
-            }
+    if(m_ldObserver && !m_ldObserver->isActive()) {
+        m_ldObserver->stop();
+    }
+
+    foreach(int serviceID, m_ldServiceMap.keys()) {
+        LDService* service = m_ldServiceMap.value(serviceID);
+        if(service != nullptr) service->disposeService();
+    }
+}
+
+LDService* AppController::createLDService()
+{
+    LDService* service = new LDService(m_ldServiceMap.keys().length(), this);
+    connect(service, &LDService::statusChanged, this, &AppController::onLDServiceUpdate);
+    m_ldServiceMap.insert(m_ldServiceMap.keys().length(), service);
+    return service;
+}
+
+void AppController::onLDServiceUpdate(int serviceId)
+{
+    if(m_ldServiceMap.contains(serviceId)) {
+        LDService* service = m_ldServiceMap.value(serviceId);
+        LDService::E_SERVICE_STATUS status = service->serviceStatus();
+        LOGD("service: " + QString::number(serviceId) + " status: " + QString::number(status));
+        if(status == LDService::E_SERVICE_STATUS_STOPPED) {
+            m_ldServiceMap.remove(serviceId);
+            delete service;
         }
     }
 }
 
-void AppController::onUpdateLDThreadList()
+void AppController::onCheckLDServices()
 {
-    if(m_ldThreadList.length() != APP_MODEL->devicesRunningList().length()){
-        LOGD(" -------------------------------- ERROR -------------------------------------------- ");
-    }
-    LOGD(QString("m_ldThreadList: %1").arg(m_ldThreadList.length()) +
-         QString(" -- amountOfThread: %1").arg(APP_MODEL->amountOfThread()) +
-         QString(" -- runningList: %1").arg(APP_MODEL->devicesRunningList().length()));
-    LDCommand::instance()->sortWindow();
-    double diskUsage = PerformanceReader::instance()->avgDiskUsage();
-    if(diskUsage < 0 || diskUsage > AVAILBLE_DISK_USAGE ){
-        LOGD("Disk usage is too large ... NONE NEW DEVICE IS STARTED!");
-        return;
-    }
+    LOGD("");
+    double cpuPercent = PerformanceReader::instance()->currentCPUUsage();
+    LOGD(QString("cpuPercent: %1").arg(cpuPercent));
+    if(cpuPercent > 80) return;
 
-    double curCPU = PerformanceReader::instance()->currentCPUUsage();
-    if(curCPU < 0 || curCPU > AVAILBLE_CPU_USAGE ){
-        LOGD("CPU usage is too large ... NONE NEW DEVICE IS STARTED!");
-        return;
-    }
-
-    /* ******** Update m_deviceQueue from devicesList ******** */
-    foreach (QObject* device, APP_MODEL->devicesList()) {
-        if(!m_deviceQueue.contains(device))
-            m_deviceQueue.append(device);
-    }
-
-    if(static_cast<uint>(m_ldThreadList.length()) < APP_MODEL->amountOfThread()){
-        if(m_deviceQueue.isEmpty()){
-            LOGD("m_deviceQueue is empty!");
-        } else {
-            foreach (QObject* device, m_deviceQueue) {
-                if(!APP_MODEL->devicesRunningList().contains(device)){
-                    m_ldThreadList.append(new LDThread(this,dynamic_cast<LDIntance*>(device)));
-                    m_deviceQueue.removeOne(device);
-                    m_deviceQueue.append(device);
-                    break;
-                } else {
-                    LOGD(dynamic_cast<LDIntance*>(device)->instanceName() + " is run already");
-                }
-            }
-        }
-    }else {
-        LOGD("LDThreadList is full already!");
+    if(m_ldServiceMap.keys().count() < AppModel::instance()->maxNumberThread()) {
+        LDService* service = createLDService();
+        service->startService();
     }
 }

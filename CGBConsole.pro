@@ -20,23 +20,14 @@ DEFINES += QT_DEPRECATED_WARNINGS \
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    LDWorker.cpp \
     main.cpp \
-    EmulatorWorker.cpp \
     AppMain.cpp \
     AppModel.cpp \
     AppController.cpp \
     LDCommand.cpp \
-    LDIntance.cpp \
-    LDThread.cpp \
-    LDRunner.cpp \
-    WebAPI.cpp \
-    QAESEncryption.cpp \
-    DbManager.cpp \
     PerformanceReader.cpp \
-    AutoUpdaterWorker.cpp \
     LDService.cpp \
-    DownloadService.cpp \
-    LogService.cpp
 
 RESOURCES += qml.qrc
 
@@ -56,20 +47,11 @@ HEADERS += \
     AppModel.h \
     AppDefines.h \
     AppController.h \
-    EmulatorWorker.h \
     LDCommand.h \
-    LDIntance.h \
-    LDThread.h \
-    LDRunner.h \
-    WebAPI.hpp \
-    QAESEncryption.hpp \
-    DbManager.h \
+    LDWorker.h \
     PerformanceReader.h \
     CPdhQuery.h \
-    AutoUpdaterWorker.h \
     LDService.h \
-    DownloadService.h \
-    LogService.h
 
 LIBS += -L$$PWD/libs/ -lchilkat-9.5.0 -lws2_32 -lcrypt32 -ldnsapi
 LIBS += $$PWD/libs/Pdh.Lib
@@ -79,13 +61,13 @@ INCLUDEPATH += $$PWD/include/chilkat_mingw/
 
 RC_ICONS = Logo.ico
 
-win32:CONFIG(release, debug|release): {
-    QMAKE_POST_LINK += mt -manifest $$PWD/manifest.xml -outputresource:$$OUT_PWD/release/$$TARGET".exe" $$escape_expand(\n\t)
+#win32:CONFIG(release, debug|release): {
+#    QMAKE_POST_LINK += mt -manifest $$PWD/manifest.xml -outputresource:$$OUT_PWD/release/$$TARGET".exe" $$escape_expand(\n\t)
+##    CONFIG += console
+##    DEFINES += RELEASE_MODE
+#}
+#else:win32:CONFIG(debug, debug|release): {
 #    CONFIG += console
-#    DEFINES += RELEASE_MODE
-}
-else:win32:CONFIG(debug, debug|release): {
-    CONFIG += console
-    QMAKE_POST_LINK += mt -manifest $$PWD/manifest.xml -outputresource:$$OUT_PWD/debug/$$TARGET".exe" $$escape_expand(\n\t)
-}
+#    QMAKE_POST_LINK += mt -manifest $$PWD/manifest.xml -outputresource:$$OUT_PWD/debug/$$TARGET".exe" $$escape_expand(\n\t)
+#}
 

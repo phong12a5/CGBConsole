@@ -6,166 +6,77 @@
 #include <AppModel.h>
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <LDWorker.h>
 
-LDService* LDService::m_instance = nullptr;
-
-LDService::LDService(QObject *parent) : QObject(parent),
-  m_listDeviceStatus(new QMap<QString,E_DEVICE_STATUS>),
-  m_listAppStatus(new QMap<QString,E_APP_STATUS>),
-  m_listMissionStatus(new QMap<QString,E_MISSION_STATUS>)
+LDService::LDService(int serviceId, QObject *parent) :
+    QObject(parent),
+    m_serviceId(serviceId),
+    m_serviceStatus(E_SERVICE_STATUS_INITIALIZING)
 {
-    m_checkConnectTimer = nullptr;
-    m_checkRunAppTimer = nullptr;
-    m_checkMissionSttTimer = nullptr;
+    m_ldThread = new QThread();
+    m_ldWorker = new LDWorker("LDPlayer-" + QString::number(m_serviceId));
+
+    connect(m_ldThread, &QThread::started, this, &LDService::onThreadStarted);
+    connect(m_ldThread, &QThread::finished, this, &LDService::onThreadFinished);
+
+    m_ldWorker->moveToThread(m_ldThread);
+    LOGD(QString("--- Create LDService:%1---").arg(m_serviceId));
 }
 
 LDService::~LDService()
 {
-    delete m_listDeviceStatus;
-    delete m_listAppStatus;
-    delete m_listMissionStatus;
+    LOGD(QString(":%1").arg(m_serviceId));
+    if(m_ldThread) {
+        m_ldThread->quit();
+        m_ldThread->wait();
+        delete m_ldThread;
+    }
+
+    if(m_ldWorker) {
+        delete m_ldWorker;
+    }
 }
 
-LDService *LDService::instance()
+LDService::E_SERVICE_STATUS LDService::serviceStatus() const
 {
-    if(m_instance == nullptr){
-        m_instance = new LDService();
+    return m_serviceStatus;
+}
+
+void LDService::setServiceStatus(E_SERVICE_STATUS status)
+{
+    if(m_serviceStatus != status) {
+        m_serviceStatus = status;
+        emit statusChanged(m_serviceId);
     }
-    return m_instance;
 }
 
 void LDService::startService()
 {
     LOGD("");
-    if(m_checkConnectTimer == nullptr){
-        m_checkConnectTimer = new QTimer(this);
-        m_checkConnectTimer->setSingleShot(false);
-        m_checkConnectTimer->setInterval(60000);
-        connect(m_checkConnectTimer, &QTimer::timeout, this, &LDService::onCheckDeviceStatus);
-    }
-
-
-    if(m_checkRunAppTimer == nullptr){
-        m_checkRunAppTimer = new QTimer(this);
-        m_checkRunAppTimer->setSingleShot(false);
-        m_checkRunAppTimer->setInterval(60000);
-        connect(m_checkRunAppTimer, &QTimer::timeout, this, &LDService::onCheckRunApp);
-    }
-
-    if(m_checkMissionSttTimer == nullptr){
-        m_checkMissionSttTimer = new QTimer(this);
-        m_checkMissionSttTimer->setSingleShot(false);
-        m_checkMissionSttTimer->setInterval(60000);
-        connect(m_checkMissionSttTimer, &QTimer::timeout, this, &LDService::onCheckMissionStatus);
-    }
-
-    m_checkConnectTimer->start();
-    m_checkRunAppTimer->start();
-    m_checkMissionSttTimer->start();
+    if(!m_ldThread->isRunning())
+        m_ldThread->start();
 }
 
-void LDService::stopService()
+void LDService::disposeService()
 {
     LOGD("");
-    m_checkConnectTimer->stop();
-    m_checkRunAppTimer->stop();
-    m_checkMissionSttTimer->stop();
+    if(m_ldThread->isRunning()) {
+        m_ldThread->quit();
+    } else {
+        setServiceStatus(E_SERVICE_STATUS_STOPPED);
+    }
 }
 
-void LDService::onCheckDeviceStatus()
+
+void LDService::onThreadStarted()
 {
-    LOGD("");
-    QFile::remove(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/LDPlayer/Pictures/temp");
-    QStringList existedDevices;
-    existedDevices.clear();
-    for (int i = 0; i < AppModel::instance()->devicesRunningList().length(); i++) {
-        existedDevices << dynamic_cast<LDIntance*>(AppModel::instance()->devicesRunningList().at(i))->instanceName();
-    }
-
-    m_listDeviceStatus->clear();
-
-    foreach(QString instanceName, existedDevices){
-        if(LDCommand::instance()->checkConnection(instanceName)){
-            m_listDeviceStatus->insert(instanceName,E_DEVICE_STATUS::E_DEVICE_CONNECTED);
-        }else {
-            m_listDeviceStatus->insert(instanceName,E_DEVICE_STATUS::E_DEVICE_DISCONNECT);
-        }
-    }
-    foreach(QString deviceName, m_listDeviceStatus->keys()){
-        LOGD(QString("%1 : %2").arg(deviceName).arg(m_listDeviceStatus->value(deviceName) == 0? "connected" : "disconnected"));
-    }
-    emit updateDeviceStatus(m_listDeviceStatus);
+    LOGD(QString::number(m_serviceId));
+    emit m_ldWorker->start();
+    setServiceStatus(E_SERVICE_STATUS_RUNNING);
 }
 
-void LDService::onCheckRunApp()
+void LDService::onThreadFinished()
 {
-    LOGD("");
-    QStringList existedDevices;
-    existedDevices.clear();
-    for (int i = 0; i < AppModel::instance()->devicesRunningList().length(); i++) {
-        existedDevices << dynamic_cast<LDIntance*>(AppModel::instance()->devicesRunningList().at(i))->instanceName();
-    }
-
-    m_listAppStatus->clear();
-
-    QDir directory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/LDPlayer/Applications");
-    QStringList runningFileList = directory.entryList(QStringList() << "*.running",QDir::Files);
-
-    foreach(QString instanceName, existedDevices){
-        if(runningFileList.contains("." + instanceName + ".running")){
-            m_listAppStatus->insert(instanceName,E_APP_STATUS::E_APP_RUNNING);
-        }else {
-            m_listAppStatus->insert(instanceName,E_APP_STATUS::E_APP_STOPPED);
-        }
-    }
-    emit updateAppStatus(m_listAppStatus);
-}
-
-void LDService::onCheckMissionStatus()
-{
-    LOGD("");
-    QStringList existedDevices;
-    existedDevices.clear();
-    for (int i = 0; i < AppModel::instance()->devicesRunningList().length(); i++) {
-        existedDevices << dynamic_cast<LDIntance*>(AppModel::instance()->devicesRunningList().at(i))->instanceName();
-    }
-
-    m_listMissionStatus->clear();
-
-    QDir directory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/LDPlayer/Applications");
-    QStringList runningFileList = directory.entryList(QStringList() << "*.endscript",QDir::Files);
-
-    foreach(QString instanceName, existedDevices){
-        if(runningFileList.contains("." + instanceName + ".endscript")){
-            m_listMissionStatus->insert(instanceName,E_MISSION_STATUS::E_MISSION_COMPLETED);
-        }else {
-            m_listMissionStatus->insert(instanceName,E_MISSION_STATUS::E_MISSION_INCOMPLETED);
-        }
-    }
-    emit updateMissionStatus(m_listMissionStatus);
-}
-
-void LDService::onPassConfigToDevice(QString instanceName)
-{
-    LOGD(instanceName + " Passing token id .." + AppModel::instance()->token());
-
-    /* Create startup.config and pass to LD */
-    QJsonObject configObj;
-    configObj["token"] = AppModel::instance()->token();
-    configObj["auto_startup"] = true;
-    configObj["timeout"] = 30;
-    configObj["country"] = "Vietnam";
-    configObj["appname"] = AppModel::instance()->appName();
-    configObj["machineid"] = AppModel::instance()->serialNumber();
-    configObj["devicename"] = instanceName;
-
-    QString startUpFile = "startup.config";
-    QFile jsonFile(startUpFile);
-    jsonFile.open(QFile::WriteOnly);
-    jsonFile.write(QJsonDocument(configObj).toJson());
-    jsonFile.close();
-
-    LDCommand::instance()->pushFile(instanceName,QString(APP_DATA_FOLDER) + startUpFile,"./" + startUpFile);
-    QFile::remove(startUpFile);
-    /* Created startup.config and passed to Nox*/
+    LOGD(QString::number(m_serviceId));
+    setServiceStatus(E_SERVICE_STATUS_STOPPED);
 }
