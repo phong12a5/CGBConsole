@@ -36,20 +36,6 @@ void AppMain::onLoadConfig()
     LOGD("");
 }
 
-void AppMain::startProgram()
-{
-    LOGD("");
-    APP_MODEL->setAppStarted(true);
-    APP_CTRL->startLDPlayers();
-}
-
-void AppMain::stopProgarm()
-{
-    LOGD("");
-    APP_MODEL->setAppStarted(false);
-    APP_CTRL->stopLDPlayers();
-}
-
 void AppMain::closingApp()
 {
     LOGD("");

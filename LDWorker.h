@@ -2,6 +2,7 @@
 #define LDWORKER_H
 
 #include <QObject>
+#include <QTimer>
 
 class LDWorker : public QObject
 {
@@ -12,12 +13,14 @@ public:
 
 public slots:
     void onStarted();
-
+    void onCheckRunningApp();
 signals:
     void start();
 
 private:
     QString m_name;
+    QTimer* m_appChecker;
+    bool app_running = false;
 };
 
 #endif // LDWORKER_H

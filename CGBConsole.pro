@@ -1,6 +1,6 @@
-QT += quick \
-      widgets \
-      sql
+QT += gui \
+      core \
+      widgets
 
 CONFIG += c++11
 DEFINES += USE_FILE_STEADOF_ADB
@@ -21,6 +21,7 @@ DEFINES += QT_DEPRECATED_WARNINGS \
 
 SOURCES += \
     LDWorker.cpp \
+    MainWindow.cpp \
     main.cpp \
     AppMain.cpp \
     AppModel.cpp \
@@ -29,13 +30,8 @@ SOURCES += \
     PerformanceReader.cpp \
     LDService.cpp \
 
-RESOURCES += qml.qrc
-
-# Additional import path used to resolve QML modules in Qt Creator's code model
-QML_IMPORT_PATH =
-
-# Additional import path used to resolve QML modules just for Qt Quick Designer
-QML_DESIGNER_IMPORT_PATH =
+FORMS += \
+    mainwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -49,6 +45,7 @@ HEADERS += \
     AppController.h \
     LDCommand.h \
     LDWorker.h \
+    MainWindow.h \
     PerformanceReader.h \
     CPdhQuery.h \
     LDService.h \

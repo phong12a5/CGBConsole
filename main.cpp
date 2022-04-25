@@ -1,5 +1,5 @@
-#include <QGuiApplication>
-#include <QQmlApplicationEngine>
+#include <QApplication>
+#include <MainWindow.h>
 #include "AppMain.h"
 #include <QtWidgets>
 #include <iostream>
@@ -34,14 +34,10 @@ int main(int argc, char *argv[])
     AppMain appMain;
     appMain.initApplication();
 
-    QQmlApplicationEngine engine;
-    engine.rootContext()->setContextProperty("AppModel",AppModel::instance());
-    engine.rootContext()->setContextProperty("AppMain",&appMain);
-    engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
-    if (engine.rootObjects().isEmpty())
-        return -1;
-
-    return app.exec();
+    QApplication a(argc, argv);
+    MainWindow w;
+    w.show();
+    return a.exec();
 }
 
 

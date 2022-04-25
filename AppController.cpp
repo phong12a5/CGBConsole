@@ -27,7 +27,7 @@ void AppController::startLDPlayers()
 {
     if(m_ldObserver == nullptr) {
         m_ldObserver = new QTimer(this);
-        m_ldObserver->setInterval(5000);
+        m_ldObserver->setInterval(3000);
         m_ldObserver->setSingleShot(false);
         connect(m_ldObserver, &QTimer::timeout, this, &AppController::onCheckLDServices);
     }

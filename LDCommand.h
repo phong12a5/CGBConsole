@@ -22,6 +22,7 @@ public:
     bool runLDCommand(QString args, QString &output, QString &error, int timeout = -1);
     bool lunchInstance(QString instanceName);
     bool runApp(QString instanceName, QString packageName);
+    bool killApp(QString instanceName, QString packageName);
     bool addInstance(QString instanceName);
     QString ld_adb_command(QString instanceName, QString cmd, int timeout = -1);
     bool quitInstance(QString instanceName);

@@ -89,6 +89,16 @@ bool LDCommand::runApp(QString instanceName, QString packageName)
     return success;
 }
 
+bool LDCommand::killApp(QString instanceName, QString packageName)
+{
+    LOGD("instanceName: " + instanceName + " -- packageName: " + packageName);
+    QMutex mutex;
+    mutex.lock();
+    bool success = this->runLDCommand(QString("killapp --name %1 --packagename %2").arg(instanceName).arg(packageName));
+    mutex.unlock();
+    return success;
+}
+
 bool LDCommand::addInstance(QString instanceName)
 {
     LOGD(instanceName);

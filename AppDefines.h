@@ -25,7 +25,7 @@
 #define ORIGIN_DEVICE_NAME      "LDPlayer"
 #define ORIGIN_DEVICE_NAME_OLD  "OrgDevice"
 
-#define DEFAULT_MAX_VM_THREAD   5
+#define DEFAULT_MAX_VM_THREAD   30
 #define DEFAULT_MAX_VM_COUNT    20
 #define DEFAULT_OPENAPK_TIME    20 // Unit seconds
 
