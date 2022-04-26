@@ -21,7 +21,7 @@ AppMain::AppMain(QObject *parent) :
 
 AppMain::~AppMain()
 {
-    LDCommand::instance()->quitAll();
+    LDCommand::quitAll();
 }
 
 void AppMain::initApplication()

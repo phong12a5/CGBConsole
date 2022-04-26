@@ -29,6 +29,7 @@ AppModel::AppModel(QObject *parent) : QObject(parent)
     m_cpuCoreCount = PerformanceReader::instance()->cpuCoreCount();
 
     m_ldIntallFolder = "C:/LDPlayer/LDPlayer4.0";
+    LDCommand::setLDPath(m_ldIntallFolder);
 }
 
 AppModel *AppModel::instance()

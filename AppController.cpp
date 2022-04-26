@@ -67,6 +67,8 @@ void AppController::onLDServiceUpdate(int serviceId)
             delete service;
         }
     }
+
+    if(m_ldServiceMap.empty()) LDCommand::quitAll();
 }
 
 void AppController::onCheckLDServices()

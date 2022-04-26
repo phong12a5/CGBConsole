@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
     QProcess::execute("Taskkill /IM dnconsole.exe /F");
     QProcess::execute("Taskkill /IM dnplayer.exe /F");
 
-    LDCommand::instance()->repairEmulator();
+    LDCommand::repairEmulator();
 
     AppMain appMain;
     appMain.initApplication();

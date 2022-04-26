@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QEventLoop>
 #include <QTimer>
+#include <QThread>
 
 #ifdef RELEASE_MODE
 #define LOGD(x) emit LogService::instance()->dologging("CGBConsole",__FUNCTION__,QString(x))
@@ -11,7 +12,7 @@
 #define LOGD(x) LLOGD(x)
 #endif
 
-#define LLOGD(x) qDebug() << "[" << __FUNCTION__ << "][" << __LINE__ << "]" << x
+#define LLOGD(x) qDebug() << "[" << __FUNCTION__ << "][" << __LINE__ << "][" << QThread::currentThreadId() << "]" << x
 
 #define FARM_PACKAGE_NAME       "xyz.autofarmer.app"
 #define CONFIG_FILE_NAME        "config.json"

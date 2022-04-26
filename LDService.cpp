@@ -43,13 +43,13 @@ LDService::~LDService()
         delete m_ldWorker;
     }
 
-    if(m_ldWidget) {
-        m_ldWidget->setParent(nullptr);
+    if(m_ldWidget){
+        m_ldWidget->close();
     }
 
     if(m_ldWindow) {
-        m_ldWindow->setParent(nullptr);
-        m_ldWindow->setFlags(Qt::Window);
+        m_ldWindow->close();
+        m_ldWindow->destroy();
     }
 }
 
@@ -76,7 +76,7 @@ void LDService::startService()
 QWidget* LDService::getLDWidget()
 {
     if(m_ldWidget == nullptr) {
-        int bindWinId = LDCommand::instance()->bindWinId(m_ldInsName);
+        int bindWinId = LDCommand::bindWinId(m_ldInsName);
         if(bindWinId > 0) {
             m_ldWindow = QWindow::fromWinId(bindWinId);
             m_ldWidget  = QWidget::createWindowContainer(m_ldWindow);
@@ -84,7 +84,7 @@ QWidget* LDService::getLDWidget()
     }
 
     if(m_ldTopWidget == nullptr) {
-        int topWinId = LDCommand::instance()->topWinId(m_ldInsName);
+        int topWinId = LDCommand::topWinId(m_ldInsName);
         LOGD(topWinId);
         if(topWinId > 0) {
             m_ldTopWindow = QWindow::fromWinId(topWinId);
