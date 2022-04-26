@@ -30,7 +30,6 @@ int main(int argc, char *argv[])
 
     LDCommand::instance()->repairEmulator();
 
-
     AppMain appMain;
     appMain.initApplication();
 

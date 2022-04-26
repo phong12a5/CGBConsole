@@ -76,8 +76,18 @@ void AppController::onCheckLDServices()
     LOGD(QString("cpuPercent: %1").arg(cpuPercent));
     if(cpuPercent > 80) return;
 
-    if(m_ldServiceMap.keys().count() < AppModel::instance()->maxNumberThread()) {
-        LDService* service = createLDService();
-        service->startService();
+    if(APP_MODEL->appStarted()) {
+        if(m_ldServiceMap.keys().count() < AppModel::instance()->maxNumberThread()) {
+            LDService* service = createLDService();
+            service->startService();
+        }
+    }
+
+    foreach(int ldInsId, m_ldServiceMap.keys()) {
+        LDService* service = m_ldServiceMap.value(ldInsId);
+        QWidget* widget = service->getLDWidget();
+        if(widget) {
+            APP_MODEL->updateDevicesWidgetMap(ldInsId, widget);
+        }
     }
 }

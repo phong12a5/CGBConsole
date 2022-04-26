@@ -16,10 +16,12 @@ public:
     ~MainWindow();
 
 private:
-    void connectGUISignal();
+    void connectSignalSlots();
 
 public slots:
     void onStartClicked();
+    void onUpdateDevicesView();
+
 private:
     Ui::MainWindow *ui;
 };

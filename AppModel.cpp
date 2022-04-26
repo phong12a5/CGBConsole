@@ -358,6 +358,19 @@ int AppModel::cpuCoreCount() const
     return m_cpuCoreCount;
 }
 
+QMap<int, QWidget *> AppModel::devicesWidgetMap()
+{
+    return m_ldWidgetMap;
+}
+
+void AppModel::updateDevicesWidgetMap(int ldInsId, QWidget * widget)
+{
+    if(!m_ldWidgetMap.contains(ldInsId)) {
+        m_ldWidgetMap.insert(ldInsId, widget);
+        emit devicesWidgetMapChanged();
+    }
+}
+
 void AppModel::startProgram()
 {
     emit sigStartProgram();

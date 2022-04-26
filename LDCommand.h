@@ -40,6 +40,8 @@ public:
     bool repairEmulator();
     bool isExistedDevice(QString instanceName);
     bool renameDevice(QString deviceNameOld, QString deviceNameNew);
+    int bindWinId(QString instanceName);
+    int topWinId(QString instanceName);
 
 private:
     static LDCommand* m_instance;

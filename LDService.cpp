@@ -7,14 +7,21 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <LDWorker.h>
+#include <QWindow>
+#include <QWidget>
 
 LDService::LDService(int serviceId, QObject *parent) :
     QObject(parent),
     m_serviceId(serviceId),
-    m_serviceStatus(E_SERVICE_STATUS_INITIALIZING)
+    m_ldInsName("LDPlayer-" + QString::number(m_serviceId)),
+    m_serviceStatus(E_SERVICE_STATUS_INITIALIZING),
+    m_ldWindow(nullptr),
+    m_ldWidget(nullptr),
+    m_ldTopWindow(nullptr),
+    m_ldTopWidget(nullptr)
 {
     m_ldThread = new QThread();
-    m_ldWorker = new LDWorker("LDPlayer-" + QString::number(m_serviceId));
+    m_ldWorker = new LDWorker(m_ldInsName);
 
     connect(m_ldThread, &QThread::started, this, &LDService::onThreadStarted);
     connect(m_ldThread, &QThread::finished, this, &LDService::onThreadFinished);
@@ -35,6 +42,15 @@ LDService::~LDService()
     if(m_ldWorker) {
         delete m_ldWorker;
     }
+
+    if(m_ldWidget) {
+        m_ldWidget->setParent(nullptr);
+    }
+
+    if(m_ldWindow) {
+        m_ldWindow->setParent(nullptr);
+        m_ldWindow->setFlags(Qt::Window);
+    }
 }
 
 LDService::E_SERVICE_STATUS LDService::serviceStatus() const
@@ -52,15 +68,42 @@ void LDService::setServiceStatus(E_SERVICE_STATUS status)
 
 void LDService::startService()
 {
-    LOGD("");
+    LOGD(m_ldInsName);
     if(!m_ldThread->isRunning())
         m_ldThread->start();
 }
 
+QWidget* LDService::getLDWidget()
+{
+    if(m_ldWidget == nullptr) {
+        int bindWinId = LDCommand::instance()->bindWinId(m_ldInsName);
+        if(bindWinId > 0) {
+            m_ldWindow = QWindow::fromWinId(bindWinId);
+            m_ldWidget  = QWidget::createWindowContainer(m_ldWindow);
+        }
+    }
+
+    if(m_ldTopWidget == nullptr) {
+        int topWinId = LDCommand::instance()->topWinId(m_ldInsName);
+        LOGD(topWinId);
+        if(topWinId > 0) {
+            m_ldTopWindow = QWindow::fromWinId(topWinId);
+            m_ldTopWidget  = QWidget::createWindowContainer(m_ldTopWindow);
+        }
+        if(m_ldTopWidget) {
+            m_ldTopWindow->close();
+            m_ldTopWidget->close();
+        }
+    }
+
+    return m_ldWidget;
+}
+
 void LDService::disposeService()
 {
-    LOGD("");
+    LOGD(m_ldInsName);
     if(m_ldThread->isRunning()) {
+        m_ldWorker->stop();
         m_ldThread->quit();
     } else {
         setServiceStatus(E_SERVICE_STATUS_STOPPED);
@@ -70,8 +113,8 @@ void LDService::disposeService()
 
 void LDService::onThreadStarted()
 {
-    LOGD(QString::number(m_serviceId));
-    emit m_ldWorker->start();
+    LOGD(m_ldInsName);
+    m_ldWorker->start();
     setServiceStatus(E_SERVICE_STATUS_RUNNING);
 }
 
@@ -79,4 +122,14 @@ void LDService::onThreadFinished()
 {
     LOGD(QString::number(m_serviceId));
     setServiceStatus(E_SERVICE_STATUS_STOPPED);
+}
+
+void LDService::onWorkerStarted()
+{
+    LOGD(m_ldInsName);
+}
+
+void LDService::onWorkerStopped()
+{
+    LOGD(m_ldInsName);
 }

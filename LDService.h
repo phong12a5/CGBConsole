@@ -5,6 +5,8 @@
 #include <QTimer>
 #include <QMap>
 #include <QThread>
+#include <QWindow>
+#include <QWidget>
 
 class LDWorker;
 
@@ -27,10 +29,15 @@ public:
 
     void disposeService();
     void startService();
+    QWidget* getLDWidget();
 
 public slots:
     void onThreadStarted();
     void onThreadFinished();
+
+    void onWorkerStarted();
+    void onWorkerStopped();
+
 
 signals:
     void statusChanged(int);
@@ -39,9 +46,15 @@ private:
     static LDService* m_instance;
 
     int m_serviceId;
+    QString m_ldInsName;
     E_SERVICE_STATUS m_serviceStatus;
     QThread* m_ldThread;
     LDWorker* m_ldWorker;
+    QWindow* m_ldWindow;
+    QWidget* m_ldWidget;
+
+    QWindow* m_ldTopWindow;
+    QWidget* m_ldTopWidget;
 };
 
 #endif // LDSERVICE_H

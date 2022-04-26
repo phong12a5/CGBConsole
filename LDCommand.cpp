@@ -39,7 +39,7 @@ bool LDCommand::runLDCommand(QString args, int timeout)
     if(error != "")
         LOGD("error: " + error);
     if(output != "")
-        LOGD("output: " + output);
+//        LOGD("output: " + output);
     if(error != ""){
         LOGD(error);
         return false;
@@ -61,7 +61,7 @@ bool LDCommand::runLDCommand(QString args, QString &output, QString &error, int 
     if(error != "")
         LOGD("error: " + error);
     if(output != "")
-        LOGD("output: " + output);
+//        LOGD("output: " + output);
     if(error != ""){
         return false;
     }else{
@@ -364,4 +364,40 @@ bool LDCommand::renameDevice(QString deviceNameOld, QString deviceNameNew)
     bool success = this->runLDCommand(QString("rename --name %1 --title %2").arg(deviceNameOld).arg(deviceNameNew));
     mutex.unlock();
     return success;
+}
+
+int LDCommand::bindWinId(QString instanceName)
+{
+    QString deviceListStr;
+    QString error;
+    if(this->runLDCommand("list2", deviceListStr, error)){
+        QStringList deviceList = deviceListStr.split("\r\n");
+        foreach(QString device, deviceList) {
+            if(device.contains(instanceName)) {
+                QStringList params = device.split(",");
+                if(params.length() == 7) {
+                    return params[3].toInt();
+                }
+            }
+        }
+    }
+    return -1;
+}
+
+int LDCommand::topWinId(QString instanceName)
+{
+    QString deviceListStr;
+    QString error;
+    if(this->runLDCommand("list2", deviceListStr, error)){
+        QStringList deviceList = deviceListStr.split("\r\n");
+        foreach(QString device, deviceList) {
+            if(device.contains(instanceName)) {
+                QStringList params = device.split(",");
+                if(params.length() == 7) {
+                    return params[2].toInt();
+                }
+            }
+        }
+    }
+    return -1;
 }

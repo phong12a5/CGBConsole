@@ -110,6 +110,9 @@ public:
 
     int cpuCoreCount() const;
 
+    QMap<int, QWidget*> devicesWidgetMap();
+    void updateDevicesWidgetMap(int ldInsId, QWidget*);
+
 public:
     Q_INVOKABLE void startProgram();
     Q_INVOKABLE void stopProgarm();
@@ -139,6 +142,7 @@ signals:
 
     void sigStartProgram();
     void sigStoptProgram();
+    void devicesWidgetMapChanged();
 
 private:
     static AppModel* m_instance;
@@ -168,7 +172,7 @@ private:
     bool m_testMode;
     bool m_validToken;
     int m_cpuCoreCount;
-
+    QMap<int, QWidget*> m_ldWidgetMap;
 public slots:
 };
 

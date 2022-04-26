@@ -1,37 +1,46 @@
 #include "LDWorker.h"
 #include <AppDefines.h>
 #include <LDCommand.h>
+#include <QMutex>
 
 LDWorker::LDWorker(QString name, QObject *parent) :
     QObject(parent),
     m_name(name),
-    m_appChecker(nullptr)
+    m_started(false)
 {
-    connect(this, &LDWorker::start, this, &LDWorker::onStarted);
+    connect(this, &LDWorker::post, this, &LDWorker::run);
 }
 
 LDWorker::~LDWorker()
 {
     LOGD(m_name);
-    LDCommand::instance()->quitInstance(m_name);
 }
 
-void LDWorker::onStarted()
+void LDWorker::start()
 {
     LOGD(m_name);
+    QMutex mutex;
+    mutex.lock();
+    m_started = true;
     LDCommand::instance()->lunchInstance(m_name);
-    if(m_appChecker == nullptr) {
-        m_appChecker = new QTimer(this);
-        m_appChecker->setInterval(7000);
-        connect(m_appChecker, &QTimer::timeout, this, &LDWorker::onCheckRunningApp);
-    }
-    if(!m_appChecker->isActive()) {
-        m_appChecker->start();
-    }
+    postDelay(0);
+    mutex.unlock();
 }
 
-void LDWorker::onCheckRunningApp()
+void LDWorker::stop()
 {
+    LOGD(m_name);
+    QMutex mutex;
+    mutex.lock();
+    m_started = false;
+    LDCommand::instance()->quitInstance(m_name);
+    mutex.unlock();
+}
+
+void LDWorker::run()
+{
+    if(!m_started) return;
+
     if(!app_running) {
         LDCommand::instance()->runApp(m_name, "com.facebook.katana");
         app_running = true;
@@ -39,4 +48,14 @@ void LDWorker::onCheckRunningApp()
         LDCommand::instance()->killApp(m_name, "com.facebook.katana");
         app_running = false;
     }
+
+    postDelay(7000);
+}
+
+void LDWorker::postDelay(int milSec)
+{
+    if(milSec > 0)
+        delay(milSec);
+
+    emit post();
 }
