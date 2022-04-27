@@ -1,3 +1,4 @@
+#include "LDCommand.h"
 #include "LDPlayer.h"
 
 #include <QByteArray>
@@ -102,7 +103,8 @@ void LDPlayer::disableAccessibilityService()
 QJsonObject LDPlayer::getScreenElment()
 {
 //    LOG;
-    QString rs = command({"shell","am","broadcast","-a","com.cgb.support.SCREEN_ELEMENT_ACTION","com.cgb.support"});
+    QString rs = LDCommand::getElements(profile.name); /*command({"shell","am","broadcast","-a","com.cgb.support.SCREEN_ELEMENT_ACTION","com.cgb.support"})*/;
+    LOG<<rs;
     QRegExp rg("(\\{.{0,3}elements.+:.+\\})");
 //    printf("%s",rs.toUtf8().data());
 //    Utility::write(Utility::getExecutedPath()+"/crlog.txt",rs);
@@ -414,7 +416,7 @@ bool LDPlayer::isAppRunning(QString packageName)
 {
     QStringList agruments;
     agruments<<"shell"<<"pidof"<<packageName;
-    QString out = ldhelper->adbShellCommand2(profile.address,agruments);
+    QString out = LDCommand::ld_adb_command(profile.name,"shell pidof "+packageName);
     LOG<<": com.facebook.katana pid = "<<out;
     if(out.length() == 0){
         return false;
@@ -480,7 +482,7 @@ QJsonArray LDPlayer::getScreenId()
        LOG<<"Screen defined count:"<<m_screens.size();
     }else{
         if(QDateTime::currentDateTime().toSecsSinceEpoch()%/*300*/5==0){
-            loadScreen();
+//            loadScreen();
         }
     }
 
@@ -534,8 +536,7 @@ void LDPlayer::setupKeyboard(bool isUnicode)
 
 void LDPlayer::tapOn(double x, double y)
 {
-    ldhelper->adbShellCommand(profile.address,QStringList()<<"shell"<<"input"<<"tap"<<QString::number(x)<<QString::number(y),true);
-    //ldhelper->ldConsoleCommand(QStringList()<<"adb --index"<<QString::number(dnsID)<<"--command\""<<"shell input tap "+QString::number(x)+" "+QString::number(y)+"\"",true);
+    LDCommand::ld_adb_command(profile.name,QString("shell input tap %1 %2").arg(x).arg(y));
 }
 
 void LDPlayer::tapOn(QPoint point)
@@ -553,29 +554,25 @@ void LDPlayer::inputText(QString content, bool isUnicode, bool isSlow)
 {
     LOG<<": "<<content;
     if(isUnicode){
-        ldhelper->adbShellCommand(profile.address,{"shell","ime","set", "com.android.adbkeyboard/.AdbIME"},true);
+        LDCommand::ld_adb_command(profile.name,"shell ime set com.android.adbkeyboard/.AdbIME");
     }else{
-        ldhelper->adbShellCommand(profile.address,{"shell","ime","set","com.android.inputmethod.pinyin/.InputService"},true);
+        LDCommand::ld_adb_command(profile.name,"shell ime set com.android.inputmethod.pinyin/.InputService");
     }
 
     if(isSlow){
         for(int i=0;i<content.size();i++){
     //        Utility::waitForMiliseconds(50);
             if(isUnicode){
-                ldhelper->adbShellCommand(profile.address,
-                                          QStringList()<<"shell"<<"am"<<"broadcast"<<"-a"<<"ADB_INPUT_B64"<<"--es"<<"msg"<<"'"+content.mid(i,1).toUtf8().toBase64()+"'",true);
+                LDCommand::ld_adb_command(profile.name,"shell am broadcast -a ADB_INPUT_B64 --es msg '"+content.mid(i,1).toUtf8().toBase64()+"'");
             }else{
-                ldhelper->adbShellCommand(profile.address,
-                                          QStringList()<<"shell"<<"input"<<"text"<<"\'"+content.mid(i,1)+"\'",true);
+                LDCommand::ld_adb_command(profile.name,"shell input text '"+content.mid(i,1)+"'");
             }
         }
     }else{
         if(isUnicode){
-            ldhelper->adbShellCommand(profile.address,
-                                      QStringList()<<"shell"<<"am"<<"broadcast"<<"-a"<<"ADB_INPUT_B64"<<"--es"<<"msg"<<"'"+content.toUtf8().toBase64()+"'",true);
+            LDCommand::ld_adb_command(profile.name,"shell am broadcast -a ADB_INPUT_B64 --es msg '"+content.toUtf8().toBase64()+"'");
         }else{
-            ldhelper->adbShellCommand(profile.address,
-                                      QStringList()<<"shell"<<"input"<<"text"<<"\'"+content+"\'",true);
+            LDCommand::ld_adb_command(profile.name,"shell input text \'"+content+"\'");
         }
     }
 }

@@ -27,6 +27,7 @@ private:
     bool app_running = false;
     bool m_started;
     bool isGetElementOk = false;
+    bool openLD;
 
     LDPlayer *player{nullptr};
 };

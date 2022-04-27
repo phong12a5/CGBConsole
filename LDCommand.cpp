@@ -3,7 +3,7 @@
 #include <iostream>
 #include <QFile>
 #include <QDir>
-#include <QMutex>
+//#include <//QMutex>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <math.h>
@@ -64,47 +64,47 @@ bool LDCommand::runLDCommand(QString args, QString &output, QString &error, int 
 bool LDCommand::lunchInstance(QString instanceName)
 {
     LOGD(instanceName);
-    QMutex mutex;
-    mutex.lock();
+    //QMutex mutex;
+    //mutex.lock();
     bool success = runLDCommand(QString("launch --name %1").arg(instanceName));
-    mutex.unlock();
+    //mutex.unlock();
     return success;
 }
 
 bool LDCommand::runApp(QString instanceName, QString packageName)
 {
     LOGD("instanceName: " + instanceName + " -- packageName: " + packageName);
-    QMutex mutex;
-    mutex.lock();
+    //QMutex mutex;
+    //mutex.lock();
     bool success = runLDCommand(QString("runapp --name %1 --packagename %2").arg(instanceName).arg(packageName));
-    mutex.unlock();
+    //mutex.unlock();
     return success;
 }
 
 bool LDCommand::killApp(QString instanceName, QString packageName)
 {
     LOGD("instanceName: " + instanceName + " -- packageName: " + packageName);
-    QMutex mutex;
-    mutex.lock();
+    //QMutex mutex;
+    //mutex.lock();
     bool success = runLDCommand(QString("killapp --name %1 --packagename %2").arg(instanceName).arg(packageName));
-    mutex.unlock();
+    //mutex.unlock();
     return success;
 }
 
 bool LDCommand::addInstance(QString instanceName)
 {
     LOGD(instanceName);
-    QMutex mutex;
-    mutex.lock();
+    //QMutex mutex;
+    //mutex.lock();
     bool success = runLDCommand(QString("add --name %1").arg(instanceName));
-    mutex.unlock();
+    //mutex.unlock();
     return success;
 }
 
 QString LDCommand::ld_adb_command(QString instanceName, QString cmd, int timeout)
 {
-    QMutex mutex;
-    mutex.lock();
+    //QMutex mutex;
+    //mutex.lock();
     QString output, error, retVal;
     runLDCommand(QString("adb --name %1 --command \"%2\"").arg(instanceName).arg(cmd), output, error,timeout);
     if(error != ""){
@@ -117,37 +117,37 @@ QString LDCommand::ld_adb_command(QString instanceName, QString cmd, int timeout
         QProcess::execute("LDSetup\adb.exe kill-server");
         QProcess::execute("LDSetup\adb.exe start-server");
     }
-    mutex.unlock();
+    //mutex.unlock();
     return  retVal;
 }
 
 bool LDCommand::quitInstance(QString instanceName)
 {
     LOGD(instanceName);
-    QMutex mutex;
-    mutex.lock();
+    //QMutex mutex;
+    //mutex.lock();
     bool success = runLDCommand(QString("quit --name %1").arg(instanceName));
-    mutex.unlock();
+    //mutex.unlock();
     return success;
 }
 
 bool LDCommand::quitAll()
 {
     LOGD("");
-    QMutex mutex;
-    mutex.lock();
+    //QMutex mutex;
+    //mutex.lock();
     bool success = runLDCommand("quitall");
-    mutex.unlock();
+    //mutex.unlock();
     return success;
 }
 
 bool LDCommand::rebootInstance(QString instanceName)
 {
     LOGD(instanceName);
-    QMutex mutex;
-    mutex.lock();
+    //QMutex mutex;
+    //mutex.lock();
     bool success = runLDCommand(QString("reboot --name %1").arg(instanceName));
-    mutex.unlock();
+    //mutex.unlock();
     return success;
 }
 
@@ -194,10 +194,10 @@ bool LDCommand::checkEnscript(QString instanceName)
 bool LDCommand::coppyInstance(QString instanceName, QString fromInstanceName)
 {
     LOGD(instanceName + " from " + fromInstanceName);
-    QMutex mutex;
-    mutex.lock();
+    //QMutex mutex;
+    //mutex.lock();
     bool success = runLDCommand(QString("copy --name %1 --from %2").arg(instanceName).arg(fromInstanceName));
-    mutex.unlock();
+    //mutex.unlock();
     return success;
 }
 
@@ -220,8 +220,8 @@ bool LDCommand::isAppRunning(QString instanceName)
 
 bool LDCommand::sortWindow()
 {
-    QMutex mutex;
-    mutex.lock();
+    //QMutex mutex;
+    //mutex.lock();
     bool success = false;
     int windowsRowCount = 0;
     QFile configFile("LDSetup/vms/config/leidians.config");
@@ -255,7 +255,7 @@ bool LDCommand::sortWindow()
     configFile.close();
     success = runLDCommand("sortWnd");
     //"windowsRowCount"
-    mutex.unlock();
+    //mutex.unlock();
     return success;
 }
 
@@ -284,34 +284,34 @@ bool LDCommand::isExistedPackage(QString instanceName,QString packageName)
 
 bool LDCommand::pushFile(QString instanceName, QString filePath, QString target)
 {
-    QMutex mutex;
-    mutex.lock();
+    //QMutex mutex;
+    //mutex.lock();
     QString fileTemp = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/LDPlayer/Pictures/temp";
     if(QFile(fileTemp).exists()){
         QFile::remove(fileTemp);
     }
     bool success = runLDCommand(QString("push --name %1 --remote %2 --local %3").arg(instanceName).arg(filePath).arg(target));
-    mutex.unlock();
+    //mutex.unlock();
     return success;
 }
 
 bool LDCommand::pullFile(QString instanceName, QString remoteFile, QString localFile)
 {
-    QMutex mutex;
-    mutex.lock();
+    //QMutex mutex;
+    //mutex.lock();
     QString fileTemp = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/LDPlayer/Pictures/temp";
     if(QFile(fileTemp).exists()){
         QFile::remove(fileTemp);
     }
     bool success = runLDCommand(QString("pull --name %1 --remote %2 --local %3").arg(instanceName).arg(remoteFile).arg(localFile));
-    mutex.unlock();
+    //mutex.unlock();
     return success;
 }
 
 int LDCommand::isRunningDevice(QString instanceName)
 {
-    QMutex mutex;
-    mutex.lock();
+    //QMutex mutex;
+    //mutex.lock();
     int retVal = DEVICE_STATE::DEVICE_STATE_UNKNOW;
     QString output, error;
     if(runLDCommand(QString("isrunning --name %1").arg(instanceName),output,error)){
@@ -321,7 +321,7 @@ int LDCommand::isRunningDevice(QString instanceName)
             retVal = DEVICE_STATE::DEVICE_STATE_STOP;
         }
     }
-    mutex.unlock();
+    //mutex.unlock();
     return retVal;
 }
 
@@ -351,10 +351,10 @@ bool LDCommand::isExistedDevice(QString instanceName)
 bool LDCommand::renameDevice(QString deviceNameOld, QString deviceNameNew)
 {
     LOGD(deviceNameOld);
-    QMutex mutex;
-    mutex.lock();
+    //QMutex mutex;
+    //mutex.lock();
     bool success = runLDCommand(QString("rename --name %1 --title %2").arg(deviceNameOld).arg(deviceNameNew));
-    mutex.unlock();
+    //mutex.unlock();
     return success;
 }
 
@@ -396,10 +396,10 @@ int LDCommand::topWinId(QString instanceName)
 
 bool LDCommand::installApk(QString instanceName, QString apkPath)
 {
-    QMutex mutex;
-    mutex.lock();
+    //QMutex mutex;
+    //mutex.lock();
     bool success = runLDCommand(QString("installapp --name %1 --filename %2").arg(instanceName).arg(apkPath));
-    mutex.unlock();
+    //mutex.unlock();
     return success;
 }
 

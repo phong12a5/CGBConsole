@@ -84,7 +84,7 @@ void AppController::onCheckLDServices()
     double cpuPercent = PerformanceReader::instance()->currentCPUUsage();
     double diskPercent = PerformanceReader::instance()->currentDiskUsage();
     LOGD(QString("cpuPercent: %1 -- diskPercent: %2").arg(cpuPercent).arg(diskPercent));
-    if(cpuPercent > AVAILBLE_CPU_USAGE || diskPercent > AVAILBLE_DISK_USAGE) return;
+    if(cpuPercent > AVAILBLE_CPU_USAGE ) return;
 
     if(APP_MODEL->appStarted()) {
         if(m_ldServiceMap.keys().count() < AppModel::instance()->maxNumberThread()) {

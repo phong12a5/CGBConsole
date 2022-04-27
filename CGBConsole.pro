@@ -3,6 +3,8 @@ QT += gui \
       widgets
 
 CONFIG += c++11
+CONFIG += console
+
 DEFINES += USE_FILE_STEADOF_ADB
 
 
@@ -36,9 +38,11 @@ SOURCES += \
     LDCommand.cpp \
     PerformanceReader.cpp \
     LDService.cpp \
+    ui/informationtab.cpp
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    ui/informationtab.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -59,11 +63,12 @@ HEADERS += \
     MainWindow.h \
     PerformanceReader.h \
     CPdhQuery.h \
-    LDService.h \ \
+    LDService.h \
     ScreenInfo.h \
     ScreenNode.h \
     ScreenReferences.h \
-    Utility.h
+    Utility.h \
+    ui/informationtab.h
 
 LIBS += -L$$PWD/libs/ -lchilkat-9.5.0 -lws2_32 -lcrypt32 -ldnsapi
 LIBS += $$PWD/libs/Pdh.Lib

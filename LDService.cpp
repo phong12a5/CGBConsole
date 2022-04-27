@@ -75,26 +75,26 @@ void LDService::startService()
 
 QWidget* LDService::getLDWidget()
 {
-    if(m_ldWidget == nullptr) {
-        int bindWinId = LDCommand::bindWinId(m_ldInsName);
-        if(bindWinId > 0) {
-            m_ldWindow = QWindow::fromWinId(bindWinId);
-            m_ldWidget  = QWidget::createWindowContainer(m_ldWindow);
-        }
-    }
+//    if(m_ldWidget == nullptr) {
+//        int bindWinId = LDCommand::bindWinId(m_ldInsName);
+//        if(bindWinId > 0) {
+//            m_ldWindow = QWindow::fromWinId(bindWinId);
+//            m_ldWidget  = QWidget::createWindowContainer(m_ldWindow);
+//        }
+//    }
 
-    if(m_ldTopWidget == nullptr) {
-        int topWinId = LDCommand::topWinId(m_ldInsName);
-        LOGD(topWinId);
-        if(topWinId > 0) {
-            m_ldTopWindow = QWindow::fromWinId(topWinId);
-            m_ldTopWidget  = QWidget::createWindowContainer(m_ldTopWindow);
-        }
-        if(m_ldTopWidget) {
-            m_ldTopWindow->close();
-            m_ldTopWidget->close();
-        }
-    }
+//    if(m_ldTopWidget == nullptr) {
+//        int topWinId = LDCommand::topWinId(m_ldInsName);
+//        LOGD(topWinId);
+//        if(topWinId > 0) {
+//            m_ldTopWindow = QWindow::fromWinId(topWinId);
+//            m_ldTopWidget  = QWidget::createWindowContainer(m_ldTopWindow);
+//        }
+//        if(m_ldTopWidget) {
+//            m_ldTopWindow->close();
+//            m_ldTopWidget->close();
+//        }
+//    }
 
     return m_ldWidget;
 }
