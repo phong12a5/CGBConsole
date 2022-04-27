@@ -2,11 +2,13 @@
 #include "AppMain.h"
 #include <QFile>
 #include <QDir>
+#include "ConfigHelper.h"
 
 AppModel* AppModel::m_instance = nullptr;
 
 AppModel::AppModel(QObject *parent) : QObject(parent)
 {
+    ConfigHelper::initConfig();
     m_amountOfThread = 1;
     m_isLaunchMutiTask = false;
     m_latestRunningInstance = -1;
@@ -16,7 +18,7 @@ AppModel::AppModel(QObject *parent) : QObject(parent)
     m_appName = "fblite";
     m_walletEmpty = false;
     m_deviceCount = DEFAULT_MAX_VM_COUNT;
-    m_maxNumberThread = DEFAULT_MAX_VM_THREAD;
+    m_maxNumberThread = ConfigHelper::getNumThread();
     m_maxVMCount = DEFAULT_MAX_VM_COUNT;
     m_taskInProgress = "";
     m_resolution = "720,1280,320";
@@ -28,7 +30,7 @@ AppModel::AppModel(QObject *parent) : QObject(parent)
     m_validToken = false;
     m_cpuCoreCount = PerformanceReader::instance()->cpuCoreCount();
 
-    m_ldIntallFolder = "C:/LDPlayer/LDPlayer4.0";
+    m_ldIntallFolder = ConfigHelper::GetLDPlayerLibsPath();
     LDCommand::setLDPath(m_ldIntallFolder);
 }
 

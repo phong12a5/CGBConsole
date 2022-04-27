@@ -5,6 +5,7 @@
 #include <QEventLoop>
 #include <QTimer>
 #include <QThread>
+#include "ConfigHelper.h"
 
 #ifdef RELEASE_MODE
 #define LOGD(x) emit LogService::instance()->dologging("CGBConsole",__FUNCTION__,QString(x))
@@ -26,7 +27,7 @@
 #define ORIGIN_DEVICE_NAME      "LDPlayer"
 #define ORIGIN_DEVICE_NAME_OLD  "OrgDevice"
 
-#define DEFAULT_MAX_VM_THREAD   20
+#define DEFAULT_MAX_VM_THREAD   40
 #define DEFAULT_MAX_VM_COUNT    20
 #define DEFAULT_OPENAPK_TIME    20 // Unit seconds
 
@@ -42,7 +43,7 @@
 #define CHECK_CONNECT_FILENAME  ".checkconnect.st"
 
 #define AVAILBLE_DISK_USAGE     95
-#define AVAILBLE_CPU_USAGE      85
+#define AVAILBLE_CPU_USAGE      95
 
 typedef struct app_config_struct {
     int timeout;
@@ -67,7 +68,7 @@ typedef struct app_config_struct {
         user_type = 0;
         m_mobileCloneCount = 0;
         m_maxVmCount = DEFAULT_MAX_VM_COUNT;
-        m_maxVmThread = DEFAULT_MAX_VM_THREAD;
+        m_maxVmThread = ConfigHelper::getNumThread();
         m_ldCloneCount = 0;
         m_balance = -1;
         m_openApkAfterNSeconds = DEFAULT_OPENAPK_TIME;

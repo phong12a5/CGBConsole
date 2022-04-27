@@ -1,0 +1,2699 @@
+[
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.EditText",
+                    "clickable": true,
+                    "contentDescription": "Tên người dùng",
+                    "selected": false,
+                    "text": "Số điện thoại hoặc email"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.EditText",
+                    "clickable": true,
+                    "contentDescription": "Mật khẩu",
+                    "selected": false,
+                    "text": "Mật khẩu"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Đăng nhập",
+                    "selected": false,
+                    "text": "null"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_LOG_IN"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Cần có mã đăng nhập"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Hãy tạo mã từ ứng dụng xác thực của bạn rồi nhập mã đó để đăng nhập."
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "OK"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_CODE_2FA_DIALOG"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.EditText",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Mã đăng nhập"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Tiếp tục",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": true,
+                    "contentDescription": "Gửi lại mã",
+                    "selected": false,
+                    "text": "Gửi lại mã"
+                },
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": true,
+                    "contentDescription": "Bạn đang gặp sự cố?",
+                    "selected": false,
+                    "text": "Bạn đang gặp sự cố?"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_INPUT_2FA_CODE"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Lưu thông tin đăng nhập của bạn"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Lần tới khi đăng nhập vào điện thoại này, bạn chỉ cần nhấn vào ảnh đại diện thay vì nhập mật khẩu."
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Lúc khác"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "OK"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_SAVE_INFO"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Tìm kiếm bạn bè"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Bỏ qua",
+                    "selected": false,
+                    "text": "Bỏ qua"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Facebook sẽ tuyệt vời hơn khi có bạn bè"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Hãy liên tục tải lên danh bạ của mình để xem người nào đang sử dụng Facebook, rồi từ đó cho chúng tôi biết bạn muốn thêm ai làm bạn bè."
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Bắt đầu"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Bắt đầu"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Bỏ qua",
+                    "selected": false,
+                    "text": "Bỏ qua"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Tìm bạn bè"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Hãy liên tục tải lên danh bạ của mình để xem người nào đang sử dụng Facebook, rồi từ đó cho chúng tôi biết bạn muốn thêm ai làm bạn bè."
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Facebook sẽ tuyệt vời hơn khi có bạn bè"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Tìm bạn bè"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Bỏ qua",
+                    "selected": false,
+                    "text": "Bỏ qua"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": false,
+                    "contentDescription": "Quay lại",
+                    "selected": false,
+                    "text": "null"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Thêm bạn bè"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Bỏ qua",
+                    "selected": false,
+                    "text": "Bỏ qua"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_FIND_FRIEND"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Cho phép Facebook truy cập vị trí của bạn?",
+                    "selected": false,
+                    "text": "Cho phép Facebook truy cập vị trí của bạn?"
+                },
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Facebook dùng thông tin này để mang đến trải nghiệm phù hợp với mỗi cá nhân hơn, như giúp bạn check in, tìm sự kiện tại địa phương và nhận được quảng cáo hữu ích hơn.",
+                    "selected": false,
+                    "text": "Facebook dùng thông tin này để mang đến trải nghiệm phù hợp với mỗi cá nhân hơn, như giúp bạn check in, tìm sự kiện tại địa phương và nhận được quảng cáo hữu ích hơn."
+                },
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Từ chối",
+                    "selected": false,
+                    "text": "Từ chối"
+                },
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Cho phép",
+                    "selected": false,
+                    "text": "Cho phép"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_REQUEST_ACCESS_LOCATION"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "AutoFarmer Support"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "AutoFamer Support"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_AUTOFARMER_SUPPORT"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Phát trực tiếp",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Phòng họp mặt",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Ảnh",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Tìm kiếm Facebook",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Nhắn tin",
+                    "selected": false,
+                    "text": "null"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Tìm kiếm",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Nhắn tin",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Đi tới trang cá nhân",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Viết bài trên Facebook",
+                    "selected": false,
+                    "text": "Viết bài trên Facebook"
+                },
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "BÀI VIẾT BẠN ĐÃ XEM",
+                    "selected": false,
+                    "text": "BÀI VIẾT BẠN ĐÃ XEM"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Trạng thái",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Ảnh",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Check in",
+                    "selected": false,
+                    "text": "null"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Tìm kiếm Facebook",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Nhắn tin",
+                    "selected": false,
+                    "text": "null"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Tìm kiếm",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Nhắn tin",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Đi tới trang cá nhân",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Viết bài trên Facebook",
+                    "selected": false,
+                    "text": "Viết bài trên Facebook"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Trạng thái",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Ảnh",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Check in",
+                    "selected": false,
+                    "text": "null"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Tìm kiếm",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Nhắn tin",
+                    "selected": false,
+                    "text": "null"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Search Facebook",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Messaging",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Make a post on Facebook",
+                    "selected": false,
+                    "text": "Make a post on Facebook"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Status",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Photo",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Check In",
+                    "selected": false,
+                    "text": "null"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Tìm kiếm Facebook",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Đi tới trang cá nhân",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Viết bài trên Facebook",
+                    "selected": false,
+                    "text": "Viết bài trên Facebook"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Trạng thái",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Ảnh",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Check in",
+                    "selected": false,
+                    "text": "null"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_HOME"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": true,
+                    "contentDescription": "Ảnh đại diện",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Menu bài viết",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": true,
+                    "contentDescription": "Nút Thích. Hãy nhấn đúp và giữ để bày tỏ cảm xúc.",
+                    "selected": false,
+                    "text": "Thích"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": true,
+                    "contentDescription": "Phím bình luận",
+                    "selected": false,
+                    "text": "Bình luận"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": true,
+                    "contentDescription": "Nút chia sẻ",
+                    "selected": false,
+                    "text": "Chia sẻ"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": true,
+                    "contentDescription": "Quay lại",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": true,
+                    "contentDescription": "Tìm kiếm",
+                    "selected": false,
+                    "text": "null"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": true,
+                    "contentDescription": "Phím bình luận",
+                    "selected": false,
+                    "text": "Bình luận"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": true,
+                    "contentDescription": "Ảnh đại diện",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Menu bài viết",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": true,
+                    "contentDescription": "Nút chia sẻ",
+                    "selected": false,
+                    "text": "Chia sẻ"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": true,
+                    "contentDescription": "Quay lại",
+                    "selected": false,
+                    "text": "null"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": true,
+                    "contentDescription": "Ảnh đại diện",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Menu bài viết",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": true,
+                    "contentDescription": "Quay lại",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": true,
+                    "contentDescription": "Tìm kiếm",
+                    "selected": false,
+                    "text": "null"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": true,
+                    "contentDescription": "Tìm kiếm",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": true,
+                    "contentDescription": "Quay lại",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.EditText",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Viết bình luận..."
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": true,
+                    "contentDescription": "Quay lại",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": true,
+                    "contentDescription": "Tìm kiếm",
+                    "selected": false,
+                    "text": "null"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageButton",
+                    "clickable": true,
+                    "contentDescription": "Tìm kiếm",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": true,
+                    "contentDescription": "Xem thêm",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": true,
+                    "contentDescription": "Phím bình luận",
+                    "selected": false,
+                    "text": "Bình luận"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": true,
+                    "contentDescription": "Nút chia sẻ",
+                    "selected": false,
+                    "text": "Chia sẻ"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": false,
+                    "contentDescription": "Video",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": true,
+                    "contentDescription": "Nút chia sẻ",
+                    "selected": false,
+                    "text": "Chia sẻ"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": true,
+                    "contentDescription": "Phím bình luận",
+                    "selected": false,
+                    "text": "Bình luận"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Chia sẻ",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": true,
+                    "contentDescription": "Quay lại",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Gửi tin nhắn",
+                    "selected": false,
+                    "text": "Gửi tin nhắn"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": true,
+                    "contentDescription": "Nút chia sẻ",
+                    "selected": false,
+                    "text": "Chia sẻ"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": true,
+                    "contentDescription": "Phím bình luận",
+                    "selected": false,
+                    "text": "Bình luận"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": true,
+                    "contentDescription": "Xem thêm",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.FrameLayout",
+                    "clickable": false,
+                    "contentDescription": "Gắn thẻ thêm bạn bè",
+                    "selected": false,
+                    "text": "null"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": true,
+                    "contentDescription": "Nút chia sẻ",
+                    "selected": false,
+                    "text": "Chia sẻ"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": true,
+                    "contentDescription": "Phím bình luận",
+                    "selected": false,
+                    "text": "Bình luận"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageButton",
+                    "clickable": true,
+                    "contentDescription": "Tìm kiếm",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": true,
+                    "contentDescription": "Nút chia sẻ",
+                    "selected": false,
+                    "text": "Chia sẻ"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": true,
+                    "contentDescription": "Xem thêm",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.FrameLayout",
+                    "clickable": false,
+                    "contentDescription": "Gắn thẻ thêm bạn bè",
+                    "selected": false,
+                    "text": "null"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "Video khác",
+                    "selected": false,
+                    "text": "Video khác"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Tìm kiếm",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": true,
+                    "contentDescription": "Toàn màn hình",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Tùy chọn khác",
+                    "selected": false,
+                    "text": "null"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": true,
+                    "contentDescription": "Nút chia sẻ",
+                    "selected": false,
+                    "text": "Chia sẻ"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": true,
+                    "contentDescription": "Xem thêm",
+                    "selected": false,
+                    "text": "null"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": true,
+                    "contentDescription": "Nút chia sẻ",
+                    "selected": false,
+                    "text": "Chia sẻ"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Xem thêm"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": true,
+                    "contentDescription": "Ảnh đại diện",
+                    "selected": false,
+                    "text": "null"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_POST"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Xposed Installer"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageButton",
+                    "clickable": true,
+                    "contentDescription": "Open navigation drawer",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": true,
+                    "contentDescription": "Tùy chọn khác",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "YOUR DEVICE"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "GỠ CÀI ĐẶT"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "CÀI ĐẶT/CẬP NHẬT"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_XPOSED_INSTALLER"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Install"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Install via recovery"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Delete downloaded file"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Install"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Install via recovery"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_XPOSED_DIALOG_INSTALL"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Cài đặt/Cập nhật"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageButton",
+                    "clickable": true,
+                    "contentDescription": "Điều hướng lên trên",
+                    "selected": false,
+                    "text": "null"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_XPOSED_INSTALLING"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Hãy chờ một phút trong khi chúng tôi thiết lập Tiếng Việt…"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.ProgressBar",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "null"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_LOAD_VIETNAMESE"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.view.View",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Mật khẩu và bảo mật"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_PASSWORD"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Superuser Request"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Xposed Installer is requesting Superuser access."
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Xposed Installer"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_REQUEST_ROOT"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Mã bạn nhập không chính xác. Vui lòng thử lại."
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Lỗi xác thực"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "OK"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_CODE_EXPIRED"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.view.View",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Tài khoản của bạn đã bị vô hiệu hóa"
+                },
+                {
+                    "checked": false,
+                    "className": "android.view.View",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Tìm hiểu thêm về Tiêu chuẩn cộng đồng của chúng tôi"
+                },
+                {
+                    "checked": false,
+                    "className": "android.webkit.WebView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Facebook"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Yêu cầu xem xét lại"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_CHECK_POINT"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Chúng tôi gặp sự cố khi thiết lập Facebook bằng Tiếng Việt ngay lúc này. Bạn có thể thử lại hoặc tạm thời sử dụng Facebook bằng tiếng Anh (Mỹ)."
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "THỬ LẠI"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "TIẾP TỤC BẰNG TIẾNG ANH (MỸ)"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_LOAD_VIETNAMESE_FAILED"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Mất kết nối"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Nhấn để thử lại"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Connection Lost"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Tap to Retry"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_LOST_INTERNET_CONNECTION"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Đang đợi tải xuống"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Version 89"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "BỎ"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_XPOSED_DOWNLOADING"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Không thể phát video"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Đã xảy ra lỗi. Bạn có thể thoát khỏi video hoặc thử lại."
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "THOÁT"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "THỬ LẠI"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_VIDEO_PLAY_FAILED"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Session Expired"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Please log in again."
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "OK"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Phiên đã hết hạn"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Vui lòng đăng nhập lại."
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "ĐỒNG Ý"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_SESSION_EXPIRED"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Giờ bạn chưa dùng được tính năng này"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Để bảo vệ cộng đồng khỏi spam, chúng tôi giới hạn tần suất bạn đăng bài, bình luận hoặc làm các việc khác trong khoảng thời gian nhất định. Bạn có thể thử lại sau. Tìm hiểu thêm"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "OK"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_LIMITED_FUNCTION"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Bạn có chắc chắn muốn bỏ qua bước này không?"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Khi nhập danh bạ, bạn có thể tìm bạn bè dễ dàng hơn. Nhờ đó Facebook có thể cung cấp và cải thiện quảng cáo cho bạn cùng người khác, cũng như mang đến dịch vụ tốt hơn."
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "BỎ QUA"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Bạn muốn bỏ qua bước này hay thêm 5 người bạn ngay bây giờ?"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Nếu thêm bạn bè ngay, bạn sẽ thấy ảnh, bài viết, v.v. của họ nhanh hơn."
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "BỎ QUA"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Tìm kiếm bạn bè"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "BỎ QUA"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "TÌM KIẾM BẠN BÈ"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "BỎ QUA"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "THÊM 1 BẠN BÈ"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "BỎ QUA"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "THÊM 2 BẠN BÈ"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "BỎ QUA"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "THÊM 3 BẠN BÈ"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "BỎ QUA"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "THÊM 4 BẠN BÈ"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "BỎ QUA"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "THÊM 5 BẠN BÈ"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_CONFIRM_INORGE_FIND_FRIEND"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Đang đăng nhập…",
+                    "selected": false,
+                    "text": "Đang đăng nhập…"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_LOADING_LOGIN"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Người theo dõi",
+                    "selected": false,
+                    "text": "Người theo dõi"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "CHIA SẺ",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Viết bình luận..."
+                },
+                {
+                    "checked": false,
+                    "className": "android.view.View",
+                    "clickable": true,
+                    "contentDescription": "Yêu thích",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "TRỰC TIẾP"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_POST_LIVE_STREAM"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Đóng ứng dụng"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Facebook không phản hồi"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Đợi"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_FACEBOOK_NOT_RESPONSE"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Mở bằng"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "CHỈ MỘT LẦN"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "LUÔN CHỌN"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_SELECT_APP_OPEN"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": true,
+                    "contentDescription": "Quay lại",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.EditText",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Tìm kiếm"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_LOADING_PAGE"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "ảnh bìa của trang",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Ảnh đại diện",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Gửi tin nhắn",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": false,
+                    "contentDescription": "nút thích",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Giới thiệu",
+                    "selected": false,
+                    "text": "Giới thiệu"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": true,
+                    "contentDescription": "Quay lại",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Chia sẻ",
+                    "selected": false,
+                    "text": "null"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "ảnh bìa của trang",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Ảnh đại diện",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": false,
+                    "contentDescription": "nút thích",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Gọi ngay",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": true,
+                    "contentDescription": "Gửi tin nhắn",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Giới thiệu",
+                    "selected": false,
+                    "text": "Giới thiệu"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": false,
+                    "contentDescription": "Chỉnh sửa",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": false,
+                    "contentDescription": "Gợi ý chỉnh sửa",
+                    "selected": false,
+                    "text": "Gợi ý chỉnh sửa"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": true,
+                    "contentDescription": "Quay lại",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Chia sẻ",
+                    "selected": false,
+                    "text": "null"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_PAGE"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Tạo Trang",
+                    "selected": false,
+                    "text": "Tạo Trang"
+                },
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Tìm sự hỗ trợ hoặc báo cáo Trang",
+                    "selected": false,
+                    "text": "Tìm sự hỗ trợ hoặc báo cáo Trang"
+                },
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Gợi ý chỉnh sửa",
+                    "selected": false,
+                    "text": "Gợi ý chỉnh sửa"
+                },
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Chia sẻ",
+                    "selected": false,
+                    "text": "Chia sẻ"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_PAGE_MORE_OPTION"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": false,
+                    "contentDescription": "Báo cáo trang cá nhân",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": true,
+                    "contentDescription": "Quay lại",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Cài đặt trang cá nhân",
+                    "selected": false,
+                    "text": "Cài đặt trang cá nhân"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": false,
+                    "contentDescription": "Chặn",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": false,
+                    "contentDescription": "Tìm kiếm trên trang cá nhân",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Sao chép liên kết",
+                    "selected": false,
+                    "text": "null"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": true,
+                    "contentDescription": "Ảnh đại diện",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Bảo vệ ảnh đại diện",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": true,
+                    "contentDescription": "Quay lại",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.EditText",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Tìm kiếm"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.EditText",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Tìm kiếm"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": true,
+                    "contentDescription": "Quay lại",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Xem thêm",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Nhắn tin",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Theo dõi",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": true,
+                    "contentDescription": "Ảnh đại diện",
+                    "selected": false,
+                    "text": "null"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": true,
+                    "contentDescription": "Ảnh đại diện",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Thêm bạn bè",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Nhắn tin",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Xem thêm",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": true,
+                    "contentDescription": "Quay lại",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.EditText",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Tìm kiếm"
+                }
+            ],
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.EditText",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Tìm kiếm"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": true,
+                    "contentDescription": "Quay lại",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Xem thêm",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Nhắn tin",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Thêm bạn bè",
+                    "selected": false,
+                    "text": "null"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_PROFILE"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Trang này chưa thể hiển thị ngay",
+                    "selected": false,
+                    "text": "Trang này chưa thể hiển thị ngay"
+                },
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Đây có thể là do lỗi kỹ thuật mà chúng tôi đang tìm cách khắc phục. Hãy thử tải lại trang này.",
+                    "selected": false,
+                    "text": "Đây có thể là do lỗi kỹ thuật mà chúng tôi đang tìm cách khắc phục. Hãy thử tải lại trang này."
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Tải lại Trang",
+                    "selected": false,
+                    "text": "null"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_LOAD_PAGE_FAILED"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Cài đặt trang cá nhân",
+                    "selected": false,
+                    "text": "Cài đặt trang cá nhân"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": false,
+                    "contentDescription": "Theo dõi",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": false,
+                    "contentDescription": "Tìm hỗ trợ hoặc báo cáo trang cá nhân",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": false,
+                    "contentDescription": "Chặn",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Sao chép liên kết",
+                    "selected": false,
+                    "text": "null"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_PROFILE_MORE_OPTION"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Xem thêm",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Bắt buộc: Xem lại cài đặt dữ liệu của bạn",
+                    "selected": false,
+                    "text": "Bắt buộc: Xem lại cài đặt dữ liệu của bạn"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "BẮT ĐẦU",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Các luật về dữ liệu cá nhân đang thay đổi tại Brazil và chúng tôi muốn bạn dễ dàng xem được một số cài đặt dữ liệu của mình.",
+                    "selected": false,
+                    "text": "Các luật về dữ liệu cá nhân đang thay đổi tại Brazil và chúng tôi muốn bạn dễ dàng xem được một số cài đặt dữ liệu của mình."
+                }
+            ]
+        ],
+        "screenId": "SCREEN_REVIEW_DATA_1"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Dữ liệu cá nhân nhạy cảm",
+                    "selected": false,
+                    "text": "Dữ liệu cá nhân nhạy cảm"
+                },
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Nếu bạn thêm dữ liệu nhạy cảm vào trang cá nhân, chúng tôi sẽ dùng để cá nhân hóa nội dung và để phân tích",
+                    "selected": false,
+                    "text": "Nếu bạn thêm dữ liệu nhạy cảm vào trang cá nhân, chúng tôi sẽ dùng để cá nhân hóa nội dung và để phân tích"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "QUẢN LÝ CÀI ĐẶT DỮ LIỆU",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "CHẤP NHẬN VÀ TIẾP TỤC",
+                    "selected": false,
+                    "text": "null"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_REVIEW_DATA_2"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Quảng cáo dựa trên dữ liệu của đối tác",
+                    "selected": false,
+                    "text": "Quảng cáo dựa trên dữ liệu của đối tác"
+                },
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Chúng tôi hiển thị cho bạn quảng cáo phù hợp hơn bằng cách sử dụng dữ liệu từ nhà quảng cáo, nhà phát hành và nhà phát triển ứng dụng",
+                    "selected": false,
+                    "text": "Chúng tôi hiển thị cho bạn quảng cáo phù hợp hơn bằng cách sử dụng dữ liệu từ nhà quảng cáo, nhà phát hành và nhà phát triển ứng dụng"
+                },
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Chúng tôi quan tâm đến việc bảo vệ quyền riêng tư của bạn. Chúng tôi không bán dữ liệu của bạn và đã thiết kế hệ thống quảng cáo để hiển thị cho bạn quảng cáo phù hợp và hữu ích mà không cần tiết lộ danh tính của bạn với nhà quảng cáo. Để hiển thị cho bạn quảng cáo phù hợp hơn, chúng tôi sử dụng dữ liệu mà nhà quảng cáo, nhà phát hành và nhà phát triển ứng dụng cung cấp cho chúng tôi về hoạt động của bạn bên ngoài Facebook Company Products. Dữ liệu này bao gồm việc bạn sử dụng các trang web, ứng dụng của đối tác và thực hiện một số tương tác nhất định với họ ở ngoài đời, chẳng hạn như mua hàng. Bạn kiểm soát việc chúng tôi có sử dụng dữ liệu này để hiển thị quảng cáo cho bạn hay không. Hãy chọn Chấp nhận và tiếp tục để xác nhận rằng chúng tôi có thể dùng dữ liệu này nhằm quyết định hiển thị quảng cáo nào cho bạn. Nếu không muốn như vậy, hãy chọn Quản lý cài đặt dữ liệu.",
+                    "selected": false,
+                    "text": "Chúng tôi quan tâm đến việc bảo vệ quyền riêng tư của bạn. Chúng tôi không bán dữ liệu của bạn và đã thiết kế hệ thống quảng cáo để hiển thị cho bạn quảng cáo phù hợp và hữu ích mà không cần tiết lộ danh tính của bạn với nhà quảng cáo. Để hiển thị cho bạn quảng cáo phù hợp hơn, chúng tôi sử dụng dữ liệu mà nhà quảng cáo, nhà phát hành và nhà phát triển ứng dụng cung cấp cho chúng tôi về hoạt động của bạn bên ngoài Facebook Company Products. Dữ liệu này bao gồm việc bạn sử dụng các trang web, ứng dụng của đối tác và thực hiện một số tương tác nhất định với họ ở ngoài đời, chẳng hạn như mua hàng. Bạn kiểm soát việc chúng tôi có sử dụng dữ liệu này để hiển thị quảng cáo cho bạn hay không. Hãy chọn Chấp nhận và tiếp tục để xác nhận rằng chúng tôi có thể dùng dữ liệu này nhằm quyết định hiển thị quảng cáo nào cho bạn. Nếu không muốn như vậy, hãy chọn Quản lý cài đặt dữ liệu."
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "QUẢN LÝ CÀI ĐẶT DỮ LIỆU",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "CHẤP NHẬN VÀ TIẾP TỤC",
+                    "selected": false,
+                    "text": "null"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_REVIEW_DATA_3"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "ĐÃ CHẤP NHẬN",
+                    "selected": false,
+                    "text": "ĐÃ CHẤP NHẬN"
+                },
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Quảng cáo dựa trên dữ liệu của đối tác",
+                    "selected": false,
+                    "text": "Quảng cáo dựa trên dữ liệu của đối tác"
+                },
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Chúng tôi hiển thị cho bạn quảng cáo phù hợp hơn bằng cách sử dụng dữ liệu từ nhà quảng cáo, nhà phát hành và nhà phát triển ứng dụng",
+                    "selected": false,
+                    "text": "Chúng tôi hiển thị cho bạn quảng cáo phù hợp hơn bằng cách sử dụng dữ liệu từ nhà quảng cáo, nhà phát hành và nhà phát triển ứng dụng"
+                },
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Chúng tôi quan tâm đến việc bảo vệ quyền riêng tư của bạn. Chúng tôi không bán dữ liệu của bạn và đã thiết kế hệ thống quảng cáo để hiển thị cho bạn quảng cáo phù hợp và hữu ích mà không cần tiết lộ danh tính của bạn với nhà quảng cáo. Để hiển thị cho bạn quảng cáo phù hợp hơn, chúng tôi sử dụng dữ liệu mà nhà quảng cáo, nhà phát hành và nhà phát triển ứng dụng cung cấp cho chúng tôi về hoạt động của bạn bên ngoài Facebook Company Products. Dữ liệu này bao gồm việc bạn sử dụng các trang web, ứng dụng của đối tác và thực hiện một số tương tác nhất định với họ ở ngoài đời, chẳng hạn như mua hàng. Bạn kiểm soát việc chúng tôi có sử dụng dữ liệu này để hiển thị quảng cáo cho bạn hay không. Hãy chọn Chấp nhận và tiếp tục để xác nhận rằng chúng tôi có thể dùng dữ liệu này nhằm quyết định hiển thị quảng cáo nào cho bạn. Nếu không muốn như vậy, hãy chọn Quản lý cài đặt dữ liệu.",
+                    "selected": false,
+                    "text": "Chúng tôi quan tâm đến việc bảo vệ quyền riêng tư của bạn. Chúng tôi không bán dữ liệu của bạn và đã thiết kế hệ thống quảng cáo để hiển thị cho bạn quảng cáo phù hợp và hữu ích mà không cần tiết lộ danh tính của bạn với nhà quảng cáo. Để hiển thị cho bạn quảng cáo phù hợp hơn, chúng tôi sử dụng dữ liệu mà nhà quảng cáo, nhà phát hành và nhà phát triển ứng dụng cung cấp cho chúng tôi về hoạt động của bạn bên ngoài Facebook Company Products. Dữ liệu này bao gồm việc bạn sử dụng các trang web, ứng dụng của đối tác và thực hiện một số tương tác nhất định với họ ở ngoài đời, chẳng hạn như mua hàng. Bạn kiểm soát việc chúng tôi có sử dụng dữ liệu này để hiển thị quảng cáo cho bạn hay không. Hãy chọn Chấp nhận và tiếp tục để xác nhận rằng chúng tôi có thể dùng dữ liệu này nhằm quyết định hiển thị quảng cáo nào cho bạn. Nếu không muốn như vậy, hãy chọn Quản lý cài đặt dữ liệu."
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "QUẢN LÝ CÀI ĐẶT DỮ LIỆU",
+                    "selected": false,
+                    "text": "null"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_REVIEW_DATA_4"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "TIẾP TỤC",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Chính sách dữ liệu",
+                    "selected": false,
+                    "text": "Chính sách dữ liệu"
+                },
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Tìm hiểu thêm về quyền của bạn",
+                    "selected": false,
+                    "text": "Tìm hiểu thêm về quyền của bạn"
+                },
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Xem bản cập nhật Chính sách dữ liệu của chúng tôi để tìm hiểu thêm về dữ liệu mà chúng tôi xử lý và quyền của bạn.",
+                    "selected": false,
+                    "text": "Xem bản cập nhật Chính sách dữ liệu của chúng tôi để tìm hiểu thêm về dữ liệu mà chúng tôi xử lý và quyền của bạn."
+                },
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Chúng tôi cũng tạo điều kiện để bạn dễ dàng kiểm soát dữ liệu, quyền riêng tư và cài đặt bảo mật bất cứ lúc nào bằng cách đi đến phần Cài đặt.",
+                    "selected": false,
+                    "text": "Chúng tôi cũng tạo điều kiện để bạn dễ dàng kiểm soát dữ liệu, quyền riêng tư và cài đặt bảo mật bất cứ lúc nào bằng cách đi đến phần Cài đặt."
+                }
+            ]
+        ],
+        "screenId": "SCREEN_REVIEW_DATA_5"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": true,
+                    "contentDescription": "đóng",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Tất cả đã xong!",
+                    "selected": false,
+                    "text": "Tất cả đã xong!"
+                },
+                {
+                    "checked": false,
+                    "className": "android.view.ViewGroup",
+                    "clickable": false,
+                    "contentDescription": "Cảm ơn bạn đã xem lại thông tin này. Bất kỳ lúc nào bạn cũng có thể truy cập vào phần Cài đặt để xem các lựa chọn của mình và quản lý cài đặt dữ liệu.",
+                    "selected": false,
+                    "text": "Cảm ơn bạn đã xem lại thông tin này. Bất kỳ lúc nào bạn cũng có thể truy cập vào phần Cài đặt để xem các lựa chọn của mình và quản lý cài đặt dữ liệu."
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "QUẢN LÝ CÀI ĐẶT DỮ LIỆU",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "ĐÓNG",
+                    "selected": false,
+                    "text": "null"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_REVIEW_DATA_DONE"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": false,
+                    "contentDescription": "Quay lại",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "Bỏ qua",
+                    "selected": false,
+                    "text": "Bỏ qua"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Thêm ảnh của bạn"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.ImageView",
+                    "clickable": true,
+                    "contentDescription": "Thêm ảnh",
+                    "selected": false,
+                    "text": "null"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Hãy thêm ảnh đại diện để bạn bè dễ dàng tìm thấy bạn hơn"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_ADD_AVATAR"
+    }
+]

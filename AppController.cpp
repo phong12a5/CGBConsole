@@ -76,7 +76,7 @@ void AppController::onCheckLDServices()
     LOGD("");
     double cpuPercent = PerformanceReader::instance()->currentCPUUsage();
     LOGD(QString("cpuPercent: %1").arg(cpuPercent));
-    if(cpuPercent > 80) return;
+    if(cpuPercent > AVAILBLE_CPU_USAGE) return;
 
     if(APP_MODEL->appStarted()) {
         if(m_ldServiceMap.keys().count() < AppModel::instance()->maxNumberThread()) {

@@ -8,6 +8,7 @@
 #include <QStandardPaths>
 #include <QScreen>
 #include <LDService.h>
+#include "ConfigHelper.h"
 
 #define APP_MODEL   AppModel::instance()
 #define APP_CTRL    AppController::instance()

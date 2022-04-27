@@ -14,43 +14,39 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QGroupBox" name="groupBox">
-    <property name="geometry">
-     <rect>
-      <x>1520</x>
-      <y>0</y>
-      <width>151</width>
-      <height>631</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>Settings</string>
-    </property>
-    <widget class="QPushButton" name="startBtn">
-     <property name="geometry">
-      <rect>
-       <x>40</x>
-       <y>470</y>
-       <width>75</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Start</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="gridWidget" native="true">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>1521</width>
-      <height>631</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout"/>
-   </widget>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QWidget" name="gridWidget" native="true">
+      <layout class="QGridLayout" name="gridLayout"/>
+     </widget>
+    </item>
+    <item>
+     <widget class="QGroupBox" name="groupBox">
+      <property name="minimumSize">
+       <size>
+        <width>300</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="title">
+       <string>Settings</string>
+      </property>
+      <widget class="QPushButton" name="startBtn">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>470</y>
+         <width>75</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Start</string>
+       </property>
+      </widget>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

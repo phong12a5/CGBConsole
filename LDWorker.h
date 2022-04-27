@@ -2,6 +2,7 @@
 #define LDWORKER_H
 
 #include <QObject>
+#include "LDPlayer.h"
 
 class LDWorker : public QObject
 {
@@ -25,6 +26,9 @@ private:
     QString m_name;
     bool app_running = false;
     bool m_started;
+    bool isGetElementOk = false;
+
+    LDPlayer *player{nullptr};
 };
 
 #endif // LDWORKER_H

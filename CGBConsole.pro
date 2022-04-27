@@ -20,8 +20,15 @@ DEFINES += QT_DEPRECATED_WARNINGS \
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    ConfigHelper.cpp \
+    DefinedScreen.cpp \
+    LDPlayer.cpp \
+    LDPlayerHelper.cpp \
     LDWorker.cpp \
     MainWindow.cpp \
+    ScreenInfo.cpp \
+    ScreenNode.cpp \
+    Utility.cpp \
     main.cpp \
     AppMain.cpp \
     AppModel.cpp \
@@ -43,12 +50,20 @@ HEADERS += \
     AppModel.h \
     AppDefines.h \
     AppController.h \
+    ConfigHelper.h \
+    DefinedScreen.h \
     LDCommand.h \
+    LDPlayer.h \
+    LDPlayerHelper.h \
     LDWorker.h \
     MainWindow.h \
     PerformanceReader.h \
     CPdhQuery.h \
-    LDService.h \
+    LDService.h \ \
+    ScreenInfo.h \
+    ScreenNode.h \
+    ScreenReferences.h \
+    Utility.h
 
 LIBS += -L$$PWD/libs/ -lchilkat-9.5.0 -lws2_32 -lcrypt32 -ldnsapi
 LIBS += $$PWD/libs/Pdh.Lib
