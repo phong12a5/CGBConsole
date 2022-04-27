@@ -12,16 +12,11 @@ bool unlockChilkat();
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-    QGuiApplication app(argc, argv);
-
     if (unlockChilkat()){
         LLOGD("unlockChilkat successfully");
     } else {
         LLOGD("unlockChilkat Failure");
     }
-
-    AppModel::instance();
 
     QProcess::execute("Taskkill /IM adb.exe /F");
     QProcess::execute("Taskkill /IM ld.exe /F");
@@ -35,7 +30,7 @@ int main(int argc, char *argv[])
 
     QApplication a(argc, argv);
     MainWindow w;
-    w.showMaximized();
+    w.show();
     return a.exec();
 }
 

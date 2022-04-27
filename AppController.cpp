@@ -73,23 +73,23 @@ void AppController::onLDServiceUpdate(int serviceId)
 
 void AppController::onCheckLDServices()
 {
-    LOGD("");
-    double cpuPercent = PerformanceReader::instance()->currentCPUUsage();
-    LOGD(QString("cpuPercent: %1").arg(cpuPercent));
-    if(cpuPercent > AVAILBLE_CPU_USAGE) return;
-
-    if(APP_MODEL->appStarted()) {
-        if(m_ldServiceMap.keys().count() < AppModel::instance()->maxNumberThread()) {
-            LDService* service = createLDService();
-            service->startService();
-        }
-    }
-
     foreach(int ldInsId, m_ldServiceMap.keys()) {
         LDService* service = m_ldServiceMap.value(ldInsId);
         QWidget* widget = service->getLDWidget();
         if(widget) {
             APP_MODEL->updateDevicesWidgetMap(ldInsId, widget);
+        }
+    }
+
+    double cpuPercent = PerformanceReader::instance()->currentCPUUsage();
+    double diskPercent = PerformanceReader::instance()->currentDiskUsage();
+    LOGD(QString("cpuPercent: %1 -- diskPercent: %2").arg(cpuPercent).arg(diskPercent));
+    if(cpuPercent > AVAILBLE_CPU_USAGE || diskPercent > AVAILBLE_DISK_USAGE) return;
+
+    if(APP_MODEL->appStarted()) {
+        if(m_ldServiceMap.keys().count() < AppModel::instance()->maxNumberThread()) {
+            LDService* service = createLDService();
+            service->startService();
         }
     }
 }

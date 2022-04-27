@@ -405,11 +405,11 @@ bool LDCommand::installApk(QString instanceName, QString apkPath)
 
 bool LDCommand::enableFElement(QString instanceName)
 {
-    ld_adb_command(instanceName,"shell settings put secure enabled_accessibility_services com.cgb.support/.service.QAccessibilityService", 3000);
+    ld_adb_command(instanceName,"shell settings put secure enabled_accessibility_services com.cgb.support/.service.QAccessibilityService", 100000);
     return true;
 }
 
 QString LDCommand::getElements(QString instanceName)
 {
-    return ld_adb_command(instanceName,"shell am broadcast -a com.cgb.support.SCREEN_ELEMENT_ACTION com.cgb.support", 3000);
+    return ld_adb_command(instanceName,"shell am broadcast -a com.cgb.support.SCREEN_ELEMENT_ACTION com.cgb.support", 100000);
 }
