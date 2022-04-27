@@ -100,7 +100,7 @@ void LDPlayer::disableAccessibilityService()
     }while (!isEnabled);
 }
 
-QJsonObject LDPlayer::getScreenElment()
+void LDPlayer::refreshScreenElement()
 {
 //    LOG;
     QString rs = LDCommand::getElements(profile.name); /*command({"shell","am","broadcast","-a","com.cgb.support.SCREEN_ELEMENT_ACTION","com.cgb.support"})*/;
@@ -139,7 +139,8 @@ QJsonObject LDPlayer::getScreenElment()
                         rt.insert("screenId",screenArr);
                         rt.insert("elements",doc.array());
 //                        Utility::writeTo(ConfigHelper::getScreenLogPath(),QString(QJsonDocument(rt).toJson(QJsonDocument::Compact))+"\n",true);
-                        return rt;
+                        m_currentScreen = rt;
+                        return;
                     }
 
                     screenArr.append(SCREEN_UNKNOWN);
@@ -147,15 +148,15 @@ QJsonObject LDPlayer::getScreenElment()
                     rt.insert("elements",doc.array());
 //                    LOG<<"rt"<<QJsonDocument(rt).toJson(QJsonDocument::Compact);
                     Utility::writeTo(ConfigHelper::getScreenLogPath(),QString(QJsonDocument(rt).toJson(QJsonDocument::Compact))+"\n",true);
-
-                    return rt;
+                    m_currentScreen = rt;
+                    return;
                 }
             }
         }
 
     }
 
-    return QJsonObject();
+    m_currentScreen = QJsonObject();
 }
 
 QPoint LDPlayer::findPosition(QJsonArray screen, QString key, PropertyType type)
@@ -165,9 +166,9 @@ QPoint LDPlayer::findPosition(QJsonArray screen, QString key, PropertyType type)
             int x = screen[i].toObject()["x"].toInt();
             int y = screen[i].toObject()["y"].toInt();
             if(x>=0
-                && x<=320
+//                && x<=320
                 && y>=0
-                && y<=480){
+                /*&& y<=480*/){
                 return QPoint(x,y);
             }
         }
@@ -443,9 +444,8 @@ void LDPlayer::clearData(QString packageName)
 
 bool LDPlayer::isContains(QString key, PropertyType type)
 {
-    QJsonObject screen = getScreenElment();
-    if(screen.contains("elements")){
-        return findPosition(screen["elements"].toArray(),key,type) != INVALID_POINT;
+    if(m_currentScreen.contains("elements")){
+        return findPosition(m_currentScreen["elements"].toArray(),key,type) != INVALID_POINT;
     }
 
     return false;
@@ -453,9 +453,8 @@ bool LDPlayer::isContains(QString key, PropertyType type)
 
 QPoint LDPlayer::getPositionOf(QString key, PropertyType type)
 {
-    QJsonObject screen = getScreenElment();
-    if(screen.contains("elements")){
-        return findPosition(screen["elements"].toArray(),key,type);
+    if(m_currentScreen.contains("elements")){
+        return findPosition(m_currentScreen["elements"].toArray(),key,type);
     }
 
 
@@ -486,10 +485,10 @@ QJsonArray LDPlayer::getScreenId()
         }
     }
 
-    QJsonObject screenElement = getScreenElment();
-    if(screenElement.contains("screenId")){
-        LOG<<screenElement["screenId"];
-        return screenElement["screenId"].toArray();
+    refreshScreenElement();
+    if(m_currentScreen.contains("screenId")){
+        LOG<<m_currentScreen["screenId"];
+        return m_currentScreen["screenId"].toArray();
     }
 
     return QJsonArray();

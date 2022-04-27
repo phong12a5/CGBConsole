@@ -113,11 +113,13 @@ private:
     //interactive
     QImage *avatar = nullptr;
     QList<DefinedScreen*> m_screens;
+    QJsonObject m_currentScreen;
 
     void loadScreen();
 
     //methods
-    QJsonObject getScreenElment();
+    void refreshScreenElement();
+
     QPoint findPosition(QJsonArray screen, QString key, PropertyType type);
 
     QString propertyToString(PropertyType type);
