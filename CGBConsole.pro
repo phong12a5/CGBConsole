@@ -94,7 +94,7 @@ RC_ICONS = Logo.ico
 
 win32:CONFIG(release, debug|release): {
 #    QMAKE_POST_LINK += mt -manifest $$PWD/manifest.xml -outputresource:$$OUT_PWD/release/$$TARGET".exe" $$escape_expand(\n\t)
-    CONFIG += console
+#    CONFIG += console
 ##    DEFINES += RELEASE_MODE
 }
 else:win32:CONFIG(debug, debug|release): {
