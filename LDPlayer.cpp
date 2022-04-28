@@ -21,7 +21,7 @@ LDPlayer::LDPlayer(QString name)
 {
     this->ldhelper = new LDPlayerHelper();
     this->profile = ldhelper->getProfileByName(name);
-    LOG<<profile.id<<profile.name<<profile.address;
+    LOG<<profile.id<<profile.id<<profile.address;
 
     m_screens = QList<DefinedScreen*>();
 
@@ -103,7 +103,7 @@ void LDPlayer::disableAccessibilityService()
 void LDPlayer::refreshScreenElement()
 {
 //    LOG;
-    QString rs = LDCommand::getElements(profile.name); /*command({"shell","am","broadcast","-a","com.cgb.support.SCREEN_ELEMENT_ACTION","com.cgb.support"})*/;
+    QString rs = LDCommand::getElements(profile.id); /*command({"shell","am","broadcast","-a","com.cgb.support.SCREEN_ELEMENT_ACTION","com.cgb.support"})*/;
     LOG<<rs;
     QRegExp rg("(\\{.{0,3}elements.+:.+\\})");
 //    printf("%s",rs.toUtf8().data());
@@ -186,18 +186,6 @@ bool LDPlayer::restoreLDPlayer(QString filePath)
     return ldhelper->ldConsoleCommand({"restore","--index",QString::number(profile.id),"--file",filePath},true);
 }
 
-bool LDPlayer::rename(QString newName)
-{
-    if(newName == ""){
-        return false;
-    }
-    if(ldhelper->ldConsoleCommand({"rename","--index",QString::number(profile.id),"--title",newName},true)){
-        profile.name = newName;
-        return true;
-    }
-    return false;
-}
-
 bool LDPlayer::fakeDevice()
 {
     int retry = 0;
@@ -278,7 +266,7 @@ bool LDPlayer::isRunning()
     QString runninglist = ldhelper->ldConsoleCommand2(QStringList()<<"runninglist");
     QStringList listName = runninglist.split("\r\n");
     foreach(QString str,listName){
-        if(str == profile.name){
+        if(str == profile.id){
             return true;
         }
     }
@@ -417,7 +405,7 @@ bool LDPlayer::isAppRunning(QString packageName)
 {
     QStringList agruments;
     agruments<<"shell"<<"pidof"<<packageName;
-    QString out = LDCommand::ld_adb_command(profile.name,"shell pidof "+packageName);
+    QString out = LDCommand::ld_adb_command(profile.id,"shell pidof "+packageName);
     LOG<<": com.facebook.katana pid = "<<out;
     if(out.length() == 0){
         return false;
@@ -535,7 +523,7 @@ void LDPlayer::setupKeyboard(bool isUnicode)
 
 void LDPlayer::tapOn(double x, double y)
 {
-    LDCommand::ld_adb_command(profile.name,QString("shell input tap %1 %2").arg(x).arg(y));
+    LDCommand::ld_adb_command(profile.id,QString("shell input tap %1 %2").arg(x).arg(y));
 }
 
 void LDPlayer::tapOn(QPoint point)
@@ -553,25 +541,25 @@ void LDPlayer::inputText(QString content, bool isUnicode, bool isSlow)
 {
     LOG<<": "<<content;
     if(isUnicode){
-        LDCommand::ld_adb_command(profile.name,"shell ime set com.android.adbkeyboard/.AdbIME");
+        LDCommand::ld_adb_command(profile.id,"shell ime set com.android.adbkeyboard/.AdbIME");
     }else{
-        LDCommand::ld_adb_command(profile.name,"shell ime set com.android.inputmethod.pinyin/.InputService");
+        LDCommand::ld_adb_command(profile.id,"shell ime set com.android.inputmethod.pinyin/.InputService");
     }
 
     if(isSlow){
         for(int i=0;i<content.size();i++){
     //        Utility::waitForMiliseconds(50);
             if(isUnicode){
-                LDCommand::ld_adb_command(profile.name,"shell am broadcast -a ADB_INPUT_B64 --es msg '"+content.mid(i,1).toUtf8().toBase64()+"'");
+                LDCommand::ld_adb_command(profile.id,"shell am broadcast -a ADB_INPUT_B64 --es msg '"+content.mid(i,1).toUtf8().toBase64()+"'");
             }else{
-                LDCommand::ld_adb_command(profile.name,"shell input text '"+content.mid(i,1)+"'");
+                LDCommand::ld_adb_command(profile.id,"shell input text '"+content.mid(i,1)+"'");
             }
         }
     }else{
         if(isUnicode){
-            LDCommand::ld_adb_command(profile.name,"shell am broadcast -a ADB_INPUT_B64 --es msg '"+content.toUtf8().toBase64()+"'");
+            LDCommand::ld_adb_command(profile.id,"shell am broadcast -a ADB_INPUT_B64 --es msg '"+content.toUtf8().toBase64()+"'");
         }else{
-            LDCommand::ld_adb_command(profile.name,"shell input text \'"+content+"\'");
+            LDCommand::ld_adb_command(profile.id,"shell input text \'"+content+"\'");
         }
     }
 }

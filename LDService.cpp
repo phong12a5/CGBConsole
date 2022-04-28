@@ -21,7 +21,7 @@ LDService::LDService(int serviceId, QObject *parent) :
     m_ldTopWidget(nullptr)
 {
     m_ldThread = new QThread();
-    m_ldWorker = new LDWorker(m_ldInsName);
+    m_ldWorker = new LDWorker(m_serviceId);
 
     connect(m_ldThread, &QThread::started, this, &LDService::onThreadStarted);
     connect(m_ldThread, &QThread::finished, this, &LDService::onThreadFinished);

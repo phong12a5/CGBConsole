@@ -8,6 +8,8 @@
 #include <QJsonObject>
 #include <math.h>
 #include <QStandardPaths>
+#include <QRegularExpression>
+
 
 #define APP_MODEL AppModel::instance()
 
@@ -28,10 +30,10 @@ bool LDCommand::runLDCommand(QString args, int timeout)
     m_process.waitForFinished(timeout);
     QString output = m_process.readAllStandardOutput();
     QString error = m_process.readAllStandardError();
-    if(error != "")
-        LOGD("error: " + error);
-    if(output != "")
+    if(output != "") {
 //        LOGD("output: " + output);
+    }
+
     if(error != ""){
         LOGD(error);
         return false;
@@ -50,278 +52,128 @@ bool LDCommand::runLDCommand(QString args, QString &output, QString &error, int 
     m_process.waitForFinished(timeout);
     output = m_process.readAllStandardOutput();
     error = m_process.readAllStandardError();
-    if(error != "")
-        LOGD("error: " + error);
-    if(output != "")
+    if(output != "") {
 //        LOGD("output: " + output);
+    }
+
     if(error != ""){
+        LOGD("error: " + error);
         return false;
-    }else{
+    } else {
         return true;
     }
 }
 
-bool LDCommand::lunchInstance(QString instanceName)
+bool LDCommand::lunchInstance(int index)
 {
-    LOGD(instanceName);
-    //QMutex mutex;
-    //mutex.lock();
-    bool success = runLDCommand(QString("launch --name %1").arg(instanceName));
-    //mutex.unlock();
-    return success;
+    return runLDCommand(QString("launch --index %1").arg(index));
 }
 
-bool LDCommand::runApp(QString instanceName, QString packageName)
+bool LDCommand::runApp(int index, QString packageName)
 {
-    LOGD("instanceName: " + instanceName + " -- packageName: " + packageName);
-    //QMutex mutex;
-    //mutex.lock();
-    bool success = runLDCommand(QString("runapp --name %1 --packagename %2").arg(instanceName).arg(packageName));
-    //mutex.unlock();
-    return success;
+    return runLDCommand(QString("runapp --index %1 --packagename %2").arg(index).arg(packageName));
 }
 
-bool LDCommand::killApp(QString instanceName, QString packageName)
+bool LDCommand::killApp(int index, QString packageName)
 {
-    LOGD("instanceName: " + instanceName + " -- packageName: " + packageName);
-    //QMutex mutex;
-    //mutex.lock();
-    bool success = runLDCommand(QString("killapp --name %1 --packagename %2").arg(instanceName).arg(packageName));
-    //mutex.unlock();
-    return success;
+   return runLDCommand(QString("killapp --index %1 --packagename %2").arg(index).arg(packageName));
 }
 
-bool LDCommand::addInstance(QString instanceName)
+bool LDCommand::addInstance(int index)
 {
-    LOGD(instanceName);
-    //QMutex mutex;
-    //mutex.lock();
-    bool success = runLDCommand(QString("add --name %1").arg(instanceName));
-    //mutex.unlock();
-    return success;
+    return runLDCommand(QString("add --index %1").arg(index));
 }
 
-QString LDCommand::ld_adb_command(QString instanceName, QString cmd, int timeout)
+QString LDCommand::ld_adb_command(int index, QString cmd, int timeout)
 {
-    //QMutex mutex;
-    //mutex.lock();
-    QString output, error, retVal;
-    runLDCommand(QString("adb --name %1 --command \"%2\"").arg(instanceName).arg(cmd), output, error,timeout);
+    QString output, error;
+    runLDCommand(QString("adb --index %1 --command \"%2\"").arg(index).arg(cmd), output, error,timeout);
     if(error != ""){
-        retVal = error;
-    }else{
-        retVal = output;
+        LOGD(error);
     }
     if(output.contains("ADB server didn't")){
-        QProcess::execute("Taskkill /IM adb.exe /F");
-        QProcess::execute("LDSetup\adb.exe kill-server");
-        QProcess::execute("LDSetup\adb.exe start-server");
+//        QProcess::execute("Taskkill /IM adb.exe /F");
+//        QProcess::execute("LDSetup\adb.exe kill-server");
+//        QProcess::execute("LDSetup\adb.exe start-server");
+        LOGD(QString::number(index) + ": " + output);
     }
-    //mutex.unlock();
-    return  retVal;
+
+    if(output.contains("error: device not found")) {
+        LOGD(QString::number(index) + ": " + output);
+        LOGD("retry to connect: " + QString::number(index));
+        if(connectADB(index)) {
+            runLDCommand(QString("adb --index %1 --command \"%2\"").arg(index).arg(cmd), output, error,timeout);
+        }
+    }
+    return  output;
 }
 
-bool LDCommand::quitInstance(QString instanceName)
+bool LDCommand::quitInstance(int index)
 {
-    LOGD(instanceName);
-    //QMutex mutex;
-    //mutex.lock();
-    bool success = runLDCommand(QString("quit --name %1").arg(instanceName));
-    //mutex.unlock();
+    bool success = runLDCommand(QString("quit --index %1").arg(index));
     return success;
 }
 
 bool LDCommand::quitAll()
 {
-    LOGD("");
-    //QMutex mutex;
-    //mutex.lock();
     bool success = runLDCommand("quitall");
-    //mutex.unlock();
     return success;
 }
 
-bool LDCommand::rebootInstance(QString instanceName)
+bool LDCommand::rebootInstance(int index)
 {
-    LOGD(instanceName);
-    //QMutex mutex;
-    //mutex.lock();
-    bool success = runLDCommand(QString("reboot --name %1").arg(instanceName));
-    //mutex.unlock();
+    bool success = runLDCommand(QString("reboot --index %1").arg(index));
     return success;
 }
 
-bool LDCommand::checkConnection(QString instanceName)
+bool LDCommand::coppyInstance(int index, int fromIndex)
 {
-#ifdef USE_FILE_STEADOF_ADB
-    QString targetFileName = instanceName + ".checker";
-    QFile::remove(targetFileName);
-    if(runLDCommand(QString("pull --name %1 --remote /sdcard/Applications/%2 --local ./%3").arg(instanceName).arg(CHECK_CONNECT_FILENAME).arg(targetFileName),2000)){
-        if(QFile(targetFileName).exists()){
-            QFile::remove(targetFileName);
-            return true;
-        }
-    }
-    return false;
-#else
-    QString output;
-    output = ld_adb_command(instanceName,"shell ls | grep sdcard");
-    output = output.simplified();
-    if(output == "sdcard"){
-        LOGD << QString("Connect to %1: successful").arg(instanceName);
-        return true;
-    }else{
-        return false;
-    }
-#endif
-}
-
-bool LDCommand::checkEnscript(QString instanceName)
-{
-#ifdef USE_FILE_STEADOF_ADB
-    QString targetFileName = "." + instanceName + ".endscript";
-    QFile::remove(targetFileName);
-    if(runLDCommand(QString("pull --name %1 --remote /sdcard/Applications/%2 --local ./%3").arg(instanceName).arg(targetFileName).arg(targetFileName))){
-        if(QFile(targetFileName).exists()){
-            QFile::remove(targetFileName);
-            return true;
-        }
-    }
-    return false;
-#endif
-}
-
-bool LDCommand::coppyInstance(QString instanceName, QString fromInstanceName)
-{
-    LOGD(instanceName + " from " + fromInstanceName);
-    //QMutex mutex;
-    //mutex.lock();
-    bool success = runLDCommand(QString("copy --name %1 --from %2").arg(instanceName).arg(fromInstanceName));
-    //mutex.unlock();
+    bool success = runLDCommand(QString("copy --index %1 --from %2").arg(index).arg(fromIndex));
     return success;
 }
 
-bool LDCommand::isAppRunning(QString instanceName)
+bool LDCommand::isAppInForeground(int index, QString packageName)
 {
-#ifdef USE_FILE_STEADOF_ADB
-    QString targetFileName = "." + instanceName + ".running";
-    QFile::remove(targetFileName);
-    if(runLDCommand(QString("pull --name %1 --remote /sdcard/Applications/%2 --local ./%3").arg(instanceName).arg(targetFileName).arg(targetFileName))){
-        if(QFile(targetFileName).exists()){
-            QFile::remove(targetFileName);
-            return true;
-        }
-    }
-    return false;
-#else
-    return ld_adb_command(instanceName,QString("shell ps | grep %1").arg(FARM_PACKAGE_NAME)).contains(FARM_PACKAGE_NAME);
-#endif
+    QString output = ld_adb_command(index,"shell dumpsys window windows | grep -E 'mFocusedApp'| cut -d / -f 1 | cut -d ' ' -f 7");
+    return output.simplified() == packageName;
 }
 
 bool LDCommand::sortWindow()
 {
-    //QMutex mutex;
-    //mutex.lock();
-    bool success = false;
-    int windowsRowCount = 0;
-    QFile configFile("LDSetup/vms/config/leidians.config");
-    QJsonObject ldConfigObj;
-    int screenWidth = APP_MODEL->screenResolution().width();
-    int screenHeight = APP_MODEL->screenResolution().height();
-
-    for(int rowCol = 1; rowCol <= APP_MODEL->devicesRunningList().length(); rowCol++){
-        int rowcount = static_cast<int>(ceil(APP_MODEL->devicesRunningList().length()/static_cast<float>(rowCol)));
-        int deviceWidth = screenWidth/rowCol;
-        int deviceHeight = static_cast<int>(deviceWidth * 1.72);
-        if(rowcount * deviceHeight > screenHeight){
-            continue;
-        }else {
-            windowsRowCount = rowCol;
-            break;
-        }
-    }
-    if(windowsRowCount <= 0)
-        windowsRowCount = 4;
-    LOGD("windowsRowCount: " + QString::number(windowsRowCount) + " listRunning: " + QString::number(APP_MODEL->devicesRunningList().length()));
-
-    if(configFile.open(QIODevice::ReadOnly)){
-        ldConfigObj = QJsonDocument().fromJson(configFile.readAll()).object();
-    }
-    configFile.close();
-    if(configFile.open(QIODevice::WriteOnly |QIODevice::Truncate)){
-        ldConfigObj["windowsRowCount"] = windowsRowCount;
-        configFile.write(QJsonDocument(ldConfigObj).toJson());
-    }
-    configFile.close();
-    success = runLDCommand("sortWnd");
-    //"windowsRowCount"
-    //mutex.unlock();
-    return success;
+    return runLDCommand("sortWnd");
 }
 
-bool LDCommand::isExistedPackage(QString instanceName,QString packageName)
+bool LDCommand::pushFile(int index, QString filePath, QString target)
 {
-#if 0
-    QString output = ld_adb_command(instanceName,QString("shell pm list packages | grep %1").arg(packageName));
-    if(output.contains(packageName))
-        return true;
-    else
-        return false;
-#endif
-    Q_UNUSED(instanceName)
-    QFile file("LDSetup/data/apps.text");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        LOGD("Open file fail");
-    }
-    while (!file.atEnd()) {
-        QString line = QString(file.readLine());
-        LOGD("line: " + line);
-        if(line.contains(packageName))
-            return true;
-    }
-    return false;
-}
-
-bool LDCommand::pushFile(QString instanceName, QString filePath, QString target)
-{
-    //QMutex mutex;
-    //mutex.lock();
     QString fileTemp = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/LDPlayer/Pictures/temp";
     if(QFile(fileTemp).exists()){
         QFile::remove(fileTemp);
     }
-    bool success = runLDCommand(QString("push --name %1 --remote %2 --local %3").arg(instanceName).arg(filePath).arg(target));
-    //mutex.unlock();
+    bool success = runLDCommand(QString("push --index %1 --remote %2 --local %3").arg(index).arg(filePath).arg(target));
     return success;
 }
 
-bool LDCommand::pullFile(QString instanceName, QString remoteFile, QString localFile)
+bool LDCommand::pullFile(int index, QString remoteFile, QString localFile)
 {
-    //QMutex mutex;
-    //mutex.lock();
     QString fileTemp = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/LDPlayer/Pictures/temp";
     if(QFile(fileTemp).exists()){
         QFile::remove(fileTemp);
     }
-    bool success = runLDCommand(QString("pull --name %1 --remote %2 --local %3").arg(instanceName).arg(remoteFile).arg(localFile));
-    //mutex.unlock();
+    bool success = runLDCommand(QString("pull --index %1 --remote %2 --local %3").arg(index).arg(remoteFile).arg(localFile));
     return success;
 }
 
-int LDCommand::isRunningDevice(QString instanceName)
+int LDCommand::isRunningDevice(int index)
 {
-    //QMutex mutex;
-    //mutex.lock();
     int retVal = DEVICE_STATE::DEVICE_STATE_UNKNOW;
     QString output, error;
-    if(runLDCommand(QString("isrunning --name %1").arg(instanceName),output,error)){
+    if(runLDCommand(QString("isrunning --index %1").arg(index),output,error)){
         if(output.simplified() == "running")
             retVal = DEVICE_STATE::DEVICE_STATE_RUNNING;
         else if (output.simplified() == "stop") {
             retVal = DEVICE_STATE::DEVICE_STATE_STOP;
         }
     }
-    //mutex.unlock();
     return retVal;
 }
 
@@ -332,13 +184,13 @@ bool LDCommand::repairEmulator()
     return (result >= 32? true : false);
 }
 
-bool LDCommand::isExistedDevice(QString instanceName)
+bool LDCommand::isExistedDevice(int index)
 {
     QString deviceList;
     QString error;
     if(runLDCommand("list", deviceList, error)){
-        if(deviceList.contains(instanceName)){
-            LOGD("Device " + instanceName + " existed already");
+        if(deviceList.contains(index)){
+            LOGD("Device " + QString::number(index) + " existed already");
             return  true;
         } else {
             return false;
@@ -348,24 +200,14 @@ bool LDCommand::isExistedDevice(QString instanceName)
     }
 }
 
-bool LDCommand::renameDevice(QString deviceNameOld, QString deviceNameNew)
-{
-    LOGD(deviceNameOld);
-    //QMutex mutex;
-    //mutex.lock();
-    bool success = runLDCommand(QString("rename --name %1 --title %2").arg(deviceNameOld).arg(deviceNameNew));
-    //mutex.unlock();
-    return success;
-}
-
-int LDCommand::bindWinId(QString instanceName)
+int LDCommand::bindWinId(int index)
 {
     QString deviceListStr;
     QString error;
     if(runLDCommand("list2", deviceListStr, error)){
         QStringList deviceList = deviceListStr.split("\r\n");
         foreach(QString device, deviceList) {
-            if(device.contains(instanceName)) {
+            if(device.contains(index)) {
                 QStringList params = device.split(",");
                 if(params.length() == 7) {
                     return params[3].toInt();
@@ -376,14 +218,14 @@ int LDCommand::bindWinId(QString instanceName)
     return -1;
 }
 
-int LDCommand::topWinId(QString instanceName)
+int LDCommand::topWinId(int index)
 {
     QString deviceListStr;
     QString error;
     if(runLDCommand("list2", deviceListStr, error)){
         QStringList deviceList = deviceListStr.split("\r\n");
         foreach(QString device, deviceList) {
-            if(device.contains(instanceName)) {
+            if(device.contains(index)) {
                 QStringList params = device.split(",");
                 if(params.length() == 7) {
                     return params[2].toInt();
@@ -394,22 +236,45 @@ int LDCommand::topWinId(QString instanceName)
     return -1;
 }
 
-bool LDCommand::installApk(QString instanceName, QString apkPath)
+bool LDCommand::installApk(int index, QString apkPath)
 {
-    //QMutex mutex;
-    //mutex.lock();
-    bool success = runLDCommand(QString("installapp --name %1 --filename %2").arg(instanceName).arg(apkPath));
-    //mutex.unlock();
+    bool success = runLDCommand(QString("installapp --index %1 --filename %2").arg(index).arg(apkPath));
     return success;
 }
 
-bool LDCommand::enableFElement(QString instanceName)
+bool LDCommand::enableFElement(int index)
 {
-    ld_adb_command(instanceName,"shell settings put secure enabled_accessibility_services com.cgb.support/.service.QAccessibilityService", 100000);
+    ld_adb_command(index,"shell settings put secure enabled_accessibility_services com.cgb.support/.service.QAccessibilityService", 100000);
     return true;
 }
 
-QString LDCommand::getElements(QString instanceName)
+QString LDCommand::getElements(int index)
 {
-    return ld_adb_command(instanceName,"shell am broadcast -a com.cgb.support.SCREEN_ELEMENT_ACTION com.cgb.support", 100000);
+    return ld_adb_command(index,"shell am broadcast -a com.cgb.support.SCREEN_ELEMENT_ACTION com.cgb.support", 100000);
+}
+
+bool LDCommand::connectADB(int index)
+{
+    QString vmboxPath = s_installationPath + (s_installationPath.endsWith("/")? "" : "/") + "vms/leidian" + QString::number(index) + "/leidian.vbox";
+    LOGD(vmboxPath);
+    QFile vmbox(vmboxPath);
+    if (vmbox.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QString config = vmbox.readAll();
+        QRegExp regex("\"Rule 1\" proto=\"1\" hostport=\"(\\d{4})\"");
+        if(regex.indexIn(config) >= 0) {
+            bool ok;
+            int hostPort = regex.cap(1).toInt(&ok);
+            if(ok) {
+                QString cmd = QString("\"%1/adb.exe\" connect 127.0.0.1:%2").arg(s_installationPath).arg(hostPort);
+                LOGD(cmd);
+                QProcess m_process;
+                m_process.start(cmd);
+                m_process.waitForFinished(10000);
+                QString out = m_process.readAllStandardOutput();
+                LOGD(out);
+                if(out.contains("connected to")) return true;
+            }
+        }
+    }
+    return false;
 }

@@ -8,7 +8,7 @@ class LDWorker : public QObject
 {
     Q_OBJECT
 public:
-    explicit LDWorker(QString name, QObject *parent = nullptr);
+    explicit LDWorker(int ldIndex, QObject *parent = nullptr);
     ~LDWorker();
 
 public slots:
@@ -23,7 +23,7 @@ private:
     void postDelay(int milSec);
 
 private:
-    QString m_name;
+    int m_ldIndex;
     bool app_running = false;
     bool m_started;
     bool isGetElementOk = false;

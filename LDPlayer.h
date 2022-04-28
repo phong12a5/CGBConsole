@@ -44,7 +44,6 @@ public:
     QString getCurrentProxy();
     void openDeepLink(QString deepLink);
     bool restoreLDPlayer(QString filePath);
-    bool rename(QString newName);
     bool fakeDevice();
     QString getXposedData();
     void restoreDeviceInfo(QJsonObject xposedData);

@@ -3,7 +3,6 @@ QT += gui \
       widgets
 
 CONFIG += c++11
-CONFIG += console
 
 DEFINES += USE_FILE_STEADOF_ADB
 
@@ -78,13 +77,13 @@ INCLUDEPATH += $$PWD/include/chilkat_mingw/
 
 RC_ICONS = Logo.ico
 
-#win32:CONFIG(release, debug|release): {
+win32:CONFIG(release, debug|release): {
 #    QMAKE_POST_LINK += mt -manifest $$PWD/manifest.xml -outputresource:$$OUT_PWD/release/$$TARGET".exe" $$escape_expand(\n\t)
-##    CONFIG += console
+    CONFIG += console
 ##    DEFINES += RELEASE_MODE
-#}
-#else:win32:CONFIG(debug, debug|release): {
+}
+else:win32:CONFIG(debug, debug|release): {
 #    CONFIG += console
 #    QMAKE_POST_LINK += mt -manifest $$PWD/manifest.xml -outputresource:$$OUT_PWD/debug/$$TARGET".exe" $$escape_expand(\n\t)
-#}
+}
 
