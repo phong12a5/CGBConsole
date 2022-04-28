@@ -207,11 +207,12 @@ int LDCommand::bindWinId(int index)
     if(runLDCommand("list2", deviceListStr, error)){
         QStringList deviceList = deviceListStr.split("\r\n");
         foreach(QString device, deviceList) {
-            if(device.contains(index)) {
-                QStringList params = device.split(",");
-                if(params.length() == 7) {
+            QStringList params = device.split(",");
+            if(params.length() == 7) {
+                bool ok;
+                int tmpIndex = params[0].toInt(&ok);
+                if(ok && tmpIndex == index)
                     return params[3].toInt();
-                }
             }
         }
     }
@@ -225,11 +226,12 @@ int LDCommand::topWinId(int index)
     if(runLDCommand("list2", deviceListStr, error)){
         QStringList deviceList = deviceListStr.split("\r\n");
         foreach(QString device, deviceList) {
-            if(device.contains(index)) {
-                QStringList params = device.split(",");
-                if(params.length() == 7) {
+            QStringList params = device.split(",");
+            if(params.length() == 7) {
+                bool ok;
+                int tmpIndex = params[0].toInt(&ok);
+                if(ok && tmpIndex == index)
                     return params[2].toInt();
-                }
             }
         }
     }

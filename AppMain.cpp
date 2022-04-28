@@ -28,6 +28,7 @@ AppMain::~AppMain()
 void AppMain::initApplication()
 {
     LOGD("");
+    LDCommand::runLDCommand("globalsetting --fps 4");
     this->onLoadConfig();
     APP_CTRL->initAppController();
 }
