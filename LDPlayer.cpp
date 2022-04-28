@@ -17,11 +17,11 @@ QString modelBase = "QXN1c3xBbGNhdGVsIFBpeGkgNCAoNSkqQXN1c3xBc3VzIFJPRyBQaG9uZSp
 QString phonePrefix = "<<1205|+1251|+1659|+1256|+1334|+1907|+1520|+1928|+1480|+1602|+1623|+1501|+1479|+1870|+1341|+1442|+1628|+1657|+1669|+1747|+1752|+1764|+1951|+1209|+1559|+1408|+1831|+1510|+1213|+1310|+1424|+1323|+1562|+1707|+1369|+1627|+1530|+1714|+1949|+1626|+1909|+1916|+1760|+1619|+1858|+1935|+1818|+1415|+1925|+1661|+1805|+1650|+1211|+1720|+1970|+1303|+1719|+1203|+1475|+1860|+1959|+1302|+1411|+1202|+1911|+1239|+1386|+1689|+1754|+1941|+1954|+1561|+1407|+1727|+1352|+1904|+1850|+1786|+1863|+1305|+1321|+1813|+1470|+1478|+1770|+1678|+1404|+1706|+1912|+1229|+1710|+1671|+1808|+1208|+1312|+1773|+1630|+1847|+1708|+1815|+1224|+1331|+1464|+1872|+1217|+1618|+1309|+1260|+1317|+1219|+1765|+1812|+1563|+1641|+1515|+1319|+1712|+1876|+1620|+1785|+1913|+1316|+1270|+1859|+1606|+1502|+1225|+1337|+1985|+1504|+1318|+1207|+1227|+1240|+1443|+1667|+1410|+1301|+1339|+1351|+1774|+1781|+1857|+1978|+1508|+1617|+1413|+1231|+1269|+1989|+1734|+1517|+1313|+1810|+1248|+1278|+1586|+1679|+1947|+1906|+1616|+1320|+1612|+1763|+1952|+1218|+1507|+1651|+1228|+1601|+1557|+1573|+1636|+1660|+1975|+1314|+1816|+1417|+1664|+1406|+1402|+1308|+1775|+1702|+1506|+1603|+1551|+1848|+1862|+1732|+1908|+1201|+1973|+1609|+1856|+1505|+1575|+1585|+1845|+1917|+1516|+1212|+1646|+1315|+1518|+1347|+1718|+1607|+1914|+1631|+1716|+1252|+1336|+1828|+1910|+1980|+1984|+1919|+1704|+1701|+1283|+1380|+1567|+1216|+1614|+1937|+1330|+1234|+1440|+1419|+1740|+1513|+1580|+1918|+1405|+1541|+1971|+1445|+1610|+1835|+1878|+1484|+1717|+1570|+1412|+1215|+1267|+1814|+1724|+1787|+1939|+1401|+1306|+1803|+1843|+1864|+1605|+1731|+1865|+1931|+1423|+1615|+1901|+1325|+1361|+1430|+1432|+1469|+1682|+1737|+1979|+1214|+1972|+1254|+1940|+1713|+1281|+1832|+1956|+1817|+1806|+1903|+1210|+1830|+1409|+1936|+1512|+1915|+1340|+1385|+1435|+1801|+1802|+1276|+1434|+1540|+1571|+1757|+1703|+1804|+1509|+1206|+1425|+1253|+1360|+1564|+1304|+1262|+1920|+1414|+1715|+1608|+1307|+1867|+1866|+1456|+111|+1880|+1881|+1882|+1500|+1611|+1311|+1200|+1300|+1400|+1700|+1711|+1811|+1800|+1877|+1888|+8486|+8496|+8497|+8498|+8432|+8433|+8434|+8435|+8436|+8437|+8438|+8439|+8488|+8491|+8494|+8483|+8484|+8485|+8481|+8482|+8489|+8490|+8493|+8470|+8479|+8477|+8476|+8478|+8492|+8456|+8458|+8499|+8459";
 
 
-LDPlayer::LDPlayer(QString name)
+LDPlayer::LDPlayer(int dncsId)
 {
     this->ldhelper = new LDPlayerHelper();
-    this->profile = ldhelper->getProfileByName(name);
-    LOG<<profile.id<<profile.id<<profile.address;
+    this->profile = ldhelper->getProfileByDnsId(dncsId);
+    LOG<<profile.id<<profile.name<<profile.address;
 
     m_screens = QList<DefinedScreen*>();
 
@@ -537,30 +537,16 @@ void LDPlayer::doubleTapOn(double x, double y)
     tapOn(x,y);
 }
 
-void LDPlayer::inputText(QString content, bool isUnicode, bool isSlow)
+void LDPlayer::inputText(QString content, bool isSlow)
 {
     LOG<<": "<<content;
-    if(isUnicode){
-        LDCommand::ld_adb_command(profile.id,"shell ime set com.android.adbkeyboard/.AdbIME");
-    }else{
-        LDCommand::ld_adb_command(profile.id,"shell ime set com.android.inputmethod.pinyin/.InputService");
-    }
-
     if(isSlow){
         for(int i=0;i<content.size();i++){
     //        Utility::waitForMiliseconds(50);
-            if(isUnicode){
-                LDCommand::ld_adb_command(profile.id,"shell am broadcast -a ADB_INPUT_B64 --es msg '"+content.mid(i,1).toUtf8().toBase64()+"'");
-            }else{
-                LDCommand::ld_adb_command(profile.id,"shell input text '"+content.mid(i,1)+"'");
-            }
+            LDCommand::ld_adb_command(profile.id,"shell am broadcast -a ADB_INPUT_B64 --es msg '"+content.mid(i,1).toUtf8().toBase64()+"'");
         }
     }else{
-        if(isUnicode){
-            LDCommand::ld_adb_command(profile.id,"shell am broadcast -a ADB_INPUT_B64 --es msg '"+content.toUtf8().toBase64()+"'");
-        }else{
-            LDCommand::ld_adb_command(profile.id,"shell input text \'"+content+"\'");
-        }
+        LDCommand::ld_adb_command(profile.id,"shell am broadcast -a ADB_INPUT_B64 --es msg '"+content.toUtf8().toBase64()+"'");
     }
 }
 

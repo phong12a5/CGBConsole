@@ -24,7 +24,7 @@ class LDPlayer : public QObject
     Q_OBJECT
 
 public:
-    explicit LDPlayer(QString name = "");
+    explicit LDPlayer(int dncsId);
     ~LDPlayer();
     //start
     void start();
@@ -55,7 +55,7 @@ public:
     void doubleTapOn(double x, double y);
     void swipeUp(bool isLong = false);
     void swipDown(bool isLong = false);
-    void inputText(QString content, bool isUnicode = false,bool isSlow = false);
+    void inputText(QString content,bool isSlow = false);
     void inputKeyEvent(QString key);
     void clearText(bool isClearAll = false);
 

@@ -1,6 +1,7 @@
 QT += gui \
       core \
-      widgets
+      widgets \
+      network
 
 CONFIG += c++11
 
@@ -37,6 +38,13 @@ SOURCES += \
     LDCommand.cpp \
     PerformanceReader.cpp \
     LDService.cpp \
+    models/asyncnetworkmanager.cpp \
+    models/autofarmerapi.cpp \
+    models/backuprestoremanager.cpp \
+    models/backuprestorepackage.cpp \
+    models/deviceinfo.cpp \
+    models/facebookaccount.cpp \
+    models/passwdgenerator.cpp \
     ui/informationtab.cpp
 
 FORMS += \
@@ -67,6 +75,13 @@ HEADERS += \
     ScreenNode.h \
     ScreenReferences.h \
     Utility.h \
+    models/asyncnetworkmanager.h \
+    models/autofarmerapi.h \
+    models/backuprestoremanager.h \
+    models/backuprestorepackage.h \
+    models/deviceinfo.h \
+    models/facebookaccount.h \
+    models/passwdgenerator.h \
     ui/informationtab.h
 
 LIBS += -L$$PWD/libs/ -lchilkat-9.5.0 -lws2_32 -lcrypt32 -ldnsapi
