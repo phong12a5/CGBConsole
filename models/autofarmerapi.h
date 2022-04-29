@@ -41,6 +41,7 @@ public:
     static AutoFarmerAPI *instance();
     QJsonObject getClone();
     bool hasClone();
+    void addClone(QJsonObject);
 
     Action getVipLikeAction();
     Action getBuffLikeAction();

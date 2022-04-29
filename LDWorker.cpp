@@ -189,6 +189,7 @@ LDWorker::State LDWorker::doLogin(FacebookAccount &acc)
 LDWorker::State LDWorker::preparePackage()
 {
     State rs = UNKNOWN_STATE;
+    m_package = nullptr;
     if(AutoFarmerAPI::instance()->hasClone()){
         //has new clone
         if(player->fakeDevice()){
@@ -251,22 +252,17 @@ LDWorker::State LDWorker::preparePackage()
                     return PREPARE_SUCCESS;
                 }else if(currentScreenId.contains(SCREEN_LOAD_VIETNAMESE_FAILED)){
                     player->clickOn("TIẾP TỤC BẰNG TIẾNG ANH (MỸ)",TEXT);
-                }else if(currentScreenId.contains(SCREEN_LOG_IN)){
-                    QFile(m_package->backupPath()).remove();
-                    m_package->setBackupPath("");
-                    m_package->setDeviceInfo(DeviceInfo::fromJson(QJsonObject()));
-                    break;
                 }else if(currentScreenId.contains(SCREEN_SESSION_EXPIRED)){
-                    m_package->setBackupPath("");
-                    m_package->setDeviceInfo(DeviceInfo::fromJson(QJsonObject()));
+                    AutoFarmerAPI::instance()->addClone(m_package->account()->toJsonObject());
+                    BackupRestoreManager::instance()->removePackage(m_package);
                     break;
                 }else if(currentScreenId.contains(SCREEN_FACEBOOK_NOT_RESPONSE)){
                     break;
                 }else if(currentScreenId.contains(SCREEN_CHECK_POINT)
-                         || currentScreenId.contains(SCREEN_LOST_INTERNET_CONNECTION)){
-                    m_package->setAccount(FacebookAccount::fromJson(QJsonObject()));
-                    m_package->setBackupPath("");
-                    m_package->setDeviceInfo(DeviceInfo::fromJson(QJsonObject()));
+                         || currentScreenId.contains(SCREEN_LOST_INTERNET_CONNECTION)
+                         || currentScreenId.contains(SCREEN_LOG_IN)){
+                    QFile(m_package->backupPath()).remove();
+                    BackupRestoreManager::instance()->removePackage(m_package);
                     break;
                 }else if(currentScreenId.contains(SCREEN_SAVE_INFO)){
                     player->clickOn("OK",TEXT);

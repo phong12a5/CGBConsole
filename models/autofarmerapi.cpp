@@ -42,6 +42,12 @@ bool AutoFarmerAPI::hasClone()
     return m_accounts.size()>0;
 }
 
+void AutoFarmerAPI::addClone(QJsonObject acc)
+{
+    QMutexLocker locker(&mutex);
+    m_accounts.append(acc);
+}
+
 Action AutoFarmerAPI::getVipLikeAction()
 {
     Action newAction;
