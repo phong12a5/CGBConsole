@@ -2695,5 +2695,44 @@
             ]
         ],
         "screenId": "SCREEN_ADD_AVATAR"
+    },
+    {
+        "elements": [
+            [
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Sai mật khẩu"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.TextView",
+                    "clickable": false,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "Mật khẩu bạn vừa nhập không chính xác. Vui lòng thử lại hoặc lấy mã để đăng nhập."
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "LẤY MÃ"
+                },
+                {
+                    "checked": false,
+                    "className": "android.widget.Button",
+                    "clickable": true,
+                    "contentDescription": "null",
+                    "selected": false,
+                    "text": "OK"
+                }
+            ]
+        ],
+        "screenId": "SCREEN_WRONG_PASS"
     }
 ]

@@ -44,6 +44,7 @@ namespace screen_references {
     static const QString SCREEN_REVIEW_DATA_5 = "SCREEN_REVIEW_DATA_5";
     static const QString SCREEN_REVIEW_DATA_DONE = "SCREEN_REVIEW_DATA_DONE";
     static const QString SCREEN_ADD_AVATAR = "SCREEN_ADD_AVATAR";
+    static const QString SCREEN_WRONG_PASS = "SCREEN_WRONG_PASS";
 }
 
 #endif // SCREEN_REFERENCES_H

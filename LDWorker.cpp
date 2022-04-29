@@ -59,13 +59,17 @@ void LDWorker::run()
         if(player == nullptr){
             player = new LDPlayer(m_ldIndex);
             while (player->getCurrentProxy() == "") {
+                LOGD(player->getCurrentProxy());
                 player->setupProxy();
                 msleep(500);
             }
         }
 
-        LOGD(player->getCurrentProxy());
-
+        State rs = preparePackage();
+        if(rs == PREPARE_SUCCESS){
+            player->swipeUp();
+            sleep(1);
+        }
 
     }
 
@@ -166,6 +170,8 @@ LDWorker::State LDWorker::doLogin(FacebookAccount &acc)
             player->clickOn("BẮT ĐẦU",CONTENT_DESCRIPTION);
         }else if(currentScreenId.contains(SCREEN_ADD_AVATAR)){
             player->clickOn("Bỏ qua",TEXT);
+        }else if(currentScreenId.contains(SCREEN_WRONG_PASS)){
+            break;
         }
         sleep(1);
     }
@@ -223,46 +229,49 @@ LDWorker::State LDWorker::preparePackage()
         }
     }else{
         m_package = BackupRestoreManager::instance()->nextPackage();
-        //restore
-        LOG<<"Restore device";
-//        MES,"Retore device Info : "+m_package->deviceInfo()->modelName());
-        player->restoreDeviceInfo(m_package->deviceInfo()->xposeData());
-//                sleep(2);
-        player->openPackage("com.facebook.katana");
-        sleep(5);
-        for(int i=0;i<30;i++){
-            QJsonArray currentScreenId = player->getScreenId();
-            LOG<<currentScreenId;
-            if(currentScreenId.contains(SCREEN_HOME)){
-                return PREPARE_SUCCESS;
-            }else if(currentScreenId.contains(SCREEN_LOAD_VIETNAMESE_FAILED)){
-                player->clickOn("TIẾP TỤC BẰNG TIẾNG ANH (MỸ)",TEXT);
-            }else if(currentScreenId.contains(SCREEN_LOG_IN)){
-                QFile(m_package->backupPath()).remove();
-                m_package->setBackupPath("");
-                m_package->setDeviceInfo(DeviceInfo::fromJson(QJsonObject()));
-                break;
-            }else if(currentScreenId.contains(SCREEN_SESSION_EXPIRED)){
-                m_package->setBackupPath("");
-                m_package->setDeviceInfo(DeviceInfo::fromJson(QJsonObject()));
-                break;
-            }else if(currentScreenId.contains(SCREEN_FACEBOOK_NOT_RESPONSE)){
-                break;
-            }else if(currentScreenId.contains(SCREEN_CHECK_POINT)
-                     || currentScreenId.contains(SCREEN_LOST_INTERNET_CONNECTION)){
-                m_package->setAccount(FacebookAccount::fromJson(QJsonObject()));
-                m_package->setBackupPath("");
-                m_package->setDeviceInfo(DeviceInfo::fromJson(QJsonObject()));
-                break;
-            }else if(currentScreenId.contains(SCREEN_SAVE_INFO)){
-                player->clickOn("OK",TEXT);
-            }
+        if(m_package != nullptr){
+            //restore
+            LOG<<"Restore device";
+    //        MES,"Retore device Info : "+m_package->deviceInfo()->modelName());
+            player->restoreDeviceInfo(m_package->deviceInfo()->xposeData());
+    //                sleep(2);
+            player->openPackage("com.facebook.katana");
+            sleep(5);
+            for(int i=0;i<30;i++){
+                QJsonArray currentScreenId = player->getScreenId();
+                LOG<<currentScreenId;
+                if(currentScreenId.contains(SCREEN_HOME)){
+                    return PREPARE_SUCCESS;
+                }else if(currentScreenId.contains(SCREEN_LOAD_VIETNAMESE_FAILED)){
+                    player->clickOn("TIẾP TỤC BẰNG TIẾNG ANH (MỸ)",TEXT);
+                }else if(currentScreenId.contains(SCREEN_LOG_IN)){
+                    QFile(m_package->backupPath()).remove();
+                    m_package->setBackupPath("");
+                    m_package->setDeviceInfo(DeviceInfo::fromJson(QJsonObject()));
+                    break;
+                }else if(currentScreenId.contains(SCREEN_SESSION_EXPIRED)){
+                    m_package->setBackupPath("");
+                    m_package->setDeviceInfo(DeviceInfo::fromJson(QJsonObject()));
+                    break;
+                }else if(currentScreenId.contains(SCREEN_FACEBOOK_NOT_RESPONSE)){
+                    break;
+                }else if(currentScreenId.contains(SCREEN_CHECK_POINT)
+                         || currentScreenId.contains(SCREEN_LOST_INTERNET_CONNECTION)){
+                    m_package->setAccount(FacebookAccount::fromJson(QJsonObject()));
+                    m_package->setBackupPath("");
+                    m_package->setDeviceInfo(DeviceInfo::fromJson(QJsonObject()));
+                    break;
+                }else if(currentScreenId.contains(SCREEN_SAVE_INFO)){
+                    player->clickOn("OK",TEXT);
+                }
 
-            sleep(1);
-            if(i==29){
-                player->setupProxy();
+                sleep(1);
+                if(i==29){
+                    player->setupProxy();
+                }
             }
         }
+        LOG<<"Has no package";
     }
     return PREPARE_FAILED;
 }

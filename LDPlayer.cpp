@@ -375,11 +375,9 @@ bool LDPlayer::isInstallApp(QString packageName)
 {
     QStringList agruments;
     agruments<<"shell"<<"pm"<<"list"<<"packages";
-    QString rs = ldhelper->adbShellCommand2(profile.address,agruments);
+    QString rs = LDCommand::ld_adb_command(profile.id,"shell pm list packages");
     if(rs.contains(packageName)){
         return true;
-    }else if(rs.contains("daemon not running")){
-        ldhelper->refreshServer();
     }
     return false;
 }
