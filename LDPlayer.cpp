@@ -106,20 +106,14 @@ void LDPlayer::refreshScreenElement()
 {
 //    LOG;
     QString rs = LDCommand::getElements(profile.id); /*command({"shell","am","broadcast","-a","com.cgb.support.SCREEN_ELEMENT_ACTION","com.cgb.support"})*/;
-//    LOG<<rs;
     QRegExp rg("(\\{.{0,3}elements.+:.+\\})");
-//    printf("%s",rs.toUtf8().data());
-//    Utility::write(Utility::getExecutedPath()+"/crlog.txt",rs);
     if(rg.indexIn(rs) != -1){
         QJsonDocument doc = QJsonDocument::fromJson(rg.cap(1).toUtf8());
-//        qDebug()<<rg.cap(1);
         if(!doc.isNull()
              && !doc.isEmpty()){
             QString encodedElement = doc.object()["elements"].toString();
 
             QString decoded = QString::fromStdString(QByteArray::fromBase64(encodedElement.toLocal8Bit()).toStdString());
-//            qDebug()<<"decode: "<<decoded;
-            Utility::write(Utility::getExecutedPath()+"/screen.txt",decoded,true);
             QRegExp rg2("(\\[.+\\])");
             if(rg2.indexIn(decoded) != -1){
                 QString screen = rg2.cap(1);
@@ -140,7 +134,6 @@ void LDPlayer::refreshScreenElement()
                     if(screenArr.size() > 0){
                         rt.insert("screenId",screenArr);
                         rt.insert("elements",doc.array());
-//                        Utility::writeTo(ConfigHelper::getScreenLogPath(),QString(QJsonDocument(rt).toJson(QJsonDocument::Compact))+"\n",true);
                         m_currentScreen = rt;
                         return;
                     }
@@ -149,7 +142,7 @@ void LDPlayer::refreshScreenElement()
                     rt.insert("screenId",screenArr);
                     rt.insert("elements",doc.array());
 //                    LOG<<"rt"<<QJsonDocument(rt).toJson(QJsonDocument::Compact);
-                    Utility::writeTo(ConfigHelper::getScreenLogPath(),QString(QJsonDocument(rt).toJson(QJsonDocument::Compact))+"\n",true);
+//                    Utility::writeTo(ConfigHelper::getScreenLogPath(),QString(QJsonDocument(rt).toJson(QJsonDocument::Compact))+"\n",true);
                     m_currentScreen = rt;
                     return;
                 }
