@@ -58,12 +58,13 @@ void LDWorker::run()
     } else {
         if(player == nullptr){
             player = new LDPlayer(m_ldIndex);
+            while (player->getCurrentProxy() == "") {
+                player->setupProxy();
+                msleep(500);
+            }
         }
+
         LOGD(player->getCurrentProxy());
-        while (player->getCurrentProxy() == "") {
-            player->setupProxy();
-            msleep(500);
-        }
 
 
     }
