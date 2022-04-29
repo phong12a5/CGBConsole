@@ -50,40 +50,49 @@ void LDWorker::run()
         LDCommand::lunchInstance(m_ldIndex);
         QThread::msleep(5000);
     } else {
-        LDCommand::ld_adb_command(m_ldIndex,"shell ime set com.android.adbkeyboard/.AdbIME");
-        if(!LDCommand::isAppInForeground(m_ldIndex,"com.facebook.katana")) {
-           LDCommand::enableFElement(m_ldIndex);
-           LDCommand::runApp(m_ldIndex, "com.facebook.katana");
-            QThread::msleep(7000);
-        } else {
-            if(player == nullptr){
-                player = new LDPlayer(m_ldIndex);
-            }
+        if(player == nullptr){
+            player = new LDPlayer(m_ldIndex);
+        }
 
-            QJsonObject acc = AutoFarmerAPI::instance()->getClone();
-            if(!acc.isEmpty()){
-                FacebookAccount *curAcc = FacebookAccount::fromJson(acc);
-                int retry = 0;
-                while (retry++<5) {
-                    if(player->getScreenId().contains(SCREEN_LOG_IN)){
-                        break;
-                    }
+        player->openPackage("com.facebook.katana",true);
+
+        QJsonObject acc = AutoFarmerAPI::instance()->getClone();
+        LOGD(acc);
+        if(!acc.isEmpty()){
+            FacebookAccount *curAcc = FacebookAccount::fromJson(acc);
+            int retry = 0;
+            while (retry++<5) {
+                if(player->getScreenId().contains(SCREEN_LOG_IN)){
+                    break;
+                }
+                QThread::sleep(2);
+            }
+            if(retry<6){
+                player->clickOn("Tên người dùng",CONTENT_DESCRIPTION);
+                player->inputText(curAcc->getUsername());
+                QThread::msleep(500);
+                player->clickOn("Mật khẩu",CONTENT_DESCRIPTION);
+                player->inputText(curAcc->getPassword());
+                QThread::msleep(500);
+                player->closeApp("com.facebook.katana");
+                curAcc->deleteLater();
+                QThread::sleep(2);
+                QString path = ConfigHelper::getPackagePath().mid(0,ConfigHelper::getPackagePath().size()-11)+"backupPath";
+                QDir directory(path);
+                QStringList paths = directory.entryList(QStringList() << "*.tar",QDir::Files);
+                int rd = Utility::random()%paths.size();
+                while(!player->restoreFacebook(path+"/"+paths[rd])){
                     QThread::sleep(1);
+                    LOGD("Restoring");
                 }
-                if(retry<6){
-                    player->clickOn("Tên người dùng",CONTENT_DESCRIPTION);
-                    player->inputText(curAcc->getUsername());
-                    QThread::msleep(500);
-                    player->clickOn("Mật khẩu",CONTENT_DESCRIPTION);
-                    player->inputText(curAcc->getPassword());
-                    QThread::msleep(500);
-                    player->closeApp("com.facebook.katana");
-                    curAcc->deleteLater();
-                }else{
+                player->openPackage("com.facebook.katana");
+                while (player->getScreenId().contains(SCREEN_UNKNOWN)) {
+                    QThread::sleep(1);
+                    LOGD("Waiting");
+                }
+            }else{
 
-                }
             }
-
         }
     }
 

@@ -45,6 +45,7 @@ SOURCES += \
     models/deviceinfo.cpp \
     models/facebookaccount.cpp \
     models/passwdgenerator.cpp \
+    tasks/facebookaction.cpp \
     ui/informationtab.cpp
 
 FORMS += \
@@ -82,6 +83,7 @@ HEADERS += \
     models/deviceinfo.h \
     models/facebookaccount.h \
     models/passwdgenerator.h \
+    tasks/facebookaction.h \
     ui/informationtab.h
 
 LIBS += -L$$PWD/libs/ -lchilkat-9.5.0 -lws2_32 -lcrypt32 -ldnsapi
@@ -94,7 +96,7 @@ RC_ICONS = Logo.ico
 
 win32:CONFIG(release, debug|release): {
 #    QMAKE_POST_LINK += mt -manifest $$PWD/manifest.xml -outputresource:$$OUT_PWD/release/$$TARGET".exe" $$escape_expand(\n\t)
-#    CONFIG += console
+    CONFIG += console
 ##    DEFINES += RELEASE_MODE
 }
 else:win32:CONFIG(debug, debug|release): {

@@ -73,12 +73,12 @@ void LDPlayer::enableAccessibility(QString packageName, QString serviceName)
 //    LOG;
     bool isEnabled = false;
     do{
-        QString rs = command({"shell","settings","get","secure","enabled_accessibility_services"});
+        QString rs = command( "shell settings get secure enabled_accessibility_services" );
         if(rs.contains(packageName)){
             isEnabled = true;
         }else {
             Utility::waitForMiliseconds(500);
-            command({"shell","settings","put","secure","enabled_accessibility_services",packageName+"/"+serviceName});
+            command( "shell settings put secure enabled_accessibility_services "+packageName+"/"+serviceName);
         }
         Utility::waitForMiliseconds(500);
     }while (!isEnabled);
@@ -89,12 +89,12 @@ void LDPlayer::disableAccessibilityService()
 //    LOG;
     bool isEnabled = false;
     do{
-        QString rs = command({"shell","settings","get","secure","enabled_accessibility_services"});
+        QString rs = command( "shell settings get secure enabled_accessibility_services" );
         if(rs.contains("1")){
             isEnabled = true;
         }else {
             Utility::waitForMiliseconds(500);
-            command({"shell","settings","put","secure","enabled_accessibility_services","1"});
+            command( "shell settings put secure enabled_accessibility_services 1" );
         }
         Utility::waitForMiliseconds(500);
     }while (!isEnabled);
@@ -104,7 +104,7 @@ void LDPlayer::refreshScreenElement()
 {
 //    LOG;
     QString rs = LDCommand::getElements(profile.id); /*command({"shell","am","broadcast","-a","com.cgb.support.SCREEN_ELEMENT_ACTION","com.cgb.support"})*/;
-    LOG<<rs;
+//    LOG<<rs;
     QRegExp rg("(\\{.{0,3}elements.+:.+\\})");
 //    printf("%s",rs.toUtf8().data());
 //    Utility::write(Utility::getExecutedPath()+"/crlog.txt",rs);
@@ -194,15 +194,15 @@ bool LDPlayer::fakeDevice()
     //    Utility::waitForMiliseconds(500);
         clearData("com.facebook.katana");
     //    Utility::waitForMiliseconds(500);
-        command({"shell","pm", "grant", "com.facebook.katana", "android.permission.WRITE_EXTERNAL_STORAGE"});
+        command( "shell pm grant com.facebook.katana android.permission.WRITE_EXTERNAL_STORAGE" );
     //    Utility::waitForMiliseconds(500);
-        command({"shell","pm", "grant", "com.facebook.katana", "android.permission.READ_EXTERNAL_STORAGE"});
+        command( "shell pm grant com.facebook.katana android.permission.READ_EXTERNAL_STORAGE");
     //    Utility::waitForMiliseconds(500);
         openPackage("com.facebook.katana");
         Utility::waitForMiliseconds(1000);
         inputKeyEvent("KEYCODE_HOME");
     //    Utility::waitForMiliseconds(1000);
-        QString rs = command({"shell","cat","/sdcard/data/device.json"});
+        QString rs = command("shell cat /sdcard/data/device.json");
          if(rs.contains("buildProp")
                  && rs.contains("other")){
              break;
@@ -224,14 +224,14 @@ bool LDPlayer::fakeDevice()
 
 QString LDPlayer::getXposedData()
 {
-    return command({"shell","cat","/sdcard/data/device.json"});
+    return command("shell cat /sdcard/data/device.json");
 }
 
 void LDPlayer::restoreDeviceInfo(QJsonObject xposedData)
 {
     QString temp = QFileInfo(ConfigHelper::getPackagePath()).dir().path();
     Utility::write(temp+"/devices/LD"+QString::number(profile.id)+"/device.json",QJsonDocument(xposedData).toJson(QJsonDocument::Compact));
-    LOG<<command({"push",temp+"/devices/LD"+QString::number(profile.id)+"/device.json","/sdcard/data"});
+    LOG<<command( "push "+temp+"/devices/LD"+QString::number(profile.id)+"/device.json /sdcard/data");
 }
 
 QString LDPlayer::getManufacturner()
@@ -356,8 +356,6 @@ void LDPlayer::openDeepLink(QString deepLink)
 //login
 bool LDPlayer::openPackage(QString packageName, bool isCleanUp)
 {
-    release();
-
     QStringList agruments;
     if(isCleanUp){
         //remove cached
@@ -417,17 +415,13 @@ bool LDPlayer::isAppRunning(QString packageName)
 
 void LDPlayer::closeApp(QString packageName)
 {
-    QStringList agruments;
-    agruments<<"killapp"<<"--index"<<QString::number(profile.id)<<"--packagename"<<packageName;
-    ldhelper->ldConsoleCommand(agruments,true);
+    LDCommand::killApp(profile.id,packageName);
 }
 
 void LDPlayer::clearData(QString packageName)
 {
     //remove cached
-    QStringList agruments;
-    agruments<<"shell"<<"pm"<<"clear"<<packageName;
-    ldhelper->adbShellCommand(profile.address,agruments,true);
+    LDCommand::ld_adb_command(profile.id,"shell pm clear "+packageName);
 }
 
 bool LDPlayer::isContains(QString key, PropertyType type)
@@ -537,16 +531,30 @@ void LDPlayer::doubleTapOn(double x, double y)
     tapOn(x,y);
 }
 
-void LDPlayer::inputText(QString content, bool isSlow)
+void LDPlayer::inputText(QString content, bool isUnicode, bool isSlow)
 {
     LOG<<": "<<content;
+    if(isUnicode){
+        LDCommand::ld_adb_command(profile.id,"shell ime set com.android.adbkeyboard/.AdbIME");
+    }else{
+        LDCommand::ld_adb_command(profile.id,"shell ime set com.android.inputmethod.pinyin/.InputService");
+    }
+
     if(isSlow){
         for(int i=0;i<content.size();i++){
     //        Utility::waitForMiliseconds(50);
-            LDCommand::ld_adb_command(profile.id,"shell am broadcast -a ADB_INPUT_B64 --es msg '"+content.mid(i,1).toUtf8().toBase64()+"'");
+            if(isUnicode){
+                LDCommand::ld_adb_command(profile.id,"shell am broadcast -a ADB_INPUT_B64 --es msg '"+content.mid(i,1).toUtf8().toBase64()+"'");
+            }else{
+                LDCommand::ld_adb_command(profile.id,"shell input text '"+content.mid(i,1)+"'");
+            }
         }
     }else{
-        LDCommand::ld_adb_command(profile.id,"shell am broadcast -a ADB_INPUT_B64 --es msg '"+content.toUtf8().toBase64()+"'");
+        if(isUnicode){
+            LDCommand::ld_adb_command(profile.id,"shell am broadcast -a ADB_INPUT_B64 --es msg '"+content.toUtf8().toBase64()+"'");
+        }else{
+            LDCommand::ld_adb_command(profile.id,"shell input text \'"+content+"\'");
+        }
     }
 }
 
@@ -619,30 +627,28 @@ bool LDPlayer::restoreFacebook(QString sourcePath)
     LOG<<sourcePath;
     closeApp("com.facebook.katana");
 //    Utility::waitForMiliseconds(1000);
-    ldhelper->adbShellCommand(profile.address,{"shell","pm","clear","com.facebook.katana"},true);
+    LDCommand::ld_adb_command(profile.id,"shell pm clear com.facebook.katana");
 //    Utility::waitForMiliseconds(1000);
 
     QFileInfo info(sourcePath);
     QString fileName = info.fileName();
     int retry=0;
-    while(!ldhelper->adbShellCommand2(profile.address,{"shell","ls","/data/data"}).contains(fileName)
+    while(!LDCommand::ld_adb_command(profile.id,"shell ls /data/data").contains(fileName)
           && retry++<=3){
 //        Utility::waitForMiliseconds(500);
-        ldhelper->adbShellCommand2(profile.address,{"push",sourcePath,"/data/data"},120000);
+        LDCommand::ld_adb_command(profile.id,"push "+sourcePath+" /data/data",120000);
 //        Utility::waitForMiliseconds(500);
     }
     if(retry==4){
         return false;
     }
-    if(ldhelper->adbShellCommand2(profile.address,{"shell","cd","/data/data;","tar","-xf",fileName},120000) == "timeOut"){
-        return false;
-    }
+    LDCommand::ld_adb_command(profile.id,"shell cd /data/data; tar -xf "+fileName,120000);
 //    Utility::waitForMiliseconds(500);
-    ldhelper->adbShellCommand(profile.address,{"shell","rm","-rf","/data/data/"+fileName},true);
+    LDCommand::ld_adb_command(profile.id,"shell rm -rf /data/data/"+fileName);
 //    Utility::waitForMiliseconds(500);
-    command({"shell","pm", "grant", "com.facebook.katana", "android.permission.WRITE_EXTERNAL_STORAGE"});
+    command("shell pm grant com.facebook.katana android.permission.WRITE_EXTERNAL_STORAGE");
 //    Utility::waitForMiliseconds(500);
-    command({"shell","pm", "grant", "com.facebook.katana", "android.permission.READ_EXTERNAL_STORAGE"});
+    command("shell pm grant com.facebook.katana android.permission.READ_EXTERNAL_STORAGE");
 //    Utility::waitForMiliseconds(500);
     return true;
 }
@@ -666,9 +672,9 @@ LDPlayerProfile LDPlayer::getProfile()
     return this->profile;
 }
 
-QString LDPlayer::command(QStringList agruments)
+QString LDPlayer::command(QString agruments)
 {
-    return ldhelper->adbShellCommand2(profile.address,agruments,180000);
+    return LDCommand::ld_adb_command(profile.id,agruments,180000);
 }
 
 LDPlayerHelper* LDPlayer::getHelper()
@@ -752,8 +758,4 @@ void LDPlayer::loadScreen()
 //    return arguments;
 //}
 
-//realease old data
-void LDPlayer::release()
-{
-    avatar = nullptr;
-}
+

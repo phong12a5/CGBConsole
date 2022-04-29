@@ -55,7 +55,7 @@ public:
     void doubleTapOn(double x, double y);
     void swipeUp(bool isLong = false);
     void swipDown(bool isLong = false);
-    void inputText(QString content,bool isSlow = false);
+    void inputText(QString content, bool isUnicode = false, bool isSlow = false);
     void inputKeyEvent(QString key);
     void clearText(bool isClearAll = false);
 
@@ -85,7 +85,7 @@ public:
 
     void stop();
     LDPlayerProfile getProfile();
-    QString command(QStringList agruments);
+    QString command(QString agruments);
     QString adbCommand(QStringList agruments);
     LDPlayerHelper* getHelper();
 
@@ -122,9 +122,6 @@ private:
     QPoint findPosition(QJsonArray screen, QString key, PropertyType type);
 
     QString propertyToString(PropertyType type);
-
-    //realease old data 
-    void release();
 
     static int started;
 
