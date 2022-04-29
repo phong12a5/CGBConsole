@@ -25,13 +25,12 @@ BackupRestoreManager::~BackupRestoreManager()
 
 BackupRestorePackage* BackupRestoreManager::nextPackage()
 {
-    mutex.lock();
+    QMutexLocker locker(&mutex);
     m_currentId++;
 //    m_currentId = 1;
     if(m_currentId>= m_listPackage.size()){
         m_currentId = 0;
     }
-    mutex.unlock();
     qDebug()<<"Current Package :"<<m_currentId;
     if(QDateTime::currentDateTime().toSecsSinceEpoch()%6000==0){
         QFile::copy(ConfigHelper::getPackagePath(),ConfigHelper::getPackagePath().remove("package.ifo")+"/package"+Utility::generateCurrentTime()+".ifo");
@@ -57,6 +56,7 @@ void BackupRestoreManager::addPackage(BackupRestorePackage *package)
 {
     QMutexLocker locker(&mutex);
     m_listPackage.append(package);
+    reloadPackage();
 }
 
 void BackupRestoreManager::removePackage(BackupRestorePackage *package)
@@ -64,6 +64,7 @@ void BackupRestoreManager::removePackage(BackupRestorePackage *package)
     QMutexLocker locker(&mutex);
     m_listPackage.removeAll(package);
     package->deleteLater();
+    reloadPackage();
 }
 
 QList<QString> BackupRestoreManager::getSavedAccount()
@@ -157,12 +158,9 @@ void BackupRestoreManager::reloadPackage()
     qDebug()<<__FUNCTION__;
     m_packageReloadCount++;
     m_updatedCount = 0;
-    QJsonObject package;
-    package.insert("currentIndex",m_currentId);
     QJsonArray arr;
     for(int i=0;i<m_listPackage.size();i++){
         arr.append(m_listPackage[i]->toJson());
     }
-    package.insert("data",arr);
-    Utility::write(ConfigHelper::getPackagePath(),QJsonDocument(package).toJson(QJsonDocument::Compact));
+    Utility::write(ConfigHelper::getPackagePath(),QJsonDocument(arr).toJson(QJsonDocument::Compact));
 }
