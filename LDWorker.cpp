@@ -155,8 +155,7 @@ LDWorker::State LDWorker::doLogin(FacebookAccount &acc)
                 break;
             }
         }else if(currentScreenId.contains(SCREEN_CHECK_POINT)){
-            m_package->setAccount(FacebookAccount::fromJson(QJsonObject()));
-            return GET_CLONE;
+            break;
         }else if(currentScreenId.contains(SCREEN_LOST_INTERNET_CONNECTION)){
 //            return NEW_LOOP;
             break;
