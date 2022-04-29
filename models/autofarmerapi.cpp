@@ -232,7 +232,7 @@ void AutoFarmerAPI::loadClones()
                 QJsonObject clone;
                 clone.insert("username",info[0]);
                 clone.insert("password",info[1]);
-                clone.insert("2fa",info[2]);
+                clone.insert("2fa",info[2].remove("\r").remove("\n"));
                 m_accounts.append(clone);
             }
         }

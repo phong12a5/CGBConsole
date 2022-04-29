@@ -328,12 +328,12 @@ void LDPlayer::setupProxy()
     QString ip = "222.252.23.179";
 //    int port = 0;
 //    QString ip = "";
-    ldhelper->adbShellCommand(profile.address,{"shell","settings","put","global","http_proxy",ip+":"+QString::number(port)},true);
+    LDCommand::ld_adb_command(profile.id,"shell settings put global http_proxy "+ip+":"+QString::number(port));
 }
 
 void LDPlayer::clearProxy()
 {
-    ldhelper->adbShellCommand(profile.address,{"shell","settings","put","global","http_proxy",":0"},true);
+    LDCommand::ld_adb_command(profile.id,"shell settings  put global http_proxy :0");
 }
 
 QString LDPlayer::getCurrentProxy()

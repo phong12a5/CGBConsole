@@ -58,12 +58,9 @@ void LDWorker::run()
     } else {
         if(player == nullptr){
             player = new LDPlayer(m_ldIndex);
-
+            player->setupProxy();
         }
 
-
-        BackupRestoreManager::instance();
-        AutoFarmerAPI::instance();
 //        State rs = preparePackage();
 //        if(rs == PREPARE_SUCCESS){
 //            player->swipeUp();

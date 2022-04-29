@@ -4,6 +4,9 @@
 #include <QDir>
 #include "ConfigHelper.h"
 
+#include "models/autofarmerapi.h"
+#include "models/backuprestoremanager.h"
+
 AppModel* AppModel::m_instance = nullptr;
 
 AppModel::AppModel(QObject *parent) : QObject(parent)
@@ -32,6 +35,11 @@ AppModel::AppModel(QObject *parent) : QObject(parent)
 
     m_ldIntallFolder = ConfigHelper::GetLDPlayerLibsPath();
     LDCommand::setLDPath(m_ldIntallFolder);
+
+    //load data
+    BackupRestoreManager::instance();
+    AutoFarmerAPI::instance();
+
 }
 
 AppModel *AppModel::instance()
