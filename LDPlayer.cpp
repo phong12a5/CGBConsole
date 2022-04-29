@@ -339,11 +339,12 @@ void LDPlayer::clearProxy()
 QString LDPlayer::getCurrentProxy()
 {
 //    Address addr;
-//    QString proxy = ldhelper->adbShellCommand2(profile.address,{"shell","settings","get","global","http_proxy"});
-//    if(proxy != "null"
-//            && proxy.contains(":")){
-//        return proxy;
-//    }
+    QString proxy = LDCommand::ld_adb_command(profile.id,"shell settings get global http_proxy");
+    if(proxy != "null"
+            && proxy.contains(":")
+            && proxy.contains(".")){
+        return proxy;
+    }
 
     return "";
 }

@@ -168,6 +168,7 @@ int LDCommand::isRunningDevice(int index)
     int retVal = DEVICE_STATE::DEVICE_STATE_UNKNOW;
     QString output, error;
     if(runLDCommand(QString("isrunning --index %1").arg(index),output,error)){
+        qDebug()<<__FUNCTION__<<__LINE__<<output;
         if(output.simplified() == "running")
             retVal = DEVICE_STATE::DEVICE_STATE_RUNNING;
         else if (output.simplified() == "stop") {
