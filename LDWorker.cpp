@@ -63,12 +63,20 @@ void LDWorker::run()
                 player->setupProxy();
                 msleep(500);
             }
+
+            if(player->getScreenId().size() == 0){
+                player->openPackage("com.cgb.support");
+                sleep(2);
+                player->enableAccessibility("com.cgb.support",".service.QAccessibilityService");
+            }
         }
 
-        State rs = preparePackage();
-        if(rs == PREPARE_SUCCESS){
-            player->swipeUp();
-            sleep(1);
+        if(player->getScreenId().size() >0){
+            State rs = preparePackage();
+            if(rs == PREPARE_SUCCESS){
+                player->swipeUp();
+                sleep(1);
+            }
         }
 
     }

@@ -45,6 +45,7 @@ private:
     BackupRestorePackage *m_package{nullptr};
 
     State doLogin(FacebookAccount &acc);
+
     State preparePackage();
 };
 
