@@ -6,6 +6,8 @@
 #include <QTextCodec>
 #include "ScreenReferences.h"
 
+#define INVALID_POINT QPoint(-1,-1)
+#define LOG qDebug()<<QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss")<<"ID:"<<profile.id<<__FUNCTION__<<__LINE__
 
 using namespace screen_references;
 

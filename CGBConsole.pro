@@ -88,9 +88,11 @@ HEADERS += \
 
 LIBS += -L$$PWD/libs/ -lchilkat-9.5.0 -lws2_32 -lcrypt32 -ldnsapi
 LIBS += $$PWD/libs/Pdh.Lib
+LIBS += -L$$PWD/libs -lQGoogleAuthenticator
 
 
 INCLUDEPATH += $$PWD/include/chilkat_mingw/
+INCLUDEPATH += $$PWD/include/googleauthenticator
 
 RC_ICONS = Logo.ico
 

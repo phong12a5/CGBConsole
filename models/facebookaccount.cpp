@@ -110,7 +110,6 @@ QJsonObject FacebookAccount::toJsonObject()
     object.insert("username",username);
     object.insert("password",password);
     object.insert("2fa",_2fa);
-    object.insert("isChangedPass",isChangedPass);
     return object;
 }
 
@@ -227,9 +226,6 @@ FacebookAccount* FacebookAccount::fromJson(QJsonObject obj)
     if(obj.contains("2fa")){
         acc->set2fa(obj["2fa"].toString());
     }
-    if(obj.contains("isChangedPass")){
-        acc->setIsChangedPass(obj["isChangedPass"].toBool());
-    }
     return acc;
 }
 
@@ -318,15 +314,5 @@ QDateTime FacebookAccount::getRandomBirthDay(int minAge)
 QString FacebookAccount::getPassword() const
 {
     return password;
-}
-
-bool FacebookAccount::getIsChangedPass()
-{
-    return isChangedPass;
-}
-
-void FacebookAccount::setIsChangedPass(bool value)
-{
-    isChangedPass = value;
 }
 

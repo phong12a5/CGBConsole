@@ -1,7 +1,7 @@
 #include "autofarmerapi.h"
 
-#include "utility.h"
-#include "confighelper.h"
+#include "Utility.h"
+#include "ConfigHelper.h"
 #include "backuprestoremanager.h"
 
 AutoFarmerAPI* AutoFarmerAPI::m_instance = nullptr;

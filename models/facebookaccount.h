@@ -62,9 +62,6 @@ public:
 
     QString getPassword() const;
 
-    bool getIsChangedPass();
-    void setIsChangedPass(bool value);
-
 signals:
 private:
     QString username;
@@ -78,7 +75,6 @@ private:
     bool isusing = false;
     bool isdisable = false;
     bool ischecked = false;
-    bool isChangedPass = false;
 
     static PasswdGenerator m_passGenerator;
 
