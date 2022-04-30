@@ -142,7 +142,7 @@ void LDPlayer::refreshScreenElement()
                     rt.insert("screenId",screenArr);
                     rt.insert("elements",doc.array());
 //                    LOG<<"rt"<<QJsonDocument(rt).toJson(QJsonDocument::Compact);
-//                    Utility::writeTo(ConfigHelper::getScreenLogPath(),QString(QJsonDocument(rt).toJson(QJsonDocument::Compact))+"\n",true);
+                    // Utility::writeTo(ConfigHelper::getScreenLogPath(),QString(QJsonDocument(rt).toJson(QJsonDocument::Compact))+"\n",true);
                     m_currentScreen = rt;
                     return;
                 }

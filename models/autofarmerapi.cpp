@@ -39,6 +39,9 @@ QJsonObject AutoFarmerAPI::getClone()
 bool AutoFarmerAPI::hasClone()
 {
     QMutexLocker locker(&mutex);
+    if(m_accounts.size() == 0){
+        loadClones();
+    }
     return m_accounts.size()>0;
 }
 

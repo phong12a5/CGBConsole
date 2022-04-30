@@ -71,14 +71,19 @@ void LDWorker::run()
             }
         }
 
+        player->openPackage("com.facebook.katana");
         if(player->getScreenId().size() >0){
             State rs = preparePackage();
             if(rs == PREPARE_SUCCESS){
                 player->swipeUp();
                 sleep(1);
             }
+        }else{
+            player->openPackage("com.cgb.support");
+            sleep(2);
+            player->enableAccessibility("com.cgb.support",".service.QAccessibilityService");
         }
-
+        player->closeApp("com.facebook.katana");
     }
 
     postDelay(2000);
@@ -107,7 +112,7 @@ LDWorker::State LDWorker::doLogin(FacebookAccount &acc)
     LOG<<":OpenFacebook";
     player->openPackage("com.facebook.katana",true);
     int unknownCount = 0;
-    int loadVietnameseCount = 0;
+    int loginFailedCount = 0;
     bool isInEngLish = false;
     int errorCodeCount = 0;
     for(int i=0;i<40;i++){
@@ -179,6 +184,12 @@ LDWorker::State LDWorker::doLogin(FacebookAccount &acc)
             player->clickOn("Bỏ qua",TEXT);
         }else if(currentScreenId.contains(SCREEN_WRONG_PASS)){
             break;
+        }else if(currentScreenId.contains(SCREEN_LOGIN_FAILED)){
+            player->setupProxy();
+            sleep(2);
+            if(loginFailedCount++>=3){
+                break;
+            }
         }
         sleep(1);
     }
